@@ -1,0 +1,724 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta name="theme-color" content="#050916">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+
+  <title>PRISMA | Visão Geral</title>
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="../ASSETS/prisma-icone.svg"
+  >
+
+  <!-- modo claro / escuro: vem antes do CSS para a tela não piscar -->
+  <script src="../JAVA/tema.js?v=1"></script>
+
+  <!-- chegada pela luz do login (PRISMA) -->
+  <script src="../JAVA/prisma-chegada.js"></script>
+
+  <!-- ESTILOS DA VISÃO GERAL -->
+  <link
+    rel="stylesheet"
+    href="../CSS/visao-geral.css?v=8"
+  >
+</head>
+
+<body>
+
+  <!-- luz suave no fundo, como no login -->
+  <div class="luz-ambiente" aria-hidden="true"></div>
+
+  <!-- =========================================
+       APLICAÇÃO PRISMA
+  ========================================== -->
+
+  <div class="aplicacao" id="aplicacao">
+
+    <!-- fundo escuro atrás da gaveta do menu (celular) -->
+    <div class="menu-fundo" id="menuFundo" hidden></div>
+
+    <!-- =========================================
+         MENU LATERAL
+         No computador: barra lateral que recolhe.
+         No celular: gaveta que abre pelo botão MENU.
+    ========================================== -->
+
+    <aside
+      class="menu-lateral"
+      id="menuLateral"
+      aria-label="Menu lateral do PRISMA"
+    >
+
+      <!-- FECHAR A GAVETA (só no celular) -->
+
+      <button
+        type="button"
+        class="botao-fechar-menu"
+        id="botaoFecharMenu"
+        aria-label="Fechar menu"
+        title="Fechar menu"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <!-- BOTÃO PARA RECOLHER / EXPANDIR MENU -->
+
+      <button
+        type="button"
+        class="botao-recolher-menu"
+        id="botaoRecolherMenu"
+        aria-label="Recolher menu lateral"
+        aria-expanded="true"
+        aria-controls="menuLateral"
+        title="Recolher menu"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            d="m14 6-6 6 6 6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+      <!-- =========================================
+           IDENTIDADE VISUAL PRISMA (mesma logo do login)
+      ========================================== -->
+
+      <div class="marca">
+
+        <svg class="marca-icone" viewBox="0 0 164 110" role="img" aria-label="Logo do PRISMA">
+          <defs>
+            <linearGradient id="lgRoxo" x1="0" x2="1"><stop offset="0" stop-color="#7B4DFF" stop-opacity=".15"/><stop offset="1" stop-color="#9B6BFF"/></linearGradient>
+            <linearGradient id="lgAzul" x1="0" x2="1"><stop offset="0" stop-color="#2F5BFF" stop-opacity=".2"/><stop offset="1" stop-color="#3D7BFF"/></linearGradient>
+            <linearGradient id="lgCiano" x1="0" x2="1"><stop offset="0" stop-color="#00D9FF" stop-opacity=".2"/><stop offset="1" stop-color="#7DF9FF"/></linearGradient>
+            <linearGradient id="lgLaranja" x1="0" x2="1"><stop offset="0" stop-color="#FF8A2B" stop-opacity=".2"/><stop offset="1" stop-color="#FFB648"/></linearGradient>
+            <linearGradient id="lgVidro" x1="0.3" y1="0" x2="0.6" y2="1">
+              <stop offset="0" stop-color="#8FE6FF" stop-opacity=".55"/>
+              <stop offset=".5" stop-color="#2A64E0" stop-opacity=".75"/>
+              <stop offset="1" stop-color="#0D2A86" stop-opacity=".9"/>
+            </linearGradient>
+            <linearGradient id="lgContorno" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#9EEBFF"/>
+              <stop offset=".45" stop-color="#FFFFFF"/>
+              <stop offset="1" stop-color="#FFB45C"/>
+            </linearGradient>
+            <linearGradient id="lgSeta" x1="0" x2="1"><stop offset="0" stop-color="#FFF1D6"/><stop offset=".4" stop-color="#FFB648"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient>
+            <radialGradient id="lgClarao" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".35" stop-color="#FFD58A" stop-opacity=".8"/><stop offset="1" stop-color="#FF8A2B" stop-opacity="0"/></radialGradient>
+          </defs>
+          <path d="M0 16 C20 22 42 42 64 60 L64 65 C42 50 18 32 0 28 Z" fill="url(#lgRoxo)"/>
+          <path d="M0 34 C22 38 44 52 64 61 L64 66 C44 58 20 50 0 48 Z" fill="url(#lgAzul)"/>
+          <path d="M0 52 C24 54 46 59 64 62 L64 67 C46 65 22 65 0 67 Z" fill="url(#lgCiano)"/>
+          <path d="M0 72 C22 70 46 67 64 64 L64 69 C46 73 22 81 0 86 Z" fill="url(#lgLaranja)"/>
+          <path d="M6 94 C26 86 46 75 64 66 L64 70 C46 80 28 94 10 102 Z" fill="url(#lgRoxo)"/>
+          <path d="M80 8 L32 100 L128 100 Z" fill="url(#lgVidro)"/>
+          <path d="M80 30 L54 92 L106 92 Z" fill="#0B2470" fill-opacity=".55" stroke="#BFEFFF" stroke-opacity=".35" stroke-width="1"/>
+          <path d="M80 8 L54 92 M80 8 L106 92" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="1"/>
+          <path d="M80 8 L32 100 L128 100 Z" fill="none" stroke="url(#lgContorno)" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M64 64 L112 58" stroke="#E9FDFF" stroke-width="3" stroke-linecap="round"/>
+          <path d="M64 64 L112 58" stroke="#7DF9FF" stroke-opacity=".45" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="112" cy="58" r="14" fill="url(#lgClarao)"/>
+          <path d="M112 58 C124 56 136 54 146 52" stroke="url(#lgSeta)" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M144 42 L162 51 L145 61 L149 51 Z" fill="#FF8A2B" stroke="#FFD9A3" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+
+        <div class="marca-texto">
+          <strong class="marca-nome">PRISMA<svg class="marca-curva" viewBox="0 0 60 18" aria-hidden="true"><path d="M2 16 C16 16 22 4 36 4 C44 4 52 7 58 9 C50 9 44 8 38 10 C26 13 22 18 2 16 Z" fill="#FF9A3C"/></svg></strong>
+          <span class="marca-sub">Múltiplas visões, uma direção.</span>
+          <span class="marca-barra" aria-hidden="true"></span>
+        </div>
+
+      </div>
+
+      <!-- =========================================
+           NAVEGAÇÃO PRINCIPAL
+      ========================================== -->
+
+      <nav
+        class="navegacao"
+        aria-label="Navegação principal"
+      >
+
+        <p class="menu-titulo">
+          NAVEGAÇÃO
+        </p>
+
+        <!-- VISÃO GERAL COM SUBMENU -->
+
+        <div
+          class="grupo-menu"
+          id="grupoVisaoGeral"
+        >
+
+          <div class="menu-principal">
+
+            <!-- BOTÃO VISÃO GERAL -->
+
+            <button
+              type="button"
+              class="menu-item ativo"
+              id="botaoVisaoGeral"
+              data-pagina="visao-geral"
+              aria-current="page"
+              title="Visão Geral"
+            >
+
+              <span
+                class="menu-item-icone"
+                aria-hidden="true"
+              >
+                ◈
+              </span>
+
+              <span class="menu-item-texto">
+                Visão Geral
+              </span>
+
+            </button>
+
+            <!-- SETA PARA EXPANDIR SUBMENU -->
+
+            <button
+              type="button"
+              class="menu-expandir"
+              id="botaoExpandirMenu"
+              aria-label="Recolher dashboards"
+              aria-expanded="true"
+              aria-controls="submenuDashboards"
+              title="Expandir ou recolher dashboards"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="m6 9 6 6 6-6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+            </button>
+
+          </div>
+
+          <!-- =========================================
+               SUBMENU DOS DASHBOARDS
+          ========================================== -->
+
+          <div
+            class="submenu aberto"
+            id="submenuDashboards"
+          >
+
+            <!-- INTELIGÊNCIA DE REDE: página original + Kanbans setoriais -->
+            <div class="grupo-inteligencia" id="grupoInteligencia">
+              <div class="linha-inteligencia">
+                <button type="button" class="submenu-item" data-pagina="inteligencia" data-url="./inteligencia.html" title="Abrir Inteligência de Rede"><span class="submenu-icone" aria-hidden="true">◎</span><span>Inteligência de Rede</span></button>
+                <button type="button" id="botaoExpandirInteligencia" class="expandir-inteligencia" aria-expanded="false" aria-controls="submenuInteligencia" aria-label="Expandir setores de Inteligência de Rede" title="Mostrar ou ocultar Kanbans">⌄</button>
+              </div>
+              <div class="submenu submenu-inteligencia" id="submenuInteligencia" hidden>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-adm-pat" data-url="./kanban-tratativas.html?setor=adm-pat" title="Abrir Kanban de ADM/PAT"><span class="submenu-icone" aria-hidden="true">▥</span><span>ADM/PAT</span></button>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-reembolso" data-url="./kanban-tratativas.html?setor=reembolso" title="Abrir Kanban de Reembolso"><span class="submenu-icone" aria-hidden="true">▥</span><span>Reembolso</span></button>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-credenciamento" data-url="./kanban-tratativas.html?setor=credenciamento" title="Abrir Kanban de Credenciamento"><span class="submenu-icone" aria-hidden="true">▥</span><span>Credenciamento</span></button>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-auditoria" data-url="./kanban-tratativas.html?setor=auditoria" title="Abrir Kanban de Auditoria"><span class="submenu-icone" aria-hidden="true">▥</span><span>Auditoria</span></button>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-cadastro" data-url="./kanban-tratativas.html?setor=cadastro" title="Abrir Kanban de Cadastro"><span class="submenu-icone" aria-hidden="true">▥</span><span>Cadastro</span></button>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-captacao" data-url="./kanban-tratativas.html?setor=captacao" title="Abrir Kanban de Captação"><span class="submenu-icone" aria-hidden="true">▥</span><span>Captação</span></button>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-financeiro" data-url="./kanban-tratativas.html?setor=financeiro" title="Abrir Kanban de Financeiro"><span class="submenu-icone" aria-hidden="true">▥</span><span>Financeiro</span></button>
+                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-triagem" data-url="./kanban-tratativas.html?setor=triagem" title="Abrir Kanban de Triagem"><span class="submenu-icone" aria-hidden="true">▥</span><span>Triagem</span></button>
+              </div>
+            </div>
+
+            <!-- SAÚDE E SOCIAL -->
+
+            <button
+              type="button"
+              class="submenu-item"
+              data-pagina="saude-social"
+              data-url="./saude-social.html"
+              title="Abrir vidas do Saúde e Social"
+            >
+
+              <span
+                class="submenu-icone"
+                aria-hidden="true"
+              >
+                ♡
+              </span>
+
+              <span>
+                Vidas do Saúde e Social
+              </span>
+
+            </button>
+
+            <!-- FORMULÁRIO DE REUNIÃO: SUBMENU INDEPENDENTE -->
+            <div class="grupo-formulario-reuniao" id="grupoFormularioReuniao">
+              <div class="menu-principal menu-principal-formulario">
+                <button
+                  type="button"
+                  class="submenu-item menu-formulario-botao"
+                  id="botaoFormularioReuniao"
+                  aria-expanded="false"
+                  aria-controls="submenuFormularioReuniao"
+                  title="Expandir ou recolher Formulário de reunião"
+                >
+                  <span class="submenu-icone" aria-hidden="true">♧</span>
+                  <span>Formulário de reunião</span>
+                  <span class="seta-formulario" aria-hidden="true">⌄</span>
+                </button>
+              </div>
+
+              <div class="submenu submenu-formulario" id="submenuFormularioReuniao" hidden>
+                <button
+                  type="button"
+                  class="submenu-item submenu-item-formulario"
+                  data-pagina="formulario-reuniao"
+                  data-url="./formulario-reuniao.html"
+                  title="Abrir formulário para a reunião"
+                >
+                  <span class="submenu-icone" aria-hidden="true">▤</span>
+                  <span>Formulário para a reunião</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="submenu-item submenu-item-formulario"
+                  data-pagina="assuntos-por-setor"
+                  data-url="./assuntos-por-setor.html"
+                  title="Abrir assuntos por setor"
+                >
+                  <span class="submenu-icone" aria-hidden="true">▦</span>
+                  <span>Assuntos por setor</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- FINANCEIRO E CREDENCIAMENTO -->
+
+            <button
+              type="button"
+              class="submenu-item"
+              data-pagina="financeiro-credenciamento"
+              data-url=""
+              disabled
+              title="Página ainda não conectada"
+            >
+
+              <span
+                class="submenu-icone"
+                aria-hidden="true"
+              >
+                ◇
+              </span>
+
+              <span>
+                Faturamento
+              </span>
+
+              <span class="menu-em-breve">
+                Em breve
+              </span>
+
+            </button>
+
+            <!-- CRM E ATENDIMENTO -->
+
+            <button
+              type="button"
+              class="submenu-item"
+              data-pagina="crm"
+              data-url=""
+              disabled
+              title="Página ainda não conectada"
+            >
+
+              <span
+                class="submenu-icone"
+                aria-hidden="true"
+              >
+                ▤
+              </span>
+
+              <span>
+                Reembolso
+              </span>
+
+              <span class="menu-em-breve">
+                Em breve
+              </span>
+
+            </button>
+
+            <!-- NIP -->
+
+            <button
+              type="button"
+              class="submenu-item"
+              data-pagina="nip"
+              data-url=""
+              disabled
+              title="Página ainda não conectada"
+            >
+
+              <span
+                class="submenu-icone"
+                aria-hidden="true"
+              >
+                ◉
+              </span>
+
+              <span>
+                Ações sociais
+              </span>
+
+              <span class="menu-em-breve">
+                Em breve
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </nav>
+
+      <!-- =========================================
+           USUÁRIO E SAÍDA
+      ========================================== -->
+
+      <div class="menu-rodape">
+
+        <div class="usuario">
+
+          <span class="usuario-nome">
+            Teste
+          </span>
+
+          <span class="usuario-email">
+            teste@corporativo.com
+          </span>
+
+        </div>
+
+        <a
+          href="./login.html"
+          class="botao-sair"
+          id="botaoSair"
+          title="Sair do PRISMA"
+        >
+          Sair do PRISMA
+        </a>
+
+      </div>
+
+    </aside>
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main
+      class="conteudo"
+      id="conteudoPrincipal"
+    >
+
+      <!-- =========================================
+           CABEÇALHO COMPACTO
+      ========================================== -->
+
+      <header
+        class="topo"
+        id="topoPrincipal"
+      >
+
+        <!-- BOTÃO MENU (só no celular): abre a gaveta -->
+
+        <button
+          type="button"
+          class="botao-menu"
+          id="botaoAbrirMenu"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          aria-controls="menuLateral"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16" fill="none" stroke="#22D3FF" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M4 12h16" fill="none" stroke="#FFC24A" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M4 17h11" fill="none" stroke="#FF8A2B" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+          <span>MENU</span>
+        </button>
+
+        <div class="topo-informacoes">
+
+          <p class="topo-etiqueta">
+            PRISMA / CENTRAL DE INTELIGÊNCIA
+          </p>
+
+          <h1 id="tituloPagina">
+            Visão Geral
+          </h1>
+
+          <p id="subtituloPagina">
+            Central de Inteligência e Gestão Integrada
+          </p>
+
+        </div>
+
+        <div class="topo-acoes">
+
+          <!-- MODO CLARO / ESCURO (o tema.js liga o clique e os textos) -->
+          <button
+            type="button"
+            class="botao-tema"
+            data-alternar-tema
+            aria-pressed="false"
+            aria-label="Mudar para o modo claro"
+            title="Mudar para o modo claro"
+          >
+            <svg class="icone-sol" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4.2" fill="currentColor"/>
+              <path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+            </svg>
+            <svg class="icone-lua" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 14.6A8.4 8.4 0 0 1 9.4 4a8.4 8.4 0 1 0 10.6 10.6Z" fill="currentColor"/>
+            </svg>
+            <span class="botao-tema-texto">Modo claro</span>
+          </button>
+
+          <div class="topo-status">
+
+            <span
+              class="status-indicador"
+              aria-hidden="true"
+            ></span>
+
+            <span>
+              Ambiente demonstrativo
+            </span>
+
+          </div>
+
+        </div>
+
+      </header>
+
+      <!-- =========================================
+           ÁREA DINÂMICA
+      ========================================== -->
+
+      <section
+        class="area-conteudo"
+        id="areaConteudo"
+        aria-label="Conteúdo do painel selecionado"
+      >
+
+        <!-- =========================================
+             PÁGINA INICIAL
+        ========================================== -->
+
+        <div
+          class="pagina-inicial"
+          id="paginaInicial"
+        >
+
+          <!-- BOAS-VINDAS -->
+
+          <section class="boas-vindas">
+
+            <div class="boas-vindas-texto">
+
+              <span class="boas-vindas-etiqueta">
+                BEM-VINDO AO PRISMA
+              </span>
+
+              <h2>
+                Olá, <span class="texto-espectro">Teste</span>!
+              </h2>
+
+              <p class="boas-vindas-slogan">
+                Múltiplas visões, <strong>uma direção.</strong>
+              </p>
+
+              <p>
+                Este é o ambiente central da plataforma
+                PRISMA. Utilize o menu lateral para navegar
+                entre os dashboards e explorar os recursos
+                disponíveis.
+              </p>
+
+            </div>
+
+            <!-- O conceito da logo em grande: a luz entra no prisma,
+                 abre em várias cores (múltiplas visões) e sai como
+                 uma seta laranja (uma direção). -->
+            <svg class="boas-vindas-prisma" viewBox="0 0 440 260" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="hzEntrada" x1="0" x2="1">
+                  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+                  <stop offset=".7" stop-color="#EAF6FF" stop-opacity=".85"/>
+                  <stop offset="1" stop-color="#FFFFFF"/>
+                </linearGradient>
+                <linearGradient id="hzAzul" x1="0" x2="1"><stop offset="0" stop-color="#5A8CFF"/><stop offset=".55" stop-color="#2F6BFF" stop-opacity=".75"/><stop offset="1" stop-color="#2F6BFF" stop-opacity=".08"/></linearGradient>
+                <linearGradient id="hzCiano" x1="0" x2="1"><stop offset="0" stop-color="#7FE6FF"/><stop offset=".55" stop-color="#22D3FF" stop-opacity=".75"/><stop offset="1" stop-color="#22D3FF" stop-opacity=".08"/></linearGradient>
+                <linearGradient id="hzTurquesa" x1="0" x2="1"><stop offset="0" stop-color="#8CF5E2"/><stop offset=".55" stop-color="#2EE6C8" stop-opacity=".7"/><stop offset="1" stop-color="#2EE6C8" stop-opacity=".08"/></linearGradient>
+                <linearGradient id="hzAmbar" x1="0" x2="1"><stop offset="0" stop-color="#FFE09A"/><stop offset=".55" stop-color="#FFC24A" stop-opacity=".75"/><stop offset="1" stop-color="#FFC24A" stop-opacity=".08"/></linearGradient>
+                <linearGradient id="hzLaranja" x1="0" x2="1"><stop offset="0" stop-color="#FFB36B"/><stop offset=".55" stop-color="#FF8A2B" stop-opacity=".8"/><stop offset="1" stop-color="#FF8A2B" stop-opacity=".08"/></linearGradient>
+                <linearGradient id="hzVidro" x1="0.3" y1="0" x2="0.6" y2="1">
+                  <stop offset="0" stop-color="#9FEAFF" stop-opacity=".6"/>
+                  <stop offset=".5" stop-color="#2A64E0" stop-opacity=".72"/>
+                  <stop offset="1" stop-color="#0D2A86" stop-opacity=".92"/>
+                </linearGradient>
+                <linearGradient id="hzContorno" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#9EEBFF"/>
+                  <stop offset=".45" stop-color="#FFFFFF"/>
+                  <stop offset="1" stop-color="#FFB45C"/>
+                </linearGradient>
+                <linearGradient id="hzSeta" x1="0" x2="1"><stop offset="0" stop-color="#FFF1D6"/><stop offset=".45" stop-color="#FFB648"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient>
+                <radialGradient id="hzClarao" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".35" stop-color="#FFE2B0" stop-opacity=".8"/><stop offset="1" stop-color="#FF8A2B" stop-opacity="0"/></radialGradient>
+                <filter id="hzDesfoque" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+              </defs>
+
+              <!-- luz branca entrando -->
+              <path class="hz-entrada" d="M0 118 L168 128 L168 136 L0 146 Z" fill="url(#hzEntrada)" filter="url(#hzDesfoque)"/>
+              <path class="hz-entrada" d="M0 128 L168 131 L168 133 L0 136 Z" fill="url(#hzEntrada)"/>
+
+              <!-- leque de cores saindo (múltiplas visões) -->
+              <g class="hz-leque">
+                <path class="hz-faixa" d="M252 128 L440 18 L440 58 L252 131 Z" fill="url(#hzAzul)"/>
+                <path class="hz-faixa" d="M252 131 L440 62 L440 98 L252 133 Z" fill="url(#hzCiano)"/>
+                <path class="hz-faixa" d="M252 133 L440 102 L440 136 L252 135 Z" fill="url(#hzTurquesa)"/>
+                <path class="hz-faixa" d="M252 135 L440 176 L440 210 L252 138 Z" fill="url(#hzAmbar)"/>
+                <path class="hz-faixa" d="M252 138 L440 214 L440 252 L252 141 Z" fill="url(#hzLaranja)"/>
+              </g>
+
+              <!-- prisma de vidro -->
+              <path d="M210 26 L136 222 L284 222 Z" fill="url(#hzVidro)"/>
+              <path d="M210 66 L170 206 L250 206 Z" fill="#0B2470" fill-opacity=".5" stroke="#BFEFFF" stroke-opacity=".3" stroke-width="1"/>
+              <path d="M210 26 L170 206 M210 26 L250 206" stroke="#FFFFFF" stroke-opacity=".22" stroke-width="1"/>
+              <path d="M210 26 L136 222 L284 222 Z" fill="none" stroke="url(#hzContorno)" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M168 132 L252 134" stroke="#EAFBFF" stroke-width="3" stroke-linecap="round"/>
+              <circle class="hz-brilho" cx="252" cy="134" r="22" fill="url(#hzClarao)"/>
+
+              <!-- a seta laranja (uma direção) -->
+              <path class="hz-seta" d="M252 134 C310 132 360 140 404 144" stroke="url(#hzSeta)" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <path d="M398 131 L426 145 L398 158 L404 145 Z" fill="#FF8A2B" stroke="#FFD9A3" stroke-width="1.4" stroke-linejoin="round"/>
+            </svg>
+
+          </section>
+
+          <!-- ESPAÇO PARA INDICADORES FUTUROS -->
+
+          <section class="area-futura">
+
+            <div class="area-futura-conteudo">
+
+              <div class="area-futura-icone" aria-hidden="true">
+                <svg viewBox="0 0 64 56">
+                  <path d="M0 26 L22 28 L22 30 L0 32 Z" fill="#EAF6FF" opacity=".7"/>
+                  <path d="M40 28 L64 6 L64 14 L40 29 Z" fill="#22D3FF"/>
+                  <path d="M40 29 L64 22 L64 30 L40 30 Z" fill="#2EE6C8"/>
+                  <path d="M40 30 L64 38 L64 46 L40 31 Z" fill="#FF8A2B"/>
+                  <path d="M31 4 L14 52 L48 52 Z" fill="#1F4FE0" fill-opacity=".75" stroke="#EAF6FF" stroke-width="2.5" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+              <h3>
+                Visão Geral em desenvolvimento
+              </h3>
+
+              <p>
+                Este espaço será utilizado futuramente
+                para reunir indicadores estratégicos,
+                análises gerenciais e alertas dos
+                diferentes setores.
+              </p>
+
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- =========================================
+             DASHBOARD DINÂMICO
+        ========================================== -->
+
+        <div
+          class="painel-dinamico"
+          id="painelDinamico"
+          hidden
+        >
+
+          <!-- CARREGAMENTO -->
+
+          <div
+            class="painel-carregando"
+            id="painelCarregando"
+            role="status"
+            aria-live="polite"
+            hidden
+          >
+
+            <span
+              class="carregando-circulo"
+              aria-hidden="true"
+            ></span>
+
+            <span>
+              Carregando dashboard...
+            </span>
+
+          </div>
+
+          <!-- VISUALIZADOR DE DASHBOARDS -->
+
+          <iframe
+            id="iframeDashboard"
+            class="iframe-dashboard"
+            title="Dashboard PRISMA"
+            loading="eager"
+          ></iframe>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- =========================================
+       JAVASCRIPT
+  ========================================== -->
+
+  <script src="../JAVA/visao-geral.js?v=6"></script>
+
+</body>
+</html>

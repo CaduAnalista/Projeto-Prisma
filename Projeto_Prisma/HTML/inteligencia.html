@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050916"><script src="../JAVA/tema.js?v=1"></script>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <title>Inteligência de Rede | PRISMA</title>
+
+    <!-- Módulo acessado exclusivamente pela Visão Geral (dentro do iframe) -->
+    <script>
+      if (window.self === window.top) window.location.replace('./visao-geral.html');
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="../ASSETS/prisma-icone.svg">
+    <link rel="stylesheet" href="../CSS/inteligencia.css?v=8">
+
+    <!-- Leitura e exportação de Excel (SheetJS 0.20.3, dentro do projeto: funciona offline) -->
+    <script src="../LIB/xlsx-0.20.3.full.min.js" defer></script>
+</head>
+<body>
+<main class="pagina" id="pagina">
+
+<!-- No desktop cada bloco ocupa a altura da janela e a rolagem para no início
+     de cada um: nenhum gráfico fica cortado no meio. -->
+<section class="bloco bloco-1" aria-label="Indicadores e gráficos principais">
+
+    <!-- =====================================================
+         CABEÇALHO: título, movimento de hoje e ações
+    ====================================================== -->
+    <header class="cabecalho">
+        <h1 class="titulo"><span class="titulo-barra" aria-hidden="true"></span>Visão operacional</h1>
+
+        <!-- Abertos e encerrados hoje: sempre visíveis, com qualquer filtro de situação ou prazo -->
+        <section class="hoje" aria-label="Movimento de hoje"
+                 title="Os números de hoje seguem setor, canal e ocorrência, mas não a situação, o prazo, o colaborador nem o período.">
+            <span class="hoje-rotulo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+                <span>Hoje <strong id="infoHoje">—</strong></span>
+            </span>
+            <div class="hoje-item">
+                <span>Abertos</span>
+                <strong id="kpiAbertosHoje">—</strong>
+            </div>
+            <div class="hoje-item hoje-encerrados" id="cartaoEncerradosHoje">
+                <span>Encerrados</span>
+                <strong id="kpiEncerradosHoje">—</strong>
+                <small id="apoioEncerradosHoje"></small>
+            </div>
+        </section>
+
+        <div class="acoes">
+            <div class="filtro-geral">
+                <button class="botao botao-secundario" id="botaoFiltro" type="button"
+                        aria-haspopup="dialog" aria-expanded="false" aria-controls="painelFiltro">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>
+                    <span>Filtro</span>
+                    <span class="selo" id="contaFiltros" hidden>0</span>
+                    <svg class="seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+
+                <!-- Painel com todos os filtros (aplicam na hora) -->
+                <div class="popover painel-filtro" id="painelFiltro" role="dialog" aria-label="Filtros" hidden>
+                    <div class="pf-grade">
+                        <div class="pf-bloco cor-ciano">
+                            <span class="pf-rotulo">Situação</span>
+                            <div class="segmentado" id="filtroSituacao" role="group" aria-label="Situação da ocorrência">
+                                <button type="button" data-situacao="" aria-pressed="true">Todos <small id="qtdTodos">0</small></button>
+                                <button type="button" data-situacao="pendente" aria-pressed="false">Pendentes <small id="qtdPendentes">0</small></button>
+                                <button type="button" data-situacao="encerrado" aria-pressed="false">Encerrados <small id="qtdEncerrados">0</small></button>
+                            </div>
+                        </div>
+
+                        <div class="pf-bloco cor-ambar">
+                            <span class="pf-rotulo">Prazo (RN 623, dias úteis)</span>
+                            <div class="chips" id="filtroPrazo" role="group" aria-label="Prazo">
+                                <button type="button" class="chip" data-prazo="ok" aria-pressed="false"><i class="ponto ok"></i>Em dia <small>&lt; 4</small></button>
+                                <button type="button" class="chip" data-prazo="atencao4" aria-pressed="false"><i class="ponto atencao"></i>Atenção 4 dias</button>
+                                <button type="button" class="chip" data-prazo="atencao5" aria-pressed="false"><i class="ponto atencao"></i>Atenção 5 dias</button>
+                                <button type="button" class="chip" data-prazo="atraso" aria-pressed="false"><i class="ponto atraso"></i>Atrasados</button>
+                            </div>
+                        </div>
+
+                        <div class="pf-bloco cor-laranja">
+                            <span class="pf-rotulo">Kanban dos setores</span>
+                            <div class="chips">
+                                <button type="button" class="chip" id="filtroAjuda" aria-pressed="false">
+                                    <i class="ponto ajuda"></i>Precisando de ajuda <small id="qtdAjuda">0</small>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="pf-dupla">
+                            <label class="pf-campo cor-azul">
+                                <span class="pf-rotulo">Setor</span>
+                                <select id="filtroSetor"><option value="">Todos</option></select>
+                            </label>
+                            <label class="pf-campo cor-turquesa">
+                                <span class="pf-rotulo" title="Quem encerrou o protocolo (USUARIO_ENCERRAMENTO_OCORRENCIA)">Colaborador</span>
+                                <select id="filtroColaborador"><option value="">Todos</option></select>
+                            </label>
+                        </div>
+
+                        <div class="pf-bloco cor-ciano">
+                            <span class="pf-rotulo" title="Canal de comunicação (DESC_COMUNICACAO)">Canal</span>
+                            <div class="chips" id="chipsCanal" role="group" aria-label="Canal de comunicação">
+                                <span class="pf-vazio">Importe uma planilha.</span>
+                            </div>
+                        </div>
+
+                        <div class="pf-bloco cor-ambar">
+                            <span class="pf-rotulo">Abertura</span>
+                            <div class="periodo-campos">
+                                <label>De <input type="date" id="periodoDe"></label>
+                                <label>Até <input type="date" id="periodoAte"></label>
+                            </div>
+                            <div class="atalhos" id="atalhosPeriodo">
+                                <button type="button" data-atalho="hoje">Hoje</button>
+                                <button type="button" data-atalho="7">7 dias</button>
+                                <button type="button" data-atalho="30">30 dias</button>
+                                <button type="button" data-atalho="mes">Mês atual</button>
+                                <button type="button" data-atalho="tudo">Tudo</button>
+                            </div>
+                        </div>
+
+                        <div class="pf-bloco pf-ocorrencia cor-laranja">
+                            <span class="pf-rotulo">Ocorrência <small id="contaOcorrencia">0 selecionadas</small></span>
+                            <input type="search" id="buscaOcorrencia" placeholder="Buscar ocorrência..." aria-label="Buscar ocorrência">
+                            <div class="lista-opcoes" id="listaOcorrencia" role="listbox" aria-multiselectable="true"></div>
+                        </div>
+                    </div>
+
+                    <footer class="pf-rodape">
+                        <button type="button" class="link" id="limparFiltros">Limpar filtros</button>
+                        <button type="button" class="botao botao-primario" id="fecharFiltro">Ver resultado</button>
+                    </footer>
+                </div>
+            </div>
+
+            <label class="botao botao-primario" for="arquivoExcel">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                <span>Importar</span>
+            </label>
+            <input type="file" id="arquivoExcel" accept=".xlsx,.xls,.csv" hidden>
+
+            <button class="botao botao-secundario" id="exportarExcel" type="button" disabled
+                    title="Exporta os protocolos filtrados (e a busca da tabela) para o Excel">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                <span>Exportar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- filtros em uso: cada um sai no × -->
+    <div class="filtros-ativos" id="filtrosAtivos" aria-label="Filtros em uso" hidden></div>
+
+    <!-- =====================================================
+         INDICADORES (clique filtra a tela)
+    ====================================================== -->
+    <section class="indicadores" aria-label="Indicadores">
+        <button type="button" class="ind ind-azul" data-ind="total" title="Mostrar todos os protocolos">
+            <span class="ind-topo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+                <span class="ind-rotulo">Total de chamados</span>
+            </span>
+            <strong class="ind-valor" id="indTotal">—</strong>
+            <span class="ind-var" id="varTotal"></span>
+        </button>
+
+        <button type="button" class="ind ind-ciano" data-ind="pendentes" title="Filtrar só os pendentes">
+            <span class="ind-topo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
+                <span class="ind-rotulo">Protocolos pendentes</span>
+            </span>
+            <strong class="ind-valor" id="indPendentes">—</strong>
+            <span class="ind-var" id="varPendentes"></span>
+        </button>
+
+        <button type="button" class="ind ind-ok" data-ind="ok" title="Filtrar os em dia">
+            <span class="ind-topo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+                <span class="ind-rotulo">Em dia <small>&lt; 4 dias</small></span>
+            </span>
+            <strong class="ind-valor" id="indOk">—</strong>
+            <span class="ind-var" id="varOk"></span>
+        </button>
+
+        <button type="button" class="ind ind-atencao" data-ind="atencao" title="Filtrar os em atenção (4 e 5 dias)">
+            <span class="ind-topo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></svg>
+                <span class="ind-rotulo">Atenção <small>4 e 5 dias</small></span>
+            </span>
+            <strong class="ind-valor" id="indAtencao">—</strong>
+            <span class="ind-var" id="varAtencao"></span>
+        </button>
+
+        <button type="button" class="ind ind-atraso" data-ind="atraso" title="Filtrar os atrasados">
+            <span class="ind-topo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
+                <span class="ind-rotulo">Atrasado <small>(RN 623)</small></span>
+            </span>
+            <strong class="ind-valor" id="indAtraso">—</strong>
+            <span class="ind-var" id="varAtraso"></span>
+        </button>
+
+        <button type="button" class="ind ind-ajuda" data-ind="ajuda" title="Filtrar os que os setores marcaram como precisando de ajuda no Kanban">
+            <span class="ind-topo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg>
+                <span class="ind-rotulo">Precisando de ajuda</span>
+            </span>
+            <strong class="ind-valor" id="indAjuda">—</strong>
+            <span class="ind-var" id="varAjuda"></span>
+        </button>
+
+        <div class="ind ind-azul ind-fixo" title="Tempo médio de encerramento: média de dias úteis entre a abertura e o encerramento dos protocolos encerrados">
+            <span class="ind-topo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M10 2h4M19 6l1.5-1.5"/></svg>
+                <span class="ind-rotulo">T.M.E</span>
+            </span>
+            <strong class="ind-valor" id="indTme">—</strong>
+            <span class="ind-var" id="varTme"></span>
+        </div>
+
+    </section>
+
+    <!-- =====================================================
+         GRÁFICOS
+    ====================================================== -->
+    <section class="graficos">
+        <article class="cartao cartao-ir">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Evolução do IR</h2>
+                <p class="cartao-apoio">Encerrados no prazo ÷ encerrados, por mês de encerramento · <span id="periodoIR"></span></p>
+            </header>
+            <div class="grafico-ir" id="graficoIR">
+                <p class="vazio-pequeno">Importe uma planilha para ver o índice.</p>
+            </div>
+        </article>
+
+        <article class="cartao cartao-setores">
+            <header class="cartao-topo">
+                <div>
+                    <h2 id="tituloSetores"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Protocolos por setor</h2>
+                    <p class="cartao-apoio">Clique num setor para filtrar a tela</p>
+                </div>
+                <ul class="legenda" aria-label="Legenda">
+                    <li><i class="ponto ok"></i>Em dia <small>&lt; 4 dias</small></li>
+                    <li><i class="ponto atencao"></i>Atenção <small>4 e 5 dias</small></li>
+                    <li><i class="ponto atraso"></i>Atraso <small>(RN 623)</small></li>
+                </ul>
+            </header>
+            <div class="grafico-setores" id="setoresLista">
+                <p class="vazio-pequeno">Importe uma planilha para ver os setores.</p>
+            </div>
+        </article>
+    </section>
+</section>
+
+<section class="bloco bloco-2" aria-label="Evolução mensal">
+    <article class="cartao cartao-evolucao">
+        <header class="cartao-topo">
+            <div>
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M3 21h18"/></svg>Abertura × encerramento por dia</h2>
+                <ul class="legenda" aria-label="Legenda">
+                    <li><i class="ponto ok"></i><i class="ponto atencao"></i><i class="ponto atraso"></i>Encerrados <small>acima · igual · abaixo dos abertos</small></li>
+                    <li><i class="traco abertura"></i>Abertos</li>
+                </ul>
+            </div>
+            <!-- mês do gráfico: trocar o mês é a forma de comparar -->
+            <div class="diario-controles">
+                <label>Mês
+                    <select id="mesDiario" disabled><option>—</option></select>
+                </label>
+            </div>
+        </header>
+        <div class="grafico-evolucao" id="graficoEvolucao">
+            <p class="vazio-pequeno">Importe uma planilha para ver a evolução.</p>
+        </div>
+    </article>
+
+    <!-- Encerrados por prazo RN 623, mês a mês -->
+    <article class="cartao cartao-prazos">
+        <header class="cartao-topo">
+            <div>
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Encerrados por prazo (RN 623)</h2>
+                <p class="cartao-apoio">Protocolos encerrados em cada mês, pelo tempo que levaram (dias úteis)</p>
+            </div>
+            <ul class="legenda" aria-label="Legenda">
+                <li><i class="ponto ok"></i>Em dia <small>&lt; 4 dias</small></li>
+                <li><i class="ponto atencao4"></i>Atenção 4 dias</li>
+                <li><i class="ponto atencao5"></i>Atenção 5 dias</li>
+                <li><i class="ponto atraso"></i>Atraso <small>(RN 623)</small></li>
+            </ul>
+        </header>
+        <div class="grafico-prazos" id="graficoPrazos">
+            <p class="vazio-pequeno">Importe uma planilha para ver os encerrados por prazo.</p>
+        </div>
+    </article>
+</section>
+
+<section class="bloco bloco-3" aria-label="Protocolos">
+
+    <!-- =====================================================
+         TABELA DE PROTOCOLOS
+    ====================================================== -->
+    <article class="cartao tabela-cartao">
+        <header class="tabela-topo">
+            <div class="tabela-titulo">
+                <h2>Protocolos</h2>
+                <span class="contador" id="contadorTabela">0</span>
+                <span class="tabela-fonte" id="chipBase" hidden>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+                    <span id="infoBase"></span>
+                </span>
+            </div>
+            <label class="busca">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input type="search" id="buscaTabela" placeholder="Protocolo, CPF ou e-mail" aria-label="Buscar na tabela">
+            </label>
+        </header>
+
+        <div class="tabela-area" id="tabelaArea">
+            <table class="tabela" id="tabela">
+                <colgroup>
+                    <col class="c-protocolo"><col class="c-canal"><col class="c-cpf"><col class="c-nome"><col class="c-email"><col class="c-setor">
+                    <col class="c-ocorrencia"><col class="c-data"><col class="c-data"><col class="c-status"><col class="c-obs">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col" data-ordem="protocolo">Protocolo</th>
+                        <th scope="col" data-ordem="canal">Canal</th>
+                        <th scope="col" data-ordem="cpf">CPF</th>
+                        <th scope="col" data-ordem="nome">Beneficiário</th>
+                        <th scope="col" data-ordem="email">E-mail</th>
+                        <th scope="col" data-ordem="setor">Setor</th>
+                        <th scope="col" data-ordem="ocorrencia">Ocorrência</th>
+                        <th scope="col" data-ordem="abertura" aria-sort="descending">Abertura</th>
+                        <th scope="col" data-ordem="previsao">Previsão</th>
+                        <th scope="col" data-ordem="prazo">Status</th>
+                        <th scope="col">Observação de abertura</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela"></tbody>
+            </table>
+
+            <div class="vazio" id="vazio">
+                <div class="vazio-icone">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
+                </div>
+                <strong id="vazioTitulo">Nenhuma planilha carregada</strong>
+                <p id="vazioTexto">Clique em <b>Importar</b> ou arraste o arquivo (.xlsx, .xls ou .csv) para esta janela.</p>
+            </div>
+        </div>
+
+        <footer class="paginacao" id="paginacao">
+            <span id="infoPagina">—</span>
+            <div class="paginacao-botoes">
+                <button class="botao-icone" id="paginaAnterior" type="button" aria-label="Página anterior" disabled>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+                </button>
+                <span id="numeroPagina">—</span>
+                <button class="botao-icone" id="proximaPagina" type="button" aria-label="Próxima página" disabled>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                </button>
+            </div>
+        </footer>
+    </article>
+</section>
+</main>
+
+<!-- dica dos gráficos (uma só, reaproveitada) -->
+<div class="dica" id="dica" role="tooltip" hidden></div>
+
+<!-- Arraste e solte -->
+<div class="soltar" id="soltar" hidden>
+    <div class="soltar-caixa">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+        <strong>Solte a planilha aqui</strong>
+        <span>.xlsx, .xls ou .csv</span>
+    </div>
+</div>
+
+<!-- Carregando -->
+<div class="carregando" id="carregando" hidden>
+    <div class="carregando-caixa">
+        <span class="giro" aria-hidden="true"></span>
+        <strong>Lendo a planilha...</strong>
+        <span id="carregandoTexto">Isso pode levar alguns segundos.</span>
+    </div>
+</div>
+
+<!-- Observação completa -->
+<dialog class="detalhe" id="detalhe">
+    <header>
+        <div>
+            <span class="detalhe-rotulo">Protocolo</span>
+            <strong id="detalheProtocolo"></strong>
+        </div>
+        <button class="botao-icone" id="fecharDetalhe" type="button" aria-label="Fechar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+    </header>
+    <dl class="detalhe-dados" id="detalheDados"></dl>
+    <span class="detalhe-rotulo">Observação de abertura</span>
+    <p id="detalheObs"></p>
+</dialog>
+
+<div class="aviso-flutuante" id="avisoFlutuante" role="status" hidden></div>
+
+<script src="../JAVA/inteligencia.js?v=8" defer></script>
+</body>
+</html>

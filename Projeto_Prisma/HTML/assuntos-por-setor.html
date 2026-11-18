@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050916"><script src="../JAVA/tema.js?v=1"></script>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Assuntos por setor | PRISMA</title>
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/svg+xml" href="../ASSETS/prisma-icone.svg">
+
+  <link rel="stylesheet" href="../CSS/assuntos-por-setor.css?v=prisma2">
+  <script src="../JAVA/assuntos-por-setor.js?v=prisma1" defer></script>
+</head>
+<body>
+  <!-- O menu lateral pertence exclusivamente ao visao-geral.html. -->
+  <main class="pagina-assuntos" id="paginaAssuntos">
+    <header class="cabecalho-pagina">
+      <div>
+        <span class="sobretitulo">FORMULÁRIO DE REUNIÃO</span>
+        <h1>Assuntos por setor</h1>
+        <p>Consulte, gerencie e acompanhe os assuntos registrados para a reunião.</p>
+      </div>
+      <span class="etiqueta-reuniao">Reuniões às segundas-feiras</span>
+    </header>
+    <section class="barra-ferramentas" aria-label="Filtros da reunião">
+      <label class="campo-data" for="filtroDataReuniao">
+        <span>Data da reunião</span>
+        <input type="date" id="filtroDataReuniao" name="filtroDataReuniao">
+      </label>
+      <label class="campo-busca" for="buscaAssuntos">
+        <span>Buscar setor ou assunto</span>
+        <input type="search" id="buscaAssuntos" placeholder="Digite para buscar..." autocomplete="off">
+      </label>
+      <button class="botao-atualizar" id="atualizarAssuntos" type="button">Atualizar</button>
+    </section>
+    <p class="aviso-informativo" id="avisoAssuntos" role="status" aria-live="polite">
+      Os assuntos resolvidos antecipadamente permanecem no histórico, sem contar como pendentes.
+    </p>
+    <section class="grade-setores" id="gradeSetores" aria-label="Assuntos registrados por setor">
+      <article class="cartao-setor sem-assuntos" data-setor="Inteligência de rede">
+        <div class="cartao-cabecalho"><h2>Inteligência de rede</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Inteligência de rede"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="Gestão">
+        <div class="cartao-cabecalho"><h2>Gestão</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Gestão"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="ADM/PAT">
+        <div class="cartao-cabecalho"><h2>ADM/PAT</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de ADM/PAT"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="Financeiro">
+        <div class="cartao-cabecalho"><h2>Financeiro</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Financeiro"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="Captação/Cadastro">
+        <div class="cartao-cabecalho"><h2>Captação/Cadastro</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Captação/Cadastro"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="Auditoria">
+        <div class="cartao-cabecalho"><h2>Auditoria</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Auditoria"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="Credenciamento">
+        <div class="cartao-cabecalho"><h2>Credenciamento</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Credenciamento"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="Gerência">
+        <div class="cartao-cabecalho"><h2>Gerência</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Gerência"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+      <article class="cartao-setor sem-assuntos" data-setor="Coordenação">
+        <div class="cartao-cabecalho"><h2>Coordenação</h2><span class="cartao-acoes"></span></div>
+        <ul class="lista-assuntos" aria-label="Assuntos de Coordenação"></ul><p class="mensagem-vazia">Nenhum assunto cadastrado</p>
+      </article>
+    </section>
+  </main>
+
+  <dialog id="dialogoPlano" class="dialogo-plano" aria-labelledby="tituloPlano">
+    <form id="formPlano" class="form-plano">
+      <header class="plano-cabecalho">
+        <div><span class="plano-sobretitulo">PLANEJAMENTO E ACOMPANHAMENTO</span><h2 id="tituloPlano">5W2H — Plano de ação</h2><p id="planoAssuntoTitulo"></p></div>
+        <button type="button" id="fecharPlano" class="plano-fechar" aria-label="Fechar plano de ação">×</button>
+      </header>
+      <div class="plano-campos">
+        <label><span>O que será feito? <em>*</em></span><textarea id="planoOQue" rows="2" maxlength="800" required></textarea></label>
+        <label><span>Por que será feito? <em>*</em></span><textarea id="planoPorQue" rows="2" maxlength="800" required></textarea></label>
+        <label><span>Onde será feito?</span><input id="planoOnde" type="text" maxlength="200" placeholder="Local, unidade ou setor"></label>
+        <label><span>Quando será feito? <em>*</em></span><input id="planoQuando" type="date" required></label>
+        <label><span>Quem será responsável? <em>*</em></span><input id="planoQuem" type="text" maxlength="160" required></label>
+        <label><span>Como será feito? <em>*</em></span><textarea id="planoComo" rows="3" maxlength="1200" required></textarea></label>
+        <label><span>Quanto custará?</span><input id="planoQuanto" type="text" maxlength="160" placeholder="Ex.: Sem custo ou R$ 500,00"></label>
+      </div>
+      <p id="erroPlano" class="erro-plano" role="alert"></p>
+      <section id="historicoPlano" class="historico-plano" hidden aria-label="Histórico do plano de ação">
+        <h3>Histórico de alterações</h3><div id="historicoPlanoLista"></div>
+      </section>
+      <footer class="plano-rodape">
+        <button type="button" id="alternarHistoricoPlano" class="botao-modal-secundario">Ver histórico</button>
+        <div class="plano-rodape-direita"><button type="button" id="cancelarPlano" class="botao-modal-secundario">Cancelar</button><button type="submit" class="botao-modal-primario">Salvar plano de ação</button></div>
+      </footer>
+    </form>
+  </dialog>
+  <dialog id="dialogoEditar" class="dialogo-edicao" aria-labelledby="tituloEdicao">
+    <form id="formEditarAssunto" class="form-edicao">
+      <h2 id="tituloEdicao">Editar assunto</h2>
+      <p>Atualize as informações do assunto registrado.</p>
+      <label>Responsável<input id="editarResponsavel" type="text" maxlength="120" required></label>
+      <label>Setor<select id="editarSetor" required></select></label>
+      <label>Data da reunião<input id="editarDataReuniao" type="date" required></label>
+      <label>Assunto<textarea id="editarTexto" rows="5" maxlength="500" required></textarea></label>
+      <p id="erroEdicao" class="erro-edicao" role="alert"></p>
+      <div class="acoes-edicao">
+        <button type="button" class="botao-modal-secundario" id="cancelarEdicao">Cancelar</button>
+        <button type="submit" class="botao-modal-primario">Salvar alterações</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
