@@ -130,6 +130,7 @@
     },
 
     /* CRM: um Kanban só, com o filtro de setor (antes eram 8 itens no menu) */
+    "estudo-reclamacoes": { titulo: "Estudo de reclamações", subtitulo: "Reclamações, Reclame Aqui e Ouvidoria" },
     "kanban-crm": { titulo: "CRM", subtitulo: "Kanban de tratativas · escolha o seu setor no filtro" },
     "saude-social": {
       titulo: "Saúde e Social",
@@ -368,9 +369,12 @@
     definirSubmenuInteligencia(false);
   }
 
-  /* no CRM o grupo fica aberto para a página aberta aparecer no menu */
+  /* páginas que ficam dentro do grupo da Inteligência de Rede (CRM e Estudo de reclamações) */
+  const ehDaInteligencia = (idPagina) => idPagina.startsWith("kanban-") || idPagina === "estudo-reclamacoes";
+
+  /* nessas páginas o grupo fica aberto para a página aberta aparecer no menu */
   function abrirGrupoDaPagina(idPagina) {
-    if (idPagina.startsWith("kanban-")) definirSubmenuInteligencia(true);
+    if (ehDaInteligencia(idPagina)) definirSubmenuInteligencia(true);
   }
 
   /* ================================================
@@ -671,7 +675,7 @@
         definirSubmenuFormularioReuniao(true);
       }
 
-      if (idPagina.startsWith("kanban-")) {
+      if (ehDaInteligencia(idPagina)) {
         if (menuRecolhido) definirMenuLateral(false);
         definirSubmenu(true);
         abrirGrupoDaPagina(idPagina);

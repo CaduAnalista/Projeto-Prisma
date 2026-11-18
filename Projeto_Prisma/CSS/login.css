@@ -730,6 +730,60 @@ body.saindo .cena {
   .status-sistema { margin-left: 0; }
 }
 
+/* CELULAR SEM ROLAGEM (pedido do autor, 18/11/2026)
+   Antes a página tinha ~1136 px num celular de 812 px e o botão "Entrar"
+   ficava para baixo. Agora a cena tem exatamente a altura da tela:
+   o cartão fica com o tamanho dele (mais compacto) e o robô ocupa
+   só o espaço que sobrar em cima, encolhendo nos celulares menores.
+   dvh = altura visível de verdade (sem a barra do navegador); vh é o reserva. */
+@media (max-width: 900px) {
+  .cena {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    padding: 10px 14px 12px;
+    align-items: stretch;
+  }
+
+  .lado-robo {
+    width: 100%;
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 120px;
+    max-height: 420px;
+  }
+
+  .robo-area { height: 94%; }
+
+  .cartao { flex: none; padding: 16px 16px 14px; }
+  .marca { padding-bottom: 10px; margin-bottom: 12px; }
+  .marca-logo { width: 58px; }
+  .marca-nome { font-size: 1.4rem; }
+  .marca-barra { margin-top: 5px; }
+  .sobretitulo { margin-bottom: 4px; font-size: 0.7rem; }
+  .titulo h1 { font-size: 1.5rem; }
+  .subtitulo { margin: 4px 0 12px; font-size: 0.86rem; line-height: 1.4; }
+  .campo { margin-bottom: 10px; }
+  .campo label { margin-bottom: 5px; font-size: 0.85rem; }
+  .campo-caixa { height: 46px; }
+  .aviso { min-height: 1.1em; margin: 0 0 8px; font-size: 0.84rem; }
+  .botao-entrar { height: 50px; font-size: 1.05rem; }
+  .link-teste { margin-top: 8px; }
+  .rodape { margin-top: 10px; padding-top: 8px; font-size: 0.76rem; }
+}
+
+/* celulares baixos (iPhone SE e parecidos): tiro o que é só texto de apoio */
+@media (max-width: 900px) and (max-height: 700px) {
+  .subtitulo, .sobretitulo { display: none; }
+  .titulo h1 { margin-bottom: 10px; font-size: 1.35rem; }
+  .marca { padding-bottom: 8px; margin-bottom: 10px; }
+  .balao { font-size: 0.76rem; padding: 8px 10px; }
+  .rodape { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .robo, .piramide { animation: none; }
   .status-sistema i { animation: none; }

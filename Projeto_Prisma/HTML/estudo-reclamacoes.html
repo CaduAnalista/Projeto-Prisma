@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050916"><script src="../JAVA/tema.js?v=1"></script>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <title>Estudo de reclamações | PRISMA</title>
+
+    <!-- Módulo acessado pela Visão Geral (dentro do iframe) -->
+    <script>
+      if (window.self === window.top) window.location.replace('./visao-geral.html');
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="../ASSETS/prisma-icone.svg">
+    <!-- mesmo visual da Inteligência de Rede: reaproveito o CSS dela e só acrescento o desta página -->
+    <link rel="stylesheet" href="../CSS/inteligencia.css?v=9">
+    <link rel="stylesheet" href="../CSS/estudo-reclamacoes.css?v=3">
+
+    <script src="../LIB/xlsx-0.20.3.full.min.js" defer></script>
+</head>
+<body>
+<main class="pagina estudo" id="pagina">
+
+    <!-- CABEÇALHO: título, resumo e ações -->
+    <header class="cabecalho">
+        <h1 class="titulo"><span class="titulo-barra" aria-hidden="true"></span>Estudo de reclamações</h1>
+
+        <section class="er-resumo" aria-label="Resumo">
+            <div><span>Reclamações</span><strong id="resTotal">—</strong></div>
+            <div><span>Beneficiários</span><strong id="resBenef">—</strong></div>
+            <div><span>Média por mês</span><strong id="resMedia">—</strong></div>
+        </section>
+
+        <div class="acoes">
+            <label class="botao botao-primario" for="arquivoExcel">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                <span>Importar</span>
+            </label>
+            <input type="file" id="arquivoExcel" accept=".xlsx,.xls,.csv" hidden>
+
+            <button class="botao botao-secundario" id="exportarExcel" type="button" disabled
+                    title="Exporta as reclamações filtradas para o Excel">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                <span>Exportar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- FILTROS (aplicam na hora) -->
+    <section class="er-filtros" aria-label="Filtros">
+        <label class="cor-ciano"><span class="pf-rotulo">Plano</span><select id="fPlano"><option value="">Todos</option></select></label>
+        <label class="cor-ambar"><span class="pf-rotulo">Assunto</span><select id="fAssunto"><option value="">Todos</option></select></label>
+        <label class="cor-laranja er-f-benef"><span class="pf-rotulo">Beneficiário</span>
+            <input type="search" id="fBenef" list="listaBenef" placeholder="Nome ou CPF" autocomplete="off">
+            <datalist id="listaBenef"></datalist>
+        </label>
+        <label class="cor-ciano"><span class="pf-rotulo">Canal</span><select id="fCanal"><option value="">Todos</option></select></label>
+        <label class="cor-azul"><span class="pf-rotulo">Setor</span><select id="fSetor"><option value="">Todos</option></select></label>
+        <label class="cor-turquesa"><span class="pf-rotulo" title="Quem encerrou o protocolo (USUARIO_ENCERRAMENTO_OCORRENCIA)">Colaborador</span><select id="fColab"><option value="">Todos</option></select></label>
+        <button type="button" class="botao botao-secundario er-limpar" id="limpar">Limpar</button>
+    </section>
+
+    <p class="er-criterio" id="criterio">Entram os protocolos do tipo <b>Reclamação</b>, do canal <b>Reclame Aqui</b> e de <b>Ouvidoria</b>. Importe a planilha do CRM para começar.</p>
+
+    <!-- GRÁFICOS -->
+    <section class="er-grade">
+        <article class="cartao er-evolucao">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg>Reclamações por mês</h2>
+                <ul class="legenda" aria-label="Legenda">
+                    <li><i class="er-marca-coluna"></i>Reclamações</li>
+                    <li><i class="er-marca-media"></i>Média mensal <b id="legMedia"></b></li>
+                </ul>
+            </header>
+            <div class="er-grafico" id="gEvolucao"></div>
+        </article>
+
+        <article class="cartao er-setor">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"/></svg>Reclamações por setor</h2>
+                <p class="cartao-apoio">Clique num setor para filtrar</p>
+            </header>
+            <div class="er-barras" id="gSetor"></div>
+        </article>
+
+        <article class="cartao er-plano">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"/></svg>Reclamações por plano</h2>
+                <p class="cartao-apoio">Coluna DESCRICAO_PLANO</p>
+            </header>
+            <div class="er-barras empilhada" id="gPlano"></div>
+        </article>
+
+        <article class="cartao er-ocorrencia">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"/></svg>Ocorrências mais recorrentes</h2>
+                <p class="cartao-apoio">Ranking da coluna DESCRICAO_OCORRENCIA</p>
+            </header>
+            <div class="er-barras empilhada" id="gOcorrencia"></div>
+        </article>
+
+        <article class="cartao er-benef">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Beneficiários que mais reclamaram</h2>
+                <p class="cartao-apoio">Quantidade de reclamações por pessoa</p>
+            </header>
+            <div class="er-barras empilhada" id="gBenef"></div>
+        </article>
+    </section>
+</main>
+
+<div class="dica" id="dica" role="tooltip" hidden></div>
+<div class="aviso-flutuante" id="avisoFlutuante" role="status" hidden></div>
+
+<script src="../JAVA/setores-crm.js?v=1" defer></script>
+<script src="../JAVA/estudo-reclamacoes.js?v=3" defer></script>
+</body>
+</html>
