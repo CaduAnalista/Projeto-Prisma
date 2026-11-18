@@ -31,7 +31,7 @@
   <!-- ESTILOS DA VISÃO GERAL -->
   <link
     rel="stylesheet"
-    href="../CSS/visao-geral.css?v=8"
+    href="../CSS/visao-geral.css?v=10"
   >
 </head>
 
@@ -235,21 +235,18 @@
             id="submenuDashboards"
           >
 
-            <!-- INTELIGÊNCIA DE REDE: página original + Kanbans setoriais -->
+            <!-- INTELIGÊNCIA DE REDE (pedido do autor, 18/11/2026):
+                 o nome abre o painel de sempre; dentro ficam Estudo de reclamações e CRM -->
             <div class="grupo-inteligencia" id="grupoInteligencia">
               <div class="linha-inteligencia">
                 <button type="button" class="submenu-item" data-pagina="inteligencia" data-url="./inteligencia.html" title="Abrir Inteligência de Rede"><span class="submenu-icone" aria-hidden="true">◎</span><span>Inteligência de Rede</span></button>
-                <button type="button" id="botaoExpandirInteligencia" class="expandir-inteligencia" aria-expanded="false" aria-controls="submenuInteligencia" aria-label="Expandir setores de Inteligência de Rede" title="Mostrar ou ocultar Kanbans">⌄</button>
+                <button type="button" id="botaoExpandirInteligencia" class="expandir-inteligencia" aria-expanded="false" aria-controls="submenuInteligencia" aria-label="Expandir Inteligência de Rede" title="Mostrar ou ocultar Estudo de reclamações e CRM">⌄</button>
               </div>
               <div class="submenu submenu-inteligencia" id="submenuInteligencia" hidden>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-adm-pat" data-url="./kanban-tratativas.html?setor=adm-pat" title="Abrir Kanban de ADM/PAT"><span class="submenu-icone" aria-hidden="true">▥</span><span>ADM/PAT</span></button>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-reembolso" data-url="./kanban-tratativas.html?setor=reembolso" title="Abrir Kanban de Reembolso"><span class="submenu-icone" aria-hidden="true">▥</span><span>Reembolso</span></button>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-credenciamento" data-url="./kanban-tratativas.html?setor=credenciamento" title="Abrir Kanban de Credenciamento"><span class="submenu-icone" aria-hidden="true">▥</span><span>Credenciamento</span></button>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-auditoria" data-url="./kanban-tratativas.html?setor=auditoria" title="Abrir Kanban de Auditoria"><span class="submenu-icone" aria-hidden="true">▥</span><span>Auditoria</span></button>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-cadastro" data-url="./kanban-tratativas.html?setor=cadastro" title="Abrir Kanban de Cadastro"><span class="submenu-icone" aria-hidden="true">▥</span><span>Cadastro</span></button>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-captacao" data-url="./kanban-tratativas.html?setor=captacao" title="Abrir Kanban de Captação"><span class="submenu-icone" aria-hidden="true">▥</span><span>Captação</span></button>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-financeiro" data-url="./kanban-tratativas.html?setor=financeiro" title="Abrir Kanban de Financeiro"><span class="submenu-icone" aria-hidden="true">▥</span><span>Financeiro</span></button>
-                <button type="button" class="submenu-item submenu-item-setor" data-pagina="kanban-triagem" data-url="./kanban-tratativas.html?setor=triagem" title="Abrir Kanban de Triagem"><span class="submenu-icone" aria-hidden="true">▥</span><span>Triagem</span></button>
+                <!-- visual novo ainda vai ser passado pelo autor -->
+                <button type="button" class="submenu-item" data-pagina="estudo-reclamacoes" data-url="" disabled title="Página ainda não conectada"><span class="submenu-icone" aria-hidden="true">◔</span><span>Estudo de reclamações</span><span class="menu-em-breve">Em breve</span></button>
+                <!-- CRM: um Kanban só; o colaborador escolhe o setor no filtro da própria página -->
+                <button type="button" class="submenu-item" data-pagina="kanban-crm" data-url="./kanban-tratativas.html" title="Abrir CRM"><span class="submenu-icone" aria-hidden="true">▥</span><span>CRM</span></button>
               </div>
             </div>
 
@@ -718,7 +715,7 @@
        JAVASCRIPT
   ========================================== -->
 
-  <script src="../JAVA/visao-geral.js?v=6"></script>
+  <script src="../JAVA/visao-geral.js?v=8"></script>
 
 </body>
 </html>

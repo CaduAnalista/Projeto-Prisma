@@ -799,18 +799,16 @@
     /* ======================================================
        8. INDICADORES
        Valor: todos os protocolos da tela (filtros aplicados).
-       Variação: mês de referência (o mais recente da planilha)
-       contra o mês anterior. Contagens pelo mês de abertura;
-       T.M.E e IR pelo mês de encerramento.
+       Sem comparação com o mês anterior (o autor pediu para tirar).
     ====================================================== */
 
     const CONTAGENS = {
-        total: { valor: 'indTotal', variacao: 'varTotal', teste: () => true, melhorSobe: null },
-        pendentes: { valor: 'indPendentes', variacao: 'varPendentes', teste: (r) => r.pendente, melhorSobe: false },
-        ok: { valor: 'indOk', variacao: 'varOk', teste: (r) => r.prazoDet === 'ok', melhorSobe: true },
-        atencao: { valor: 'indAtencao', variacao: 'varAtencao', teste: (r) => r.prazoDet === 'atencao4' || r.prazoDet === 'atencao5', melhorSobe: false },
-        atraso: { valor: 'indAtraso', variacao: 'varAtraso', teste: (r) => r.prazoDet === 'atraso', melhorSobe: false },
-        ajuda: { valor: 'indAjuda', variacao: 'varAjuda', teste: (r) => r.ajuda, melhorSobe: false }
+        total: { valor: 'indTotal', teste: () => true },
+        pendentes: { valor: 'indPendentes', teste: (r) => r.pendente },
+        ok: { valor: 'indOk', teste: (r) => r.prazoDet === 'ok' },
+        atencao: { valor: 'indAtencao', teste: (r) => r.prazoDet === 'atencao4' || r.prazoDet === 'atencao5' },
+        atraso: { valor: 'indAtraso', teste: (r) => r.prazoDet === 'atraso' },
+        ajuda: { valor: 'indAjuda', teste: (r) => r.ajuda }
     };
 
     /* T.M.E (dias úteis) e IR (%) de um grupo de registros */
@@ -832,76 +830,18 @@
         };
     }
 
-    /* Texto "▲ 12% vs. mês anterior" com a cor certa (bom / ruim / neutro). */
-    function escreverVariacao(id, atual, anterior, melhorSobe, forma) {
-        const el = $(id);
-        el.className = 'ind-var';
-        const ref = estado.mesRef;
-        if (!ref || atual === null) { el.innerHTML = ''; el.title = ''; return; }
-
-        const prev = mesAnterior(ref);
-        const fmt = (v) => (v === null ? '—'
-            : forma === 'pp' ? `${decimalBR(v)}%`
-            : forma === 'dias' ? `${decimalBR(v)} dia${v === 1 ? '' : 's'}`
-            : numeroBR(v));
-        el.title = `${rotuloMes(ref)}: ${fmt(atual)} · ${rotuloMes(prev)}: ${fmt(anterior)}`;
-
-        if (anterior === null || (forma === 'pct' && anterior === 0)) {
-            el.classList.add('neutro');
-            el.innerHTML = atual ? `<b>novo</b> sem base em ${rotuloMes(prev)}` : `<b>=</b> vs. mês anterior`;
-            return;
-        }
-
-        const diferenca = atual - anterior;
-        let texto;
-        if (forma === 'pp') texto = `${decimalBR(Math.abs(diferenca))} p.p.`;
-        else if (forma === 'dias') texto = `${decimalBR(Math.abs(diferenca))} dia${Math.abs(diferenca) === 1 ? '' : 's'}`;
-        else texto = `${decimalBR(Math.abs(diferenca / anterior) * 100, Math.abs(diferenca / anterior) < 0.1 ? 1 : 0)}%`;
-
-        const quase = Math.abs(diferenca) < (forma === 'pct' ? 0.5 : 0.05);
-        const seta = quase ? '=' : diferenca > 0 ? '▲' : '▼';
-        el.classList.add(quase || melhorSobe === null ? 'neutro' : (diferenca > 0) === melhorSobe ? 'bom' : 'ruim');
-        el.innerHTML = quase ? '<b>=</b> vs. mês anterior' : `<b>${seta} ${texto}</b> vs. mês anterior`;
-    }
-
+    /* a comparação "vs. mês anterior" embaixo dos cartões saiu a pedido do autor (18/11/2026) */
     function desenharIndicadores() {
         const temDados = estado.base.length > 0;
         const conjunto = temDados ? estado.base.filter((r) => passaBase(r) && passaSituacao(r)) : [];
-        const ref = estado.mesRef;
-        const prev = mesAnterior(ref);
 
         for (const c of Object.values(CONTAGENS)) {
-            if (!temDados) {
-                $(c.valor).textContent = '—';
-                $(c.variacao).innerHTML = '';
-                continue;
-            }
-            let total = 0;
-            let noRef = 0;
-            let noPrev = 0;
-            for (const r of conjunto) {
-                if (!c.teste(r)) continue;
-                total++;
-                if (r.mesAbertura === ref) noRef++;
-                else if (r.mesAbertura === prev) noPrev++;
-            }
-            $(c.valor).textContent = numeroBR(total);
-            escreverVariacao(c.variacao, noRef, noPrev, c.melhorSobe, 'pct');
+            $(c.valor).textContent = temDados ? numeroBR(conjunto.filter(c.teste).length) : '—';
         }
 
         /* o IR saiu dos cartões a pedido do autor: ele já aparece no gráfico mês a mês */
-        if (!temDados) {
-            $('indTme').textContent = '—';
-            $('varTme').innerHTML = '';
-        } else {
-            const semSituacao = estado.base.filter((r) => passaBase(r));
-            const geral = tmeIr(semSituacao);
-            const mesRef = tmeIr(semSituacao.filter((r) => r.mesEncerramento === ref));
-            const mesPrev = tmeIr(semSituacao.filter((r) => r.mesEncerramento === prev));
-
-            $('indTme').innerHTML = geral.tme === null ? '—' : `${decimalBR(geral.tme)}<small>dias</small>`;
-            escreverVariacao('varTme', mesRef.tme, mesPrev.tme, false, 'dias');
-        }
+        const geral = temDados ? tmeIr(estado.base.filter((r) => passaBase(r))) : { tme: null };
+        $('indTme').innerHTML = geral.tme === null ? '—' : `${decimalBR(geral.tme)}<small>dias</small>`;
 
         /* cartão ativo = filtro que ele aplica está ligado */
         const f = estado.filtros;

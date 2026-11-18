@@ -99,3 +99,130 @@ html[data-tema="claro"] .detail .key{background:rgba(47,107,255,.08);color:#1F35
 html[data-tema="claro"] .treatment input,html[data-tema="claro"] .treatment select,html[data-tema="claro"] .treatment textarea,html[data-tema="claro"] .transfer-panel select,html[data-tema="claro"] .transfer-panel input,html[data-tema="claro"] .transfer-panel textarea{background:#FFFFFF}
 html[data-tema="claro"] .history-row{background:#F1F5FC}
 html[data-tema="claro"] .transfer-tag{background:rgba(224,106,16,.12);color:#B8560C}
+
+/* ===== V2 (pedido do autor, 18/11/2026) =====
+   Eu deixo o Kanban mais enxuto: topo, sincronização e filtros compactos,
+   as 7 colunas cabendo na tela (o "Concluído" fica recolhido numa faixa),
+   cartão com o prazo em destaque e a coluna nova "Muito importante" (laranja). */
+.app{padding:14px clamp(10px,1.6vw,24px) 28px}
+.top{margin-bottom:10px;align-items:flex-end}
+.top h1{font-size:clamp(20px,2vw,26px);margin:4px 0 0}
+.top-actions{align-items:flex-end;gap:10px}
+.sector-label select{min-width:200px;height:38px;padding:6px 10px}
+.import-btn,.novo-btn{padding:9px 14px;font-size:13px;line-height:1.2}
+.novo-btn{border-color:rgba(255,138,43,.6);color:#FFD3A8;font-weight:750}
+.novo-btn:hover{background:rgba(255,138,43,.2)}
+.novo-btn[hidden],.filters label[hidden]{display:none}
+
+/* sincronização numa linha */
+.sync{justify-content:flex-start;flex-wrap:wrap;gap:6px 16px;padding:8px 14px;border-radius:11px;margin-bottom:8px;font-size:12.5px}
+.sync::before{left:12px;right:12px}
+.sync-icone{color:var(--cyan);font-size:15px}
+#ultima{color:var(--muted)}
+.sync-stats{display:flex;gap:14px;color:var(--muted)}
+.sync-stats>span{font-size:12.5px;color:var(--muted)}
+.sync-stats b{font-size:13.5px;text-shadow:none;color:var(--text)}
+.link{margin-left:auto;background:none;border:0;color:#7FA8FF;font-weight:650;font-size:12.5px;padding:4px 2px;text-decoration:underline;text-underline-offset:3px}
+
+/* filtros numa linha */
+.filters{grid-template-columns:minmax(150px,1.3fr) minmax(280px,1.4fr) repeat(3,minmax(100px,.8fr)) auto;gap:10px;padding:10px 12px;margin:8px 0 12px;border-radius:12px}
+.filters:has(#rotuloFiltroSetor:not([hidden])){grid-template-columns:minmax(140px,1.2fr) minmax(280px,1.3fr) repeat(4,minmax(92px,.8fr)) auto}
+.filters label{font-size:11px;gap:4px}
+.filters input,.filters select{height:36px;padding:6px 9px;font-size:12.5px}
+.filters .quiet{height:36px;padding:0 14px}
+
+/* quadro: 7 colunas + faixa do "Concluído" */
+.board{grid-template-columns:repeat(7,minmax(126px,1fr)) var(--fim,54px);gap:7px}
+.column{min-width:0;min-height:420px}
+.column-head{min-height:0;padding:9px 9px 8px;position:relative}
+.column-head strong{font-size:12.5px}
+.column-head .conta{display:block;font-size:18px;font-weight:750;margin-top:3px}
+.conta-atraso{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:750;color:#FFC2CD;background:rgba(255,92,122,.22);border-radius:5px;padding:1px 6px}
+.cards{padding:7px 6px;gap:7px;min-height:300px;max-height:calc(100vh - 250px)}
+.column.importante{border-color:rgba(255,138,43,.6)}
+.column.importante .column-head{background:linear-gradient(150deg,rgba(255,138,43,.62),rgba(70,30,6,.92))}
+.column.recolhida{min-width:0}
+.abrir-concluido{width:100%;flex:1;border:0;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 4px;cursor:pointer;font:inherit}
+.abrir-concluido strong{writing-mode:vertical-rl;transform:rotate(180deg);font-size:12.5px;letter-spacing:.04em}
+.abrir-concluido .conta{margin:0}
+.abrir-concluido:hover{filter:brightness(1.18)}
+.recolher{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.22);border:0;border-radius:6px;color:var(--text);font-size:10.5px;padding:3px 6px}
+
+/* cartão: prazo em cima, assunto, beneficiário, protocolo e data */
+.case{padding:8px 8px 8px 9px;border-radius:9px;border-left:3px solid transparent;font-size:11px}
+.case.warn{border-left-color:#FFC24A}
+.case.late{border-left-color:#FF5C7A}
+.case.prioritario{box-shadow:0 0 0 1px rgba(255,138,43,.6),0 6px 16px rgba(0,0,0,.4)}
+.case-top{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap}
+.case-top .sla{align-self:auto;font-size:10.5px;padding:2px 7px}
+.case-top .tag{max-width:100%;overflow:hidden;text-overflow:ellipsis;font-size:9.5px;padding:2px 5px}
+.selo-importante{margin-top:6px;font-size:10px;font-weight:800;color:#FFB45C}
+.case .case-subject{margin:6px 0 4px;font-size:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.case-benef{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case .case-meta{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:space-between;gap:2px 6px;margin-top:5px;font-size:10px;color:var(--muted)}
+.case-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.case-tags>span{font-size:9.5px;font-weight:700;border-radius:5px;padding:2px 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0}
+.tag-setor{background:rgba(34,211,255,.16);color:#8FE6FF}
+.parado{background:rgba(157,176,207,.2);color:#D5E0F2}
+.resp{background:rgba(46,230,200,.14);color:#7EF0DC}
+
+/* janela: prioridade da Triagem, observação obrigatória, transferência recolhida */
+.triagem-panel{margin:16px 0 4px;padding:14px;border:1px solid rgba(255,138,43,.4);border-radius:10px;background:rgba(255,138,43,.08)}
+.triagem-panel[hidden]{display:none}
+.triagem-panel h3{margin:0 0 4px;color:#FFB45C;font-size:15px}
+.triagem-panel label,.novo-form label{display:flex;flex-direction:column;gap:6px;margin-top:10px;color:var(--muted);font-size:12px;font-weight:650}
+.triagem-panel input,.triagem-panel select,.triagem-panel textarea,.novo-form input,.novo-form select,.novo-form textarea{background:rgba(8,14,34,.7);color:var(--text);border-color:var(--borda)}
+.btn-importante{background:linear-gradient(135deg,#FFA24D,#FF8A2B 55%,#E06A10);border-color:rgba(255,180,92,.7);box-shadow:0 6px 22px rgba(255,138,43,.3)}
+.btn-importante:hover{background:linear-gradient(135deg,#FFB870,#FF9A45 55%,#F07A20)}
+.obrigatoria{font-size:10.5px;font-weight:700;color:#FFB45C}
+.obrigatoria[hidden]{display:none}
+details.transfer-panel{margin:16px 0 6px;padding:10px 14px}
+details.transfer-panel summary{cursor:pointer;font-weight:700;font-size:14px;color:#FFB45C}
+details.transfer-panel[open] summary{margin-bottom:6px}
+.novo-numero{margin:0 0 4px;font-size:13px;color:var(--muted)}
+.novo-numero b{color:var(--text);font-family:"JetBrains Mono",Consolas,monospace}
+.novo-numero span{font-size:11px}
+.novo-form .check{flex-direction:row;align-items:center;gap:8px;color:var(--text)}
+.novo-form .check input{width:16px;height:16px}
+
+/* telas menores: filtros em 2 colunas e o quadro rola de lado */
+@media(max-width:980px){
+  .filters,.filters:has(#rotuloFiltroSetor:not([hidden])){grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filters .f-busca,.filters .f-periodo{grid-column:span 2}
+  .board{grid-template-columns:repeat(7,170px) var(--fim,54px)}
+}
+@media(max-width:700px){
+  .top{align-items:stretch}
+  .sync{flex-direction:row;align-items:center}
+  .sector-label select{min-width:0;width:100%}
+  .board{grid-template-columns:repeat(7,80vw) var(--fim,54px);scroll-snap-type:x mandatory}
+  .column{scroll-snap-align:start}
+}
+
+/* modo claro da v2 */
+html[data-tema="claro"] .column.importante .column-head{background:linear-gradient(150deg,#FF9A45,#E06A10);color:#fff}
+html[data-tema="claro"] .conta-atraso{color:#fff;background:rgba(196,42,72,.85)}
+html[data-tema="claro"] .abrir-concluido,html[data-tema="claro"] .recolher{color:#fff}
+html[data-tema="claro"] .recolher{background:rgba(255,255,255,.22)}
+html[data-tema="claro"] .selo-importante{color:#B8560C}
+html[data-tema="claro"] .case.prioritario{box-shadow:0 0 0 1px rgba(224,106,16,.55),0 4px 12px rgba(30,60,120,.1)}
+html[data-tema="claro"] .tag-setor{background:rgba(10,156,196,.12);color:#0A6F8C}
+html[data-tema="claro"] .parado{background:#E6ECF7;color:#3A4A6B}
+html[data-tema="claro"] .resp{background:rgba(14,138,98,.12);color:#0B6B4C}
+html[data-tema="claro"] .link{color:#1F4FE0}
+html[data-tema="claro"] .sync-stats b{color:var(--text)}
+html[data-tema="claro"] .novo-btn{color:#B8560C;border-color:rgba(224,106,16,.5)}
+html[data-tema="claro"] .triagem-panel h3,html[data-tema="claro"] details.transfer-panel summary,html[data-tema="claro"] .obrigatoria{color:#B8560C}
+html[data-tema="claro"] .triagem-panel input,html[data-tema="claro"] .triagem-panel select,html[data-tema="claro"] .triagem-panel textarea,html[data-tema="claro"] .novo-form input,html[data-tema="claro"] .novo-form select,html[data-tema="claro"] .novo-form textarea{background:#FFFFFF}
+.filters .date-range input{flex:1;padding:6px 5px}
+
+/* cabeçalhos com a mesma altura (pedido do autor, 18/11/2026):
+   nome com até 2 linhas em cima, total e atrasos numa linha embaixo */
+.column-head:not(.abrir-concluido){height:76px;display:flex;flex-direction:column;justify-content:space-between}
+.column-head:not(.abrir-concluido) strong{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-right:2px}
+.linha-conta{display:flex;align-items:center;flex-wrap:nowrap;gap:6px;min-width:0}
+.linha-conta .conta{margin:0;line-height:1.1}
+.linha-conta .conta-atraso{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.column.concluido .column-head:not(.abrir-concluido) strong{padding-right:70px}
+/* na faixa recolhida o total diminui para caber (ex.: 13.609) */
+.abrir-concluido .conta{font-size:12px;font-weight:800;max-width:100%;overflow-wrap:anywhere;text-align:center}

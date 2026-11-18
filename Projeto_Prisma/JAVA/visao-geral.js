@@ -129,14 +129,8 @@
         "Análise territorial e rede assistencial"
     },
 
-    "kanban-adm-pat": { titulo: "Kanban · ADM/PAT", subtitulo: "Gestão de protocolos e tratativas do setor ADM/PAT" },
-    "kanban-reembolso": { titulo: "Kanban · Reembolso", subtitulo: "Gestão de protocolos e tratativas do setor Reembolso" },
-    "kanban-credenciamento": { titulo: "Kanban · Credenciamento", subtitulo: "Gestão de protocolos e tratativas do setor Credenciamento" },
-    "kanban-auditoria": { titulo: "Kanban · Auditoria", subtitulo: "Gestão de protocolos e tratativas do setor Auditoria" },
-    "kanban-cadastro": { titulo: "Kanban · Cadastro", subtitulo: "Gestão de protocolos e tratativas do setor Cadastro" },
-    "kanban-captacao": { titulo: "Kanban · Captação", subtitulo: "Gestão de protocolos e tratativas do setor Captação" },
-    "kanban-financeiro": { titulo: "Kanban · Financeiro", subtitulo: "Gestão de protocolos e tratativas do setor Financeiro" },
-    "kanban-triagem": { titulo: "Kanban · Triagem", subtitulo: "Gestão de protocolos e tratativas do setor Triagem" },
+    /* CRM: um Kanban só, com o filtro de setor (antes eram 8 itens no menu) */
+    "kanban-crm": { titulo: "CRM", subtitulo: "Kanban de tratativas · escolha o seu setor no filtro" },
     "saude-social": {
       titulo: "Saúde e Social",
       subtitulo:
@@ -356,13 +350,14 @@
     }
   );
 
-  /* SUBMENU INTELIGÊNCIA DE REDE — sem alterar a página original */
+  /* SUBMENU INTELIGÊNCIA DE REDE (pedido do autor, 18/11/2026):
+     o nome abre o painel; a setinha mostra Estudo de reclamações e CRM */
   function definirSubmenuInteligencia(aberto) {
     if (!submenuInteligencia || !botaoExpandirInteligencia) return;
     submenuInteligencia.hidden = !aberto;
     submenuInteligencia.classList.toggle("aberto", aberto);
     botaoExpandirInteligencia.setAttribute("aria-expanded", String(aberto));
-    botaoExpandirInteligencia.setAttribute("aria-label", aberto ? "Recolher setores de Inteligência de Rede" : "Expandir setores de Inteligência de Rede");
+    botaoExpandirInteligencia.setAttribute("aria-label", aberto ? "Recolher Inteligência de Rede" : "Expandir Inteligência de Rede");
   }
   if (botaoExpandirInteligencia && submenuInteligencia) {
     botaoExpandirInteligencia.addEventListener("click", () => {
@@ -371,6 +366,11 @@
       definirSubmenuInteligencia(submenuInteligencia.hidden);
     });
     definirSubmenuInteligencia(false);
+  }
+
+  /* no CRM o grupo fica aberto para a página aberta aparecer no menu */
+  function abrirGrupoDaPagina(idPagina) {
+    if (idPagina.startsWith("kanban-")) definirSubmenuInteligencia(true);
   }
 
   /* ================================================
@@ -443,7 +443,7 @@
       if (ativoFormularioReuniao) definirSubmenuFormularioReuniao(true);
     }
 
-    if (idPagina.startsWith("kanban-") && submenuInteligencia) definirSubmenuInteligencia(true);
+    abrirGrupoDaPagina(idPagina);
 
     botoesDashboards.forEach(botao => {
       const ativo =
@@ -674,7 +674,7 @@
       if (idPagina.startsWith("kanban-")) {
         if (menuRecolhido) definirMenuLateral(false);
         definirSubmenu(true);
-        definirSubmenuInteligencia(true);
+        abrirGrupoDaPagina(idPagina);
       }
 
       abrirDashboard(idPagina, url);

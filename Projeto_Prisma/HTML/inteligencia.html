@@ -14,7 +14,7 @@
     </script>
 
     <link rel="icon" type="image/svg+xml" href="../ASSETS/prisma-icone.svg">
-    <link rel="stylesheet" href="../CSS/inteligencia.css?v=8">
+    <link rel="stylesheet" href="../CSS/inteligencia.css?v=9">
 
     <!-- Leitura e exportação de Excel (SheetJS 0.20.3, dentro do projeto: funciona offline) -->
     <script src="../LIB/xlsx-0.20.3.full.min.js" defer></script>
@@ -165,7 +165,6 @@
                 <span class="ind-rotulo">Total de chamados</span>
             </span>
             <strong class="ind-valor" id="indTotal">—</strong>
-            <span class="ind-var" id="varTotal"></span>
         </button>
 
         <button type="button" class="ind ind-ciano" data-ind="pendentes" title="Filtrar só os pendentes">
@@ -174,7 +173,6 @@
                 <span class="ind-rotulo">Protocolos pendentes</span>
             </span>
             <strong class="ind-valor" id="indPendentes">—</strong>
-            <span class="ind-var" id="varPendentes"></span>
         </button>
 
         <button type="button" class="ind ind-ok" data-ind="ok" title="Filtrar os em dia">
@@ -183,7 +181,6 @@
                 <span class="ind-rotulo">Em dia <small>&lt; 4 dias</small></span>
             </span>
             <strong class="ind-valor" id="indOk">—</strong>
-            <span class="ind-var" id="varOk"></span>
         </button>
 
         <button type="button" class="ind ind-atencao" data-ind="atencao" title="Filtrar os em atenção (4 e 5 dias)">
@@ -192,7 +189,6 @@
                 <span class="ind-rotulo">Atenção <small>4 e 5 dias</small></span>
             </span>
             <strong class="ind-valor" id="indAtencao">—</strong>
-            <span class="ind-var" id="varAtencao"></span>
         </button>
 
         <button type="button" class="ind ind-atraso" data-ind="atraso" title="Filtrar os atrasados">
@@ -201,7 +197,6 @@
                 <span class="ind-rotulo">Atrasado <small>(RN 623)</small></span>
             </span>
             <strong class="ind-valor" id="indAtraso">—</strong>
-            <span class="ind-var" id="varAtraso"></span>
         </button>
 
         <button type="button" class="ind ind-ajuda" data-ind="ajuda" title="Filtrar os que os setores marcaram como precisando de ajuda no Kanban">
@@ -210,7 +205,6 @@
                 <span class="ind-rotulo">Precisando de ajuda</span>
             </span>
             <strong class="ind-valor" id="indAjuda">—</strong>
-            <span class="ind-var" id="varAjuda"></span>
         </button>
 
         <div class="ind ind-azul ind-fixo" title="Tempo médio de encerramento: média de dias úteis entre a abertura e o encerramento dos protocolos encerrados">
@@ -219,7 +213,6 @@
                 <span class="ind-rotulo">T.M.E</span>
             </span>
             <strong class="ind-valor" id="indTme">—</strong>
-            <span class="ind-var" id="varTme"></span>
         </div>
 
     </section>
@@ -408,6 +401,6 @@
 
 <div class="aviso-flutuante" id="avisoFlutuante" role="status" hidden></div>
 
-<script src="../JAVA/inteligencia.js?v=8" defer></script>
+<script src="../JAVA/inteligencia.js?v=9" defer></script>
 </body>
 </html>
