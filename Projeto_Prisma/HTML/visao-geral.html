@@ -33,6 +33,7 @@
     rel="stylesheet"
     href="../CSS/visao-geral.css?v=10"
   >
+  <link rel="stylesheet" href="../CSS/tutorial.css?v=1">
 </head>
 
 <body>
@@ -245,6 +246,8 @@
               <div class="submenu submenu-inteligencia" id="submenuInteligencia" hidden>
                 <!-- Estudo de reclamações: só reclamação, Reclame Aqui e ouvidoria -->
                 <button type="button" class="submenu-item" data-pagina="estudo-reclamacoes" data-url="./estudo-reclamacoes.html" title="Abrir Estudo de reclamações"><span class="submenu-icone" aria-hidden="true">◔</span><span>Estudo de reclamações</span></button>
+                <!-- Volume e produtividade: encerrados e demanda em aberto por colaborador -->
+                <button type="button" class="submenu-item" data-pagina="volume-produtividade" data-url="./producao-colaboradores.html" title="Abrir Volume e produtividade"><span class="submenu-icone" aria-hidden="true">▤</span><span>Volume e produtividade</span></button>
                 <!-- CRM: um Kanban só; o colaborador escolhe o setor no filtro da própria página -->
                 <button type="button" class="submenu-item" data-pagina="kanban-crm" data-url="./kanban-tratativas.html" title="Abrir CRM"><span class="submenu-icone" aria-hidden="true">▥</span><span>CRM</span></button>
               </div>
@@ -422,6 +425,19 @@
           </span>
 
         </div>
+
+        <!-- TUTORIAIS (pedido do autor, 19/11/2026): só abre quando a pessoa clica -->
+        <button
+          type="button"
+          class="botao-tutorial"
+          id="botaoTutorial"
+          title="Abrir a central de tutoriais"
+          aria-haspopup="dialog"
+        >
+          <span class="tut-icone-botao" aria-hidden="true">?</span>
+          <span class="tut-texto-botao">Tutoriais</span>
+          <small>passo a passo</small>
+        </button>
 
         <a
           href="./login.html"
@@ -715,7 +731,8 @@
        JAVASCRIPT
   ========================================== -->
 
-  <script src="../JAVA/visao-geral.js?v=9"></script>
+  <script src="../JAVA/visao-geral.js?v=10"></script>
+  <script src="../JAVA/tutorial.js?v=2"></script>
 
 </body>
 </html>

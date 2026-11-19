@@ -1,0 +1,456 @@
+/* ==========================================================
+   TUTORIAIS — PRISMA (pedido do autor, 19/11/2026)
+   Botão "Tutoriais" no rodapé do menu, central para escolher o
+   tutorial e o passo a passo com destaque e balão.
+   Só abre quando o usuário clica: nada aparece sozinho ao entrar.
+   Uso as cores da Visão Geral (--p-*), então o modo claro vem junto.
+   ========================================================== */
+
+/* ---------- botão no rodapé do menu (perto do Sair) ---------- */
+.botao-tutorial {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 10px 9px;
+  border: 1px solid rgba(76, 201, 255, 0.22);
+  border-radius: 9px;
+  background: rgba(76, 201, 255, 0.06);
+  color: var(--p-texto);
+  font: 600 12px var(--fonte);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.botao-tutorial:hover { background: rgba(76, 201, 255, 0.12); border-color: rgba(76, 201, 255, 0.45); }
+.botao-tutorial:focus-visible { outline: 2px solid var(--p-ciano); outline-offset: 2px; }
+.botao-tutorial .tut-icone-botao {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border-radius: 50%;
+  background: var(--espectro);
+  color: #06102A;
+  font-weight: 800;
+  font-size: 12px;
+}
+.botao-tutorial small { margin-left: auto; color: var(--p-texto-3); font-weight: 600; font-size: 10.5px; }
+/* pontinho laranja até a pessoa abrir a central pela primeira vez */
+.botao-tutorial.novo::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 25px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--esp-laranja);
+  box-shadow: 0 0 0 2px var(--p-fundo);
+  animation: tut-piscar 1.8s ease-in-out infinite;
+}
+
+/* menu recolhido: fica só o ícone, centralizado */
+.menu-lateral.recolhido .botao-tutorial { justify-content: center; padding: 10px 0; }
+.menu-lateral.recolhido .botao-tutorial .tut-texto-botao,
+.menu-lateral.recolhido .botao-tutorial small { display: none; }
+
+html[data-tema="claro"] .botao-tutorial { background: rgba(47, 107, 255, 0.06); border-color: rgba(47, 107, 255, 0.22); }
+html[data-tema="claro"] .botao-tutorial:hover { background: rgba(47, 107, 255, 0.12); }
+
+/* ---------- camada que cobre a tela durante o tutorial ---------- */
+.tut-camada {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  cursor: default;
+}
+/* passo sem alvo (abertura e fim): a tela inteira escurece */
+.tut-camada.sem-alvo { background: rgba(3, 6, 18, 0.72); backdrop-filter: blur(2px); }
+
+/* o recorte iluminado em volta do que estou explicando */
+.tut-foco {
+  position: fixed;
+  z-index: 9001;
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 9999px rgba(3, 6, 18, 0.72),
+    0 0 0 2px var(--esp-ciano),
+    0 0 26px 6px rgba(34, 211, 255, 0.35);
+  transition: top 0.35s ease, left 0.35s ease, width 0.35s ease, height 0.35s ease, opacity 0.2s;
+}
+.tut-foco::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 16px;
+  border: 2px solid var(--esp-ciano);
+  opacity: 0;
+  animation: tut-onda 2s ease-out infinite;
+}
+.tut-foco[hidden] { display: none; }
+
+/* ---------- balão do passo ---------- */
+.tut-balao {
+  position: fixed;
+  z-index: 9002;
+  width: 370px;
+  max-width: calc(100vw - 24px);
+  padding: 18px 18px 14px;
+  border: 1px solid var(--p-borda-forte);
+  border-radius: 16px;
+  background: var(--p-fundo-2);
+  color: var(--p-texto);
+  font-family: var(--fonte);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  animation: tut-entrar 0.28s ease;
+}
+/* faixa do espectro no topo, igual à marca */
+.tut-balao::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: var(--espectro);
+}
+.tut-balao.trocando { animation: tut-trocar 0.26s ease; }
+
+.tut-seta {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--p-fundo-2);
+  border: 1px solid var(--p-borda-forte);
+  transform: rotate(45deg);
+}
+.tut-seta[hidden] { display: none; }
+.tut-seta.em-cima { top: -8px; border-right: 0; border-bottom: 0; }
+.tut-seta.em-baixo { bottom: -8px; border-left: 0; border-top: 0; }
+.tut-seta.na-esquerda { left: -8px; border-right: 0; border-top: 0; }
+.tut-seta.na-direita { right: -8px; border-left: 0; border-bottom: 0; }
+
+.tut-cabeca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.tut-etapa {
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: rgba(76, 201, 255, 0.12);
+  color: var(--p-ciano);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.tut-nome {
+  overflow: hidden;
+  color: var(--p-texto-3);
+  font-size: 11px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tut-fechar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-left: auto;
+  flex: 0 0 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--p-texto-2);
+  font-size: 18px;
+  cursor: pointer;
+}
+.tut-fechar:hover { background: rgba(255, 255, 255, 0.07); color: var(--p-texto); }
+
+.tut-titulo { margin: 0 0 6px; font-size: 17px; font-weight: 800; line-height: 1.25; }
+.tut-texto { margin: 0; color: var(--p-texto-2); font-size: 14px; line-height: 1.55; }
+.tut-texto b { color: var(--p-texto); }
+.tut-texto ul { margin: 6px 0 0; padding-left: 18px; }
+.tut-texto li { margin: 3px 0; }
+
+.tut-dica {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 194, 74, 0.28);
+  border-radius: 10px;
+  background: rgba(255, 194, 74, 0.08);
+  color: var(--p-texto);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.tut-dica::before { content: "💡"; }
+
+.tut-progresso {
+  height: 4px;
+  margin: 14px 0 12px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(130, 170, 255, 0.14);
+}
+.tut-progresso span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--espectro);
+  transition: width 0.35s ease;
+}
+
+.tut-rodape { display: flex; align-items: center; gap: 8px; }
+.tut-pular {
+  margin-right: auto;
+  padding: 6px 4px;
+  border: 0;
+  background: none;
+  color: var(--p-texto-3);
+  font: 600 12.5px var(--fonte);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.tut-pular:hover { color: var(--p-laranja); }
+.tut-botao {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--p-borda-forte);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--p-texto);
+  font: 700 13px var(--fonte);
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s;
+}
+.tut-botao:hover { background: rgba(130, 170, 255, 0.1); }
+.tut-botao:disabled { opacity: 0.35; cursor: default; }
+.tut-botao.primario {
+  border: 0;
+  background: linear-gradient(90deg, var(--esp-azul), var(--esp-ciano));
+  color: #FFFFFF;
+  box-shadow: 0 6px 18px rgba(47, 107, 255, 0.35);
+}
+.tut-botao.primario:hover { transform: translateY(-1px); }
+.tut-botao:focus-visible, .tut-pular:focus-visible, .tut-fechar:focus-visible { outline: 2px solid var(--p-ciano); outline-offset: 2px; }
+
+/* primeiro passo: botão maior "Já sei, pular" */
+.tut-ja-sei { display: block; margin-top: 10px; text-align: center; }
+
+.tut-teclas { margin-top: 10px; color: var(--p-texto-3); font-size: 11px; text-align: center; }
+.tut-teclas kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--p-borda-forte);
+  border-radius: 5px;
+  font: 600 10.5px var(--fonte-mono);
+}
+
+/* carregando a página do tutorial */
+.tut-carregando { display: flex; align-items: center; gap: 10px; color: var(--p-texto-2); font-size: 14px; }
+.tut-carregando::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(76, 201, 255, 0.25);
+  border-top-color: var(--p-ciano);
+  border-radius: 50%;
+  animation: tut-girar 0.8s linear infinite;
+}
+
+/* ---------- central de tutoriais ---------- */
+.tut-central {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 9002;
+  display: flex;
+  flex-direction: column;
+  width: min(820px, calc(100vw - 24px));
+  max-height: min(88vh, 760px);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  border: 1px solid var(--p-borda-forte);
+  border-radius: 20px;
+  background: var(--p-fundo-2);
+  color: var(--p-texto);
+  font-family: var(--fonte);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+  animation: tut-surgir 0.3s ease;
+}
+.tut-central::before {
+  content: "";
+  height: 3px;
+  flex: 0 0 3px;
+  background: var(--espectro);
+}
+.tut-central-topo { display: flex; align-items: flex-start; gap: 14px; padding: 20px 22px 14px; }
+.tut-central-topo .tut-fechar { margin-left: auto; }
+.tut-central-selo {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: 14px;
+  background: var(--espectro);
+  color: #06102A;
+  font-size: 22px;
+  font-weight: 900;
+}
+.tut-central h2 { margin: 0 0 4px; font-size: 20px; font-weight: 800; }
+.tut-central-topo p { margin: 0; color: var(--p-texto-2); font-size: 13.5px; line-height: 1.5; }
+.tut-placar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 22px 12px;
+  color: var(--p-texto-2);
+  font-size: 12.5px;
+}
+.tut-placar .tut-progresso { flex: 1; margin: 0; height: 6px; }
+.tut-placar b { color: var(--p-texto); }
+
+.tut-lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 4px 22px 22px;
+  overflow-y: auto;
+}
+.tut-cartao {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border: 1px solid var(--p-borda);
+  border-radius: 14px;
+  background: rgba(130, 170, 255, 0.04);
+  color: var(--p-texto);
+  font-family: var(--fonte);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.18s;
+}
+.tut-cartao:hover, .tut-cartao:focus-visible {
+  border-color: var(--cor, var(--p-ciano));
+  background: rgba(130, 170, 255, 0.09);
+  transform: translateY(-2px);
+  outline: none;
+}
+.tut-cartao.destaque { grid-column: 1 / -1; border-color: rgba(76, 201, 255, 0.4); background: rgba(76, 201, 255, 0.07); }
+.tut-cartao-icone {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--cor, var(--p-ciano)) 16%, transparent);
+  color: var(--cor, var(--p-ciano));
+  font-size: 18px;
+}
+.tut-cartao-corpo { min-width: 0; flex: 1; }
+.tut-cartao strong { display: block; margin-bottom: 3px; font-size: 14.5px; }
+.tut-cartao-corpo > span { display: block; color: var(--p-texto-2); font-size: 12.5px; line-height: 1.45; }
+.tut-cartao-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tut-cartao-meta i {
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(130, 170, 255, 0.1);
+  color: var(--p-texto-2);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+}
+.tut-cartao-meta i.feito { background: rgba(46, 230, 166, 0.14); color: var(--p-sucesso); }
+.tut-cartao-meta i.recomendado { background: rgba(255, 154, 60, 0.14); color: var(--p-laranja); }
+.tut-cartao-ir { align-self: center; color: var(--p-texto-3); font-size: 18px; }
+
+/* ---------- aviso rápido e confete do fim ---------- */
+.tut-aviso {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  z-index: 9003;
+  max-width: calc(100vw - 32px);
+  padding: 11px 16px;
+  transform: translateX(-50%);
+  border: 1px solid var(--p-borda-forte);
+  border-radius: 12px;
+  background: var(--p-fundo-2);
+  color: var(--p-texto);
+  font: 600 13px var(--fonte);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  animation: tut-entrar 0.25s ease;
+}
+.tut-confete { position: fixed; inset: 0; z-index: 9004; overflow: hidden; pointer-events: none; }
+.tut-confete i {
+  position: absolute;
+  top: -14px;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation: tut-cair 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+}
+.tut-final-icone { display: block; margin-bottom: 6px; font-size: 38px; text-align: center; }
+.tut-balao.final .tut-titulo, .tut-balao.final .tut-texto { text-align: center; }
+
+/* ---------- modo claro ---------- */
+html[data-tema="claro"] .tut-camada.sem-alvo { background: rgba(14, 26, 58, 0.5); }
+html[data-tema="claro"] .tut-foco {
+  box-shadow:
+    0 0 0 9999px rgba(14, 26, 58, 0.55),
+    0 0 0 2px var(--esp-azul),
+    0 0 26px 6px rgba(47, 107, 255, 0.3);
+}
+html[data-tema="claro"] .tut-foco::after { border-color: var(--esp-azul); }
+html[data-tema="claro"] .tut-balao,
+html[data-tema="claro"] .tut-central,
+html[data-tema="claro"] .tut-aviso { box-shadow: 0 22px 60px rgba(14, 26, 58, 0.28); }
+html[data-tema="claro"] .tut-etapa { background: rgba(47, 107, 255, 0.1); color: var(--p-azul); }
+html[data-tema="claro"] .tut-fechar:hover { background: rgba(14, 26, 58, 0.06); }
+html[data-tema="claro"] .tut-cartao { background: #FFFFFF; }
+html[data-tema="claro"] .tut-cartao:hover { background: #F3F7FF; }
+
+/* ---------- celular ---------- */
+@media (max-width: 700px) {
+  .tut-balao { left: 12px !important; width: auto; right: 12px; padding: 16px 15px 12px; }
+  .tut-titulo { font-size: 16px; }
+  .tut-texto { font-size: 13.5px; }
+  .tut-teclas { display: none; }
+  .tut-lista { grid-template-columns: 1fr; padding: 4px 14px 16px; }
+  .tut-central-topo { padding: 18px 16px 12px; }
+  .tut-central-selo { display: none; }
+  .tut-placar { margin: 0 16px 10px; }
+  .tut-central { max-height: 90dvh; }
+}
+
+/* ---------- animações ---------- */
+@keyframes tut-entrar { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes tut-trocar { from { opacity: 0.2; } to { opacity: 1; } }
+@keyframes tut-surgir { from { opacity: 0; transform: translate(-50%, -46%) scale(0.98); } to { opacity: 1; transform: translate(-50%, -50%); } }
+@keyframes tut-onda { 0% { opacity: 0.7; transform: scale(1); } 100% { opacity: 0; transform: scale(1.06); } }
+@keyframes tut-piscar { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: 0.6; } }
+@keyframes tut-girar { to { transform: rotate(360deg); } }
+@keyframes tut-cair {
+  0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate3d(var(--dx, 0), 105vh, 0) rotate(var(--giro, 540deg)); opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tut-foco, .tut-progresso span { transition: none; }
+  .tut-foco::after, .botao-tutorial.novo::after, .tut-balao, .tut-central, .tut-aviso { animation: none; }
+  .tut-confete { display: none; }
+}

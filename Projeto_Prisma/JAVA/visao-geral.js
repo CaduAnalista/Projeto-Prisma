@@ -131,6 +131,7 @@
 
     /* CRM: um Kanban só, com o filtro de setor (antes eram 8 itens no menu) */
     "estudo-reclamacoes": { titulo: "Estudo de reclamações", subtitulo: "Reclamações, Reclame Aqui e Ouvidoria" },
+    "volume-produtividade": { titulo: "Volume e produtividade", subtitulo: "Encerrados e demanda em aberto por colaborador" },
     "kanban-crm": { titulo: "CRM", subtitulo: "Kanban de tratativas · escolha o seu setor no filtro" },
     "saude-social": {
       titulo: "Saúde e Social",
@@ -370,7 +371,8 @@
   }
 
   /* páginas que ficam dentro do grupo da Inteligência de Rede (CRM e Estudo de reclamações) */
-  const ehDaInteligencia = (idPagina) => idPagina.startsWith("kanban-") || idPagina === "estudo-reclamacoes";
+  const ehDaInteligencia = (idPagina) =>
+    idPagina.startsWith("kanban-") || ["estudo-reclamacoes", "volume-produtividade"].includes(idPagina);
 
   /* nessas páginas o grupo fica aberto para a página aberta aparecer no menu */
   function abrirGrupoDaPagina(idPagina) {

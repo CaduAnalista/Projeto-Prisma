@@ -1,0 +1,102 @@
+/* ==========================================================
+   VOLUME E PRODUTIVIDADE — PRISMA
+   Base: inteligencia.css + estudo-reclamacoes.css (filtros, resumo,
+   barras deitadas e colunas). Aqui só o que é desta página.
+   ========================================================== */
+
+/* filtros: 8 campos + Limpar (Status entrou a pedido do autor) */
+.pc-filtros { grid-template-columns: 1fr 1fr 1.6fr repeat(5, minmax(0, 1fr)) auto; }
+
+/* "Sem responsável" no resumo: laranja quando tem algum pendente sem dono */
+.pc-alerta.ativo { border-color: color-mix(in srgb, var(--laranja) 55%, transparent); background: color-mix(in srgb, var(--laranja) 10%, transparent); }
+.pc-alerta.ativo strong { color: var(--laranja); }
+
+/* cores do SLA: mesmas faixas do IR (90%+ verde, 85% a 89,9% amarelo, abaixo vermelho) */
+.pc-sla-bom { color: var(--ok); }
+.pc-sla-medio { color: var(--atencao); }
+.pc-sla-ruim { color: var(--atraso); }
+.pc-sla { font-weight: 700; }
+
+.pc-ponto { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+.pc-ponto.bom { background: var(--ok); }
+.pc-ponto.medio { background: var(--atencao); }
+.pc-ponto.ruim { background: var(--atraso); }
+
+/* ---- grade dos gráficos: rankings em cima, tempo embaixo ---- */
+.pc-grade {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.pc-grade .cartao { padding: 14px 16px; min-height: 0; }
+.pc-grade .cartao-topo { margin-bottom: 8px; }
+.pc-grade .er-barras { max-height: 440px; overflow-y: auto; }
+.pc-grade .er-grafico { height: 280px; }
+/* o gráfico mensal ocupa a largura toda (o de horário saiu a pedido do autor) */
+.pc-evolucao { grid-column: 1 / -1; }
+
+/* abertos x encerrados: coluna verde (encerrou mais), amarela (igual), vermelha (menos) */
+.pc-col-ok { fill: var(--g-ok); }
+.pc-col-igual { fill: var(--g-atencao); }
+.pc-col-menos { fill: var(--g-atraso); }
+.pc-linha-abertos { fill: none; stroke: var(--texto); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; pointer-events: none; }
+.pc-ponto-abertos { fill: var(--texto); stroke: var(--g-anel); stroke-width: 2; pointer-events: none; }
+.pc-valor-abertos { fill: var(--texto-2); font-size: 11.5px; font-weight: 700; font-family: var(--fonte); paint-order: stroke; stroke: var(--superficie); stroke-width: 3px; }
+
+/* médias só na legenda, como número (a linha tracejada saiu a pedido do autor) */
+.pc-leg-media b { color: var(--texto); }
+
+.pc-marca { display: inline-block; width: 10px; height: 10px; border-radius: 3px; }
+.pc-marca + .pc-marca { margin-left: -3px; }
+.pc-marca.pc-ok { background: var(--g-ok); }
+.pc-marca.pc-igual { background: var(--g-atencao); }
+.pc-marca.pc-menos { background: var(--g-atraso); }
+.pc-marca-linha { display: inline-block; width: 16px; height: 2px; border-radius: 2px; background: var(--texto); }
+
+/* "Sem responsável" sempre em primeiro e destacado no ranking de pendentes */
+.er-barra.pc-sem-resp .er-nome { color: var(--laranja); font-weight: 700; }
+.er-barra.pc-sem-resp .er-preenche { background: var(--g-encerramento); }
+.pc-venc, .pc-venc-legenda { color: var(--atraso); font-weight: 700; }
+.er-num small.pc-venc { color: var(--atraso); }
+
+.pc-dica-nota { display: block !important; max-width: 260px; margin-top: 4px; color: var(--texto-3) !important; font-size: 11.5px; white-space: normal; }
+
+/* ---- tabela ---- */
+.pc-tabela-cartao { margin-top: 2px; }
+.pc-tabela-area { height: auto; max-height: 620px; }
+.pc-tabela { min-width: 1400px; } /* largura para "ENCERRADOS" caber sem cortar */
+/* títulos quebram em duas linhas em vez de cortar ("Para tra…") */
+.pc-tabela th { height: 48px; padding: 0 6px; font-size: 11px; white-space: normal; line-height: 1.2; vertical-align: middle; overflow: visible; }
+.pc-tabela td { padding: 0 8px; }
+.pc-tabela .num { text-align: right; font-variant-numeric: tabular-nums; }
+.pc-tabela th.num { text-align: right; }
+.pc-c-nome { width: 240px; }
+.pc-c-canal { width: 130px; }
+/* palavras compridas que não quebram: sem isso o título ficava cortado ("RECLAMAÇÕ") */
+.pc-tabela th[data-ordem="enc"], .pc-tabela th[data-ordem="recl"], .pc-tabela th[data-ordem="alta"] { width: 104px; }
+.pc-tabela tbody tr { cursor: pointer; }
+.pc-tabela td { font-size: 13px; }
+.pc-linha-sem-resp td { background: color-mix(in srgb, var(--laranja) 7%, transparent); }
+.pc-linha-sem-resp .pc-c-nome { color: var(--laranja); font-weight: 700; }
+.pc-vazio { height: 120px !important; text-align: center; color: var(--texto-3); }
+.pc-legenda-sla { font-size: 12px; }
+
+/* telas médias */
+@media (max-width: 1100px) {
+    .pc-filtros { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .pc-filtros .er-limpar { grid-column: 4; }
+}
+
+/* celular: tudo empilhado */
+@media (max-width: 760px) {
+    .pc-filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pc-filtros .er-limpar { grid-column: 1 / -1; }
+    .pc-grade { grid-template-columns: 1fr; }
+    .er-resumo { flex-wrap: wrap; }
+    .er-resumo div { flex: 1 1 40%; }
+    .pc-tabela { min-width: 0; }
+    .pc-tabela-area { max-height: none; }
+    .pc-c-nome, .pc-c-canal { width: auto; }
+    .pc-tabela .num { text-align: left; }
+}

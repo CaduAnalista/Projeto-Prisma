@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050916"><script src="../JAVA/tema.js?v=1"></script>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <title>Volume e produtividade | PRISMA</title>
+
+    <!-- Módulo acessado pela Visão Geral (dentro do iframe) -->
+    <script>
+      if (window.self === window.top) window.location.replace('./visao-geral.html');
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="../ASSETS/prisma-icone.svg">
+    <!-- mesmo visual da Inteligência e do Estudo de reclamações -->
+    <link rel="stylesheet" href="../CSS/inteligencia.css?v=9">
+    <link rel="stylesheet" href="../CSS/estudo-reclamacoes.css?v=3">
+    <link rel="stylesheet" href="../CSS/producao-colaboradores.css?v=5">
+
+    <script src="../LIB/xlsx-0.20.3.full.min.js" defer></script>
+</head>
+<body>
+<main class="pagina estudo producao" id="pagina">
+
+    <!-- CABEÇALHO: título, resumo da equipe e ações -->
+    <header class="cabecalho">
+        <h1 class="titulo"><span class="titulo-barra" aria-hidden="true"></span>Volume e produtividade</h1>
+
+        <section class="er-resumo" aria-label="Resumo da equipe">
+            <div><span>Encerrados</span><strong id="resEncerrados">—</strong></div>
+            <div><span>Para tratar</span><strong id="resPendentes">—</strong></div>
+            <div class="pc-alerta" id="caixaSemResp"><span>Sem responsável</span><strong id="resSemResp">—</strong></div>
+            <div><span>SLA cumprido</span><strong id="resSla">—</strong></div>
+        </section>
+
+        <div class="acoes">
+            <label class="botao botao-primario" for="arquivoExcel">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                <span>Importar</span>
+            </label>
+            <input type="file" id="arquivoExcel" accept=".xlsx,.xls,.csv" hidden>
+
+            <button class="botao botao-secundario" id="exportarExcel" type="button" disabled
+                    title="Exporta a tabela de produção por colaborador para o Excel">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                <span>Exportar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- FILTROS (aplicam na hora) -->
+    <section class="er-filtros pc-filtros" aria-label="Filtros">
+        <label class="cor-ciano"><span class="pf-rotulo" title="Data de encerramento da ocorrência">Encerrados de</span><input type="date" id="fDe"></label>
+        <label class="cor-ciano"><span class="pf-rotulo">Até</span><input type="date" id="fAte"></label>
+        <label class="cor-turquesa"><span class="pf-rotulo">Colaborador</span><select id="fColab"><option value="">Todos</option></select></label>
+        <label class="cor-laranja"><span class="pf-rotulo" title="Status Ocorrência (Encerrada ou Pendente)">Status</span><select id="fStatus"><option value="">Todos</option></select></label>
+        <label class="cor-ambar"><span class="pf-rotulo">Tipo</span><select id="fTipo"><option value="">Todos</option></select></label>
+        <label class="cor-azul"><span class="pf-rotulo">Canal</span><select id="fCanal"><option value="">Todos</option></select></label>
+        <label class="cor-laranja"><span class="pf-rotulo">Severidade</span><select id="fSev"><option value="">Todas</option></select></label>
+        <label class="cor-turquesa"><span class="pf-rotulo" title="Esconde quem encerrou poucos protocolos no período (pessoas de outros setores, encerramentos pontuais)">Mínimo encerrados</span>
+            <select id="fMinimo">
+                <option value="0">Todos</option>
+                <option value="10">10 ou mais</option>
+                <option value="50">50 ou mais</option>
+                <option value="100">100 ou mais</option>
+            </select>
+        </label>
+        <button type="button" class="botao botao-secundario er-limpar" id="limpar">Limpar</button>
+    </section>
+
+    <p class="er-criterio" id="criterio">Encerrados: coluna <b>Usuário Encerramento Ocorrência</b>. Para tratar: coluna <b>Descrição Operador Responsável</b> (em branco = <b>Sem responsável</b>). Importe a planilha do CRM para começar.</p>
+
+    <!-- GRÁFICOS -->
+    <section class="pc-grade">
+        <article class="cartao pc-encerrados">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"/></svg>Encerrados por colaborador</h2>
+                <p class="cartao-apoio">Quantidade e % da equipe · clique para filtrar</p>
+            </header>
+            <div class="er-barras empilhada" id="gEncerrados"></div>
+        </article>
+
+        <article class="cartao pc-pendentes">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Para tratar por responsável</h2>
+                <p class="cartao-apoio">Protocolos pendentes hoje · <span class="pc-venc-legenda">vencidos</span> já passaram do prazo</p>
+            </header>
+            <div class="er-barras empilhada" id="gPendentes"></div>
+        </article>
+
+        <article class="cartao pc-evolucao">
+            <header class="cartao-topo">
+                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg><span id="tituloEvolucao">Abertos x encerrados por mês</span></h2>
+                <!-- coluna = encerrados, colorida contra a linha dos abertos (pedido do autor, 19/11/2026) -->
+                <ul class="legenda" aria-label="Legenda">
+                    <li><i class="pc-marca pc-ok"></i><i class="pc-marca pc-igual"></i><i class="pc-marca pc-menos"></i>Encerrados: <small>mais que abriu · igual · menos</small></li>
+                    <li><i class="pc-marca-linha"></i>Abertos</li>
+                    <!-- médias só como número, sem linha no gráfico (pedido do autor) -->
+                    <li class="pc-leg-media">Média/mês: abertos <b id="legMediaAb"></b> · encerrados <b id="legMedia"></b></li>
+                </ul>
+            </header>
+            <div class="er-grafico" id="gEvolucao"></div>
+        </article>
+    </section>
+
+    <!-- TABELA: todos os indicadores por colaborador -->
+    <section class="cartao tabela-cartao pc-tabela-cartao">
+        <header class="tabela-topo">
+            <div class="tabela-titulo">
+                <h2>Indicadores por colaborador</h2>
+                <span class="tabela-fonte"><span>Clique no título de uma coluna para ordenar</span></span>
+            </div>
+            <ul class="legenda pc-legenda-sla" aria-label="Cores do SLA">
+                <li><i class="pc-ponto bom"></i>SLA 90% ou mais</li>
+                <li><i class="pc-ponto medio"></i>85% a 89,9%</li>
+                <li><i class="pc-ponto ruim"></i>abaixo de 85%</li>
+            </ul>
+        </header>
+        <div class="tabela-area pc-tabela-area">
+            <table class="tabela pc-tabela">
+                <thead>
+                    <tr>
+                        <th data-ordem="nome" class="pc-c-nome">Colaborador</th>
+                        <th data-ordem="enc" class="num" title="Encerrados no período (Usuário Encerramento Ocorrência)">Encerrados</th>
+                        <th data-ordem="part" class="num" title="Participação no total encerrado pela equipe">% equipe</th>
+                        <th data-ordem="pend" class="num" title="Pendentes hoje (Descrição Operador Responsável)">Para tratar</th>
+                        <th data-ordem="venc" class="num" title="Pendentes com a previsão do SLA já vencida">Vencidos</th>
+                        <th data-ordem="dias" class="num" title="Dias em que encerrou pelo menos um protocolo">Dias ativos</th>
+                        <th data-ordem="media" class="num" title="Encerrados ÷ dias ativos">Média/dia</th>
+                        <th data-ordem="sla" class="num" title="% encerrado dentro do prazo (SLA Cumprido = S)">SLA cumprido</th>
+                        <th data-ordem="atraso" class="num" title="Encerrados fora do prazo">Fora do prazo</th>
+                        <th data-ordem="tempo" class="num" title="Dias úteis entre a abertura e o encerramento (mediana)">Dias úteis p/ encerrar</th>
+                        <th data-ordem="mesmo" class="num" title="% encerrado no mesmo dia da abertura">No mesmo dia</th>
+                        <th data-ordem="recl" class="num" title="% dos encerrados que eram reclamação">Reclamações</th>
+                        <th data-ordem="alta" class="num" title="% dos encerrados com severidade Alta">Severidade alta</th>
+                        <th class="pc-c-canal" title="Canal em que mais encerrou">Canal principal</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela">
+                    <tr><td colspan="14" class="pc-vazio">Importe a planilha do CRM para ver a produção.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<div class="dica" id="dica" role="tooltip" hidden></div>
+<div class="aviso-flutuante" id="avisoFlutuante" role="status" hidden></div>
+
+<script src="../JAVA/producao-colaboradores.js?v=4" defer></script>
+<!-- ponte do tutorial: a Visão Geral mostra o passo a passo deste painel -->
+<script src="../JAVA/tutorial-pagina.js?v=1" defer></script>
+</body>
+</html>

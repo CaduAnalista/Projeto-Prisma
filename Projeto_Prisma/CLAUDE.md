@@ -277,6 +277,44 @@ A **Visão geral** (`visao-geral.html`) virou a casca do site: menu lateral retr
 
 Novos setores seguem o mesmo padrão: botão de importar planilha, filtros e indicadores calculados no navegador.
 
+### Tutoriais (19/11/2026) ✅ funcionando no computador do autor (também com file://)
+- Pedido do autor: passo a passo de cada página, com opção de pular, que **não abre sozinho ao entrar**. Fica no botão **Tutoriais**, no rodapé do menu, logo acima de "Sair do PRISMA".
+- **Arquivos:**
+  - `JAVA/tutorial.js` e `CSS/tutorial.css`, carregados no `visao-geral.html`;
+  - `JAVA/tutorial-pagina.js` (a "ponte"), carregado em cada painel: inteligência, estudo, produção, kanban, saúde e social, formulário e assuntos.
+- **Por que a ponte (correção de 19/11/2026):** com o site aberto direto do computador (`file://`), o navegador bloqueia o acesso da Visão Geral ao conteúdo do iframe. Só o tutorial do menu funcionava, e os outros davam "Não consegui abrir a página do tutorial".
+- **Como funciona agora:** o tutorial só conversa com o painel por `postMessage`. A ponte:
+  - responde se a página carregou;
+  - executa as ações "clique em X se Y existir" (ex.: abrir o filtro da Inteligência);
+  - acha e rola até o alvo, mandando a posição dele a cada mudança;
+  - religa o scroll-snap no fim.
+  Só passam seletores e posições, nenhum dado da planilha. **Página nova precisa da linha `<script src="../JAVA/tutorial-pagina.js?v=1" defer></script>`.**
+- **Central de tutoriais:** um cartão por tutorial, com número de passos, tempo e "✓ Concluído". O primeiro, "Primeiros passos", aparece como "Comece por aqui".
+- **Conteúdo:** 8 tutoriais, todos com o texto dentro de `TUTORIAIS` no JS:
+  - Primeiros passos (menu, topo, tema, tutoriais, sair);
+  - Inteligência de Rede (inclusive o painel de filtros, que ele abre e fecha sozinho);
+  - Estudo de reclamações;
+  - Volume e produtividade;
+  - CRM (Kanban);
+  - Saúde e Social;
+  - Formulário para a reunião;
+  - Assuntos por setor.
+- **Como funciona um passo:**
+  - escurece a tela e ilumina o alvo, com um anel pulsando;
+  - o balão traz número do passo, título, texto, dica (💡), barra de progresso, **Pular tutorial**, Voltar e Próximo;
+  - no 1º passo também aparece "Já sei usar esta página, pular";
+  - teclas: ← → para navegar e Esc para sair.
+- **No fim:** confete (sai se o sistema pede menos movimento) e opção de ver outros tutoriais.
+- **Ao começar:** abre sozinho a página certa e espera ela carregar.
+- **No celular:** abre e fecha a gaveta do menu conforme o passo, e o balão fica em cima ou embaixo do alvo.
+- **Passos opcionais:** um passo marcado `opcional` é pulado quando o alvo não existe. Exemplos: cartões do Kanban sem planilha, assuntos sem registro, rodapé do mapa que o JS do Saúde e Social remove.
+- **Scroll-snap:** durante o tutorial a ponte desliga o encaixe da rolagem da página (scroll-snap), senão a página puxava o alvo do topo para fora da tela.
+- **localStorage** (com try/catch):
+  - `prisma-tutoriais-feitos`: tutoriais concluídos;
+  - `prisma-tutoriais-visto`: tira o pontinho laranja de "novo" do botão.
+- **Para editar um texto:** é só mudar o passo em `TUTORIAIS`. Para uma página nova, crie um tutorial com `pagina` (data-pagina do menu), `arquivo` e `pronto` (seletor que indica que a página carregou).
+- Testado com dados fictícios: todos os tutoriais do começo ao fim, em 1440 × 900 e no celular, nos modos escuro e claro. Nenhum erro de script novo; os 404 do Saúde e Social já existiam (são as bases `../dados/`).
+
 ## 8. Regras de negócio dos indicadores
 
 ### Inteligência de Rede — Visão operacional v3 (18/11/2026, feita a partir da imagem do autor) ⏳ aguardando aprovação
@@ -309,6 +347,21 @@ Novos setores seguem o mesmo padrão: botão de importar planilha, filtros e ind
 - **Exportar:** exatamente os protocolos da tabela (filtros + busca), com as colunas pedidas pelo autor: Protocolo, Canal, CPF, Beneficiário, E-mail, Setor, Ocorrência, Data de abertura, Previsão para encerrar, Status (ex.: "Pendente · Atrasado (RN 623) · Precisando de ajuda") e Observação de abertura.
 - O texto abaixo (estrutura de 03/11/2026) descreve a versão anterior, guardada em `ARQUIVO/inteligencia-v2/`; vale só a parte de setores e da RN 623.
 - **Setores compartilhados (18/11/2026):** as regras de setor saíram do `inteligencia.js` para `JAVA/setores-crm.js` (`window.PrismaSetores.classificarSetor`). Inteligência e Estudo de reclamações usam o mesmo arquivo; ajuste de setor é feito só lá.
+
+### Volume e produtividade (19/11/2026) ✅ aprovado
+- Página `HTML/producao-colaboradores.html` + `CSS/producao-colaboradores.css` (por cima de `inteligencia.css` e `estudo-reclamacoes.css`) + `JAVA/producao-colaboradores.js`. No menu: Inteligência de Rede → Volume e produtividade (o autor pediu "volume de protocolos" e liberou um nome mais profissional).
+- Tela: resumo (encerrados, para tratar, sem responsável em laranja, SLA cumprido), filtros (período de encerramento, colaborador, status da ocorrência, tipo, canal, severidade, mínimo de encerrados), rankings "Encerrados por colaborador" e "Para tratar por responsável" (Sem responsável sempre em 1º, com vencidos), gráfico "Abertos x encerrados por mês" na largura toda (colunas = encerrados, linha = abertos pela `Data Abertura Ocorrência`; coluna verde se encerrou mais que abriu, amarela se igual, vermelha se menos; sem linha de média: a média por mês de abertos e de encerrados aparece só como número na legenda, a pedido do autor; a dica mostra o saldo) e tabela com todos os indicadores (ordenável, clique filtra). Exporta a tabela por colaborador (sem dados de beneficiário).
+- Período e filtros valem para os encerrados; "Para tratar" é sempre a demanda de hoje. Vencido = pendente com `Data Previsão SLA` antes de hoje. Cores do SLA = faixas do IR (90/85).
+- "Mínimo de encerrados" esconde quem encerrou pouco, mas nunca quem tem pendente.
+- Filtro "Status" (`Status Ocorrência`; na planilha real só existem Encerrada e Pendente) vale para tudo: Encerrada esconde a demanda em aberto; Pendente esconde os encerrados e a linha dos abertos mostra de que mês vêm os pendentes.
+
+#### Regras combinadas com o autor
+- Fonte: exportação do CRM no formato novo (aba "Export", 55 colunas, nomes com acento e espaço, ex.: `Usuário Encerramento Ocorrência`, `Plano`, `Canal`). O sistema precisa aceitar este formato além do antigo (`USUARIO_ENCERRAMENTO_OCORRENCIA`...).
+- **Encerrados por colaborador:** `Usuário Encerramento Ocorrência`, só ocorrências com `Status Ocorrência` = Encerrada.
+- **Para tratar (demanda em aberto) por colaborador:** `Descrição Operador Responsável`, só ocorrências com `Status Ocorrência` = Pendente. **Responsável em branco = "Sem responsável"** (regra do autor). Na planilha de 19/11/2026, 31 dos 32 pendentes estavam sem responsável.
+- O autor quer o **nome do colaborador** na tela.
+- Indicadores levantados: encerrados, % da equipe, para tratar (e vencidos), média por dia trabalhado, dias ativos, SLA cumprido (`SLA Cumprido` = S), dias úteis para encerrar (mediana), % resolvido no mesmo dia, mix por tipo/canal/severidade (reclamação pesa no prazo), evolução mensal (abertos x encerrados). O gráfico de horário de encerramento saiu a pedido do autor (19/11/2026).
+- Achados de qualidade: 97 ocorrências com encerramento em jan/2025, antes da abertura mais antiga (set/2025).
 
 ### Estudo de reclamações (18/11/2026) ✅ aprovado pelo autor
 - Arquivos: `HTML/estudo-reclamacoes.html`, `CSS/estudo-reclamacoes.css` (por cima do `inteligencia.css`), `JAVA/estudo-reclamacoes.js`. No menu fica dentro da Inteligência de Rede, acima do CRM.
