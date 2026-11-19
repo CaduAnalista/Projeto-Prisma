@@ -808,19 +808,24 @@ body.saindo .cena {
   .piramide-frente { left: -30%; bottom: 0; width: 30%; }
   .piramide-tras { right: -24%; bottom: 22%; width: 16%; }
 
-  .cartao { flex: none; padding: 16px 16px 14px; }
-  .marca { padding-bottom: 10px; margin-bottom: 12px; }
-  .marca-logo { width: 58px; }
-  .marca-nome { font-size: 1.4rem; }
+  /* Formulário em destaque (pedido do autor, 19/11/2026): sem "Central de indicadores"
+     e sem a frase de apoio, campos de e-mail e senha maiores. O robô encolhe um pouco
+     porque o cartão cresceu e ele fica só com o espaço que sobra. */
+  .cartao { flex: none; padding: 20px 18px 16px; }
+  .marca { padding-bottom: 12px; margin-bottom: 16px; }
+  .marca-logo { width: 62px; }
+  .marca-nome { font-size: 1.5rem; }
   .marca-barra { margin-top: 5px; }
-  .sobretitulo { margin-bottom: 4px; font-size: 0.7rem; }
-  .titulo h1 { font-size: 1.5rem; }
-  .subtitulo { margin: 4px 0 12px; font-size: 0.86rem; line-height: 1.4; }
-  .campo { margin-bottom: 10px; }
-  .campo label { margin-bottom: 5px; font-size: 0.85rem; }
-  .campo-caixa { height: 46px; }
-  .aviso { min-height: 1.1em; margin: 0 0 8px; font-size: 0.84rem; }
-  .botao-entrar { height: 50px; font-size: 1.05rem; }
+  .sobretitulo, .subtitulo { display: none; }
+  .titulo h1 { margin-bottom: 16px; font-size: 1.75rem; }
+  .campo { margin-bottom: 14px; }
+  .campo label { margin-bottom: 7px; font-size: 0.98rem; }
+  .campo-caixa { height: 58px; border-radius: 16px; border-color: rgba(130, 170, 255, 0.36); background: rgba(4, 9, 26, 0.8); }
+  .campo-caixa input { font-size: 1.08rem; }
+  .campo-caixa > svg { width: 22px; height: 22px; }
+  .link { font-size: 0.9rem; }
+  .aviso { min-height: 1.1em; margin: 0 0 8px; font-size: 0.86rem; }
+  .botao-entrar { height: 56px; font-size: 1.12rem; }
   .link-teste { margin-top: 8px; }
   .rodape { margin-top: 10px; padding-top: 8px; font-size: 0.76rem; }
 }
@@ -834,9 +839,14 @@ body.saindo .cena {
 
 /* celulares baixos (iPhone SE e parecidos): tiro o que é só texto de apoio */
 @media (max-width: 900px) and (max-height: 700px) {
-  .subtitulo, .sobretitulo { display: none; }
-  .titulo h1 { margin-bottom: 10px; font-size: 1.35rem; }
+  /* celular baixo: os campos continuam grandes, só aperto os espaços */
+  .cartao { padding: 16px 16px 12px; }
+  .titulo h1 { margin-bottom: 10px; font-size: 1.45rem; }
   .marca { padding-bottom: 8px; margin-bottom: 10px; }
+  .marca-logo { width: 54px; }
+  .campo { margin-bottom: 10px; }
+  .campo-caixa { height: 52px; }
+  .botao-entrar { height: 52px; }
   .balao { font-size: 0.76rem; padding: 8px 10px; }
   .rodape { display: none; }
 }
