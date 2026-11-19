@@ -124,8 +124,9 @@ function janelaBairros(titulo,list,center,zoom){closeModal();
  document.body.appendChild(element);const modal={element,map:null,closed:false};A.modal=modal;
  element.querySelector('.v9-close').onclick=closeModal;element.onclick=e=>{if(e.target===element)closeModal();};
  const map=L.map(element.querySelector('#v9-detail-map'),{zoomControl:true}).setView(center,zoom);modal.map=map;
- // fundo de ruas da Esri: o do OpenStreetMap bloqueava ("Access blocked") porque a página não manda referrer
- L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Tiles © Esri'}).addTo(map);
+ // mapa de ruas do OpenStreetMap, igual ao zip; o referrerPolicy libera o endereço do site só para as imagens do mapa
+ // (a página tem no-referrer e, sem isso, o OSM mostra "Access blocked")
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors',referrerPolicy:'strict-origin-when-cross-origin'}).addTo(map);
  setTimeout(()=>map.invalidateSize(),100);
  if(!list.length){element.querySelector('.v9-progress').textContent='Nenhum bairro informado para este município.';return;}
  const heatPoints=[],bounds=[];let found=0;
@@ -277,8 +278,9 @@ function openRedeEstado(){if(!R.loaded)return;closeModal();
  element.querySelector('.v9-close').onclick=closeModal;element.onclick=e=>{if(e.target===element)closeModal();};
  const foco=limitesFoco();
  const map=L.map(element.querySelector('#v9-detail-map'),{zoomControl:true}).fitBounds(foco,{padding:[20,20]});modal.map=map;
- // fundo de ruas da Esri: o do OpenStreetMap bloqueava ("Access blocked") porque a página não manda referrer
- L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Tiles © Esri'}).addTo(map);
+ // mapa de ruas do OpenStreetMap, igual ao zip; o referrerPolicy libera o endereço do site só para as imagens do mapa
+ // (a página tem no-referrer e, sem isso, o OSM mostra "Access blocked")
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors',referrerPolicy:'strict-origin-when-cross-origin'}).addTo(map);
  setTimeout(()=>{map.invalidateSize();map.fitBounds(foco,{padding:[20,20],animate:false});},100);
  const progress=element.querySelector('.v9-progress');
  if(!units.length){progress.textContent='Nenhuma unidade do Rio ou de Niterói nos filtros atuais.';return;}
