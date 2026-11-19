@@ -737,6 +737,16 @@ body.saindo .cena {
    só o espaço que sobrar em cima, encolhendo nos celulares menores.
    dvh = altura visível de verdade (sem a barra do navegador); vh é o reserva. */
 @media (max-width: 900px) {
+  /* No celular "100vh" conta a tela sem a barra do navegador, então o body
+     ficava mais alto que o visível e sobrava rolagem. Aqui uso a altura
+     visível de verdade (dvh) e travo a rolagem da página. */
+  html, body {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
   .cena {
     display: flex;
     flex-direction: column;
@@ -748,15 +758,55 @@ body.saindo .cena {
     align-items: stretch;
   }
 
+  /* Robô centralizado (pedido do autor, 19/11/2026): o balão fica em cima,
+     centralizado, e o robô embaixo dele no meio da tela, com a altura que sobrar. */
   .lado-robo {
     width: 100%;
     flex: 1 1 auto;
     height: auto;
-    min-height: 120px;
-    max-height: 420px;
+    min-height: 150px;
+    max-height: 460px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
   }
 
-  .robo-area { height: 94%; }
+  .balao {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    flex: none;
+    width: min(100%, 330px);
+    max-width: none;
+    text-align: center;
+  }
+
+  /* ponta do balão no meio, apontando para o robô */
+  .balao::after {
+    left: 50%;
+    right: auto;
+    bottom: -9px;
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+    transform: rotate(45deg);
+  }
+
+  .robo-area {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+
+  .piramide-frente { left: -30%; bottom: 0; width: 30%; }
+  .piramide-tras { right: -24%; bottom: 22%; width: 16%; }
 
   .cartao { flex: none; padding: 16px 16px 14px; }
   .marca { padding-bottom: 10px; margin-bottom: 12px; }
@@ -773,6 +823,13 @@ body.saindo .cena {
   .botao-entrar { height: 50px; font-size: 1.05rem; }
   .link-teste { margin-top: 8px; }
   .rodape { margin-top: 10px; padding-top: 8px; font-size: 0.76rem; }
+}
+
+/* celular deitado: não cabe numa tela só, então aqui a rolagem volta */
+@media (max-width: 900px) and (max-height: 520px) {
+  html, body { overflow: auto; }
+  .cena { height: auto; }
+  .lado-robo { flex: none; height: 220px; }
 }
 
 /* celulares baixos (iPhone SE e parecidos): tiro o que é só texto de apoio */
