@@ -124,7 +124,8 @@ function janelaBairros(titulo,list,center,zoom){closeModal();
  document.body.appendChild(element);const modal={element,map:null,closed:false};A.modal=modal;
  element.querySelector('.v9-close').onclick=closeModal;element.onclick=e=>{if(e.target===element)closeModal();};
  const map=L.map(element.querySelector('#v9-detail-map'),{zoomControl:true}).setView(center,zoom);modal.map=map;
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
+ // fundo de ruas da Esri: o do OpenStreetMap bloqueava ("Access blocked") porque a página não manda referrer
+ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Tiles © Esri'}).addTo(map);
  setTimeout(()=>map.invalidateSize(),100);
  if(!list.length){element.querySelector('.v9-progress').textContent='Nenhum bairro informado para este município.';return;}
  const heatPoints=[],bounds=[];let found=0;
@@ -271,12 +272,13 @@ function openRedeEstado(){if(!R.loaded)return;closeModal();
  const bairrosFoco=A.data?[...A.data.bairros].filter(([key])=>FOCO_RIO.has(key.split('|')[0])):[];
  const vidasFoco=A.data?[...FOCO_RIO].reduce((s,c)=>s+(A.data.cities.get(c)||0),0):0;
  const element=document.createElement('div');element.className='v9-overlay';
- element.innerHTML=`<div class="v9-dialog" role="dialog" aria-modal="true"><header><div><strong>RIO DE JANEIRO E NITERÓI — REDE CREDENCIADA</strong><small>${fmt(units.length)} ${units.length===1?'unidade':'unidades'} nos filtros do mapa 01${A.data?` · ${fmt(vidasFoco)} vidas`:''}</small></div><button class="v9-close" type="button">Fechar ×</button></header><p>Posição aproximada pelo bairro de cada prestador, utilizando referências públicas. Sem bairro informado, a unidade fica no centro do município.</p><div class="v9-grid"><div id="v9-detail-map"></div><aside><strong>UNIDADES DA REDE</strong><div class="v9-progress">Preparando localização...</div>${bairrosFoco.length?`<div class="v9-progress v9-progress-benef">Beneficiários: aguardando a rede (${fmt(bairrosFoco.length)} bairros)</div>`:''}<div class="v9-rede-lista">${units.map((u,i)=>`<button type="button" data-i="${i}"><i style="--pin:${CORES_REDE[u.categoria]}">${SIMBOLOS_REDE[u.categoria]}</i><span>${esc(u.nome)}<small>${esc([u.bairro,u.cidade].filter(Boolean).join(' — '))}${u.urgencias.has('SIM')?' · Urgência':''}</small></span></button>`).join('')}</div></aside></div></div>`;
+ element.innerHTML=`<div class="v9-dialog" role="dialog" aria-modal="true"><header><div><strong>RIO DE JANEIRO E NITERÓI — REDE CREDENCIADA</strong><small>${fmt(units.length)} ${units.length===1?'unidade':'unidades'} nos filtros do mapa 01${A.data?` · ${fmt(vidasFoco)} vidas`:''}</small></div><button class="v9-close" type="button">Fechar ×</button></header><p>Posição aproximada pelo bairro de cada prestador, utilizando referências públicas. Sem bairro informado, a unidade fica no centro do município.</p><div class="v9-grid"><div id="v9-detail-map"></div><aside><strong>UNIDADES DA REDE</strong><div class="v9-progress">Preparando localização...</div>${bairrosFoco.length?`<div class="v9-progress v9-progress-benef">Beneficiários: preparando ${fmt(bairrosFoco.length)} bairros…</div>`:''}<div class="v9-rede-lista">${units.map((u,i)=>`<button type="button" data-i="${i}"><i style="--pin:${CORES_REDE[u.categoria]}">${SIMBOLOS_REDE[u.categoria]}</i><span>${esc(u.nome)}<small>${esc([u.bairro,u.cidade].filter(Boolean).join(' — '))}${u.urgencias.has('SIM')?' · Urgência':''}</small></span></button>`).join('')}</div></aside></div></div>`;
  document.body.appendChild(element);const modal={element,map:null,closed:false};A.modal=modal;
  element.querySelector('.v9-close').onclick=closeModal;element.onclick=e=>{if(e.target===element)closeModal();};
  const foco=limitesFoco();
  const map=L.map(element.querySelector('#v9-detail-map'),{zoomControl:true}).fitBounds(foco,{padding:[20,20]});modal.map=map;
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
+ // fundo de ruas da Esri: o do OpenStreetMap bloqueava ("Access blocked") porque a página não manda referrer
+ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Tiles © Esri'}).addTo(map);
  setTimeout(()=>{map.invalidateSize();map.fitBounds(foco,{padding:[20,20],animate:false});},100);
  const progress=element.querySelector('.v9-progress');
  if(!units.length){progress.textContent='Nenhuma unidade do Rio ou de Niterói nos filtros atuais.';return;}
@@ -309,7 +311,15 @@ function openRedeEstado(){if(!R.loaded)return;closeModal();
   leg.addTo(map);
  }
  const corPonto=temBenef?'#1f6bff':'#ff3045';
- (async()=>{for(const lugar of lugares.values()){if(modal.closed)return;
+ /* Rede e beneficiários aparecem JUNTOS (pedido do autor, 19/11/2026): em vez de localizar a rede inteira
+    e só depois os beneficiários, eu alterno um bairro de cada. A busca no Nominatim continua um por vez. */
+ const listaB=bairrosFoco.map(([key,n])=>{const [city,bairro]=key.split('|');return {city,bairro,n};}).sort((a,b)=>b.n-a.n);
+ const progB=element.querySelector('.v9-progress-benef'),maxV=listaB.length?listaB[0].n:1;let achados=0,consultados=0;
+ async function passoBenef(p){const pos=await geocode(p.bairro,p.city);if(modal.closed)return;consultados++;
+  if(pos){achados++;heatBenef.push([pos[0],pos[1],heatIntensity(p.n,maxV)]);if(achados<=20||achados%5===0)desenhar();}
+  if(progB)progB.textContent=`Beneficiários: ${fmt(consultados)} de ${fmt(listaB.length)} bairros consultados (${fmt(achados)} localizados) · ~1 s por bairro`;}
+ (async()=>{const filaB=[...listaB];for(const lugar of lugares.values()){if(modal.closed)return;
+  if(filaB.length){await passoBenef(filaB.shift());if(modal.closed)return;}
   let pos=lugar.bairro?await geocode(lugar.bairro,lugar.cidade):null;if(modal.closed)return;
   if(pos)porBairro++;else{const c=A.centers.get(lugar.cidade);pos=c?[c.lat,c.lng]:null;}
   feitos++;
@@ -326,16 +336,11 @@ function openRedeEstado(){if(!R.loaded)return;closeModal();
  // o enquadramento continua no Rio até Niterói (não pulo para os pontos)
  progress.textContent=`Rede: ${lugares.size} locais processados (${porBairro} pelo bairro, ${lugares.size-porBairro} pelo centro do município). Clique numa unidade para ir até ela.`;
  if(!temBenef)return;
- // Depois da rede, os bairros dos beneficiários, do que tem mais vidas para o que tem menos (o mapa já fica útil no começo).
- // Bairros já buscados antes (ex.: janela do mapa 02) saem do cache na hora.
- const progB=element.querySelector('.v9-progress-benef'),lista=bairrosFoco.map(([key,n])=>{const [city,bairro]=key.split('|');return {city,bairro,n};}).sort((a,b)=>b.n-a.n);
- const maxV=lista[0].n;let achados=0;
- for(let i=0;i<lista.length;i++){if(modal.closed)return;const p=lista[i],pos=await geocode(p.bairro,p.city);if(modal.closed)return;
-  if(pos){achados++;heatBenef.push([pos[0],pos[1],heatIntensity(p.n,maxV)]);if(achados<=20||achados%5===0)desenhar();}
-  progB.textContent=`Beneficiários: ${fmt(i+1)} de ${fmt(lista.length)} bairros consultados (${fmt(achados)} localizados) · ~1 s por bairro`;
- }
+ // a rede acabou: sigo com os bairros de beneficiários que faltam (do que tem mais vidas para o que tem menos;
+ // bairros já buscados antes, como na janela do mapa 02, saem do cache na hora)
+ while(filaB.length){await passoBenef(filaB.shift());if(modal.closed)return;}
  desenhar();
- progB.textContent=`Beneficiários: ${fmt(achados)} de ${fmt(lista.length)} bairros localizados.`;
+ progB.textContent=`Beneficiários: ${fmt(achados)} de ${fmt(listaB.length)} bairros localizados.`;
  })();
 }
 /* ---------- Regiões de saúde do RJ (pedido do autor, 19/11/2026) ----------
