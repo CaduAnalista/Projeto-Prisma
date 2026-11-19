@@ -65,6 +65,15 @@ function indicators(d){put('totalVidas',fmt(d.total));put('vidasRJ',fmt(d.rj));p
 function popup(name,n,estado=false){return `<div class="v9-tip"><strong>${esc(name)}</strong><span>${fmt(n)} vidas</span>${estado&&name==='RIO DE JANEIRO'?'<small>Clique para explorar os bairros do estado</small>':''}</div>`;}
 /* Só o município do Rio abre a janela, e ela traz os bairros de todas as cidades da planilha */
 const abreEstado=name=>name==='RIO DE JANEIRO';
+/* Mapa 01 (pedido do autor, 19/11/2026): clicar no Rio ou em Niterói abre UMA janela só,
+   já enquadrada no Rio inteiro até Niterói, com as unidades e os bairros das duas cidades juntas */
+const FOCO_RIO=new Set(['RIO DE JANEIRO','NITEROI']);
+const abreRio=name=>FOCO_RIO.has(name);
+function limitesFoco(){const fs=A.geo.features.filter(f=>FOCO_RIO.has(cityName(f)));return L.geoJSON({type:'FeatureCollection',features:fs}).getBounds();}
+function openBairrosRio(){if(!A.data)return;
+ const list=[...A.data.bairros].map(([key,n])=>{const [city,bairro]=key.split('|');return {bairro,city,label:bairro+' — '+city,n};}).filter(p=>FOCO_RIO.has(p.city));
+ const b=limitesFoco();janelaBairros('RIO DE JANEIRO E NITERÓI',list,b.getCenter(),10);
+ setTimeout(()=>A.modal?.map?.fitBounds(b,{padding:[20,20]}),150);}
 function drawEstado(fit=false){const k='estado',map=A.maps[k],d=A.data;if(!map||!d||!A.geo)return;clear(k);
  const features=A.geo.features;
  const max=Math.max(1,...features.map(f=>d.cities.get(cityName(f))||0));
@@ -228,7 +237,7 @@ function tipRede(name,list,vidas){
  if(R.loaded)html+=`<span class="tip-rede">${fmt(list.length)} ${list.length===1?'unidade':'unidades'} da rede</span>${list.length?`<small>${porCat.map(([c,n])=>`${esc(c)}: ${fmt(n)}`).join(' · ')}${urg?` · Urgência: ${fmt(urg)}`:''}</small>`:''}`;
  if(A.data)html+=`<span class="tip-benef">${fmt(vidas)} vidas</span>`;
  if(R.loaded&&A.data&&vidas)html+=`<small class="tip-razao">${list.length?`${fmt(Math.round(vidas/list.length))} vidas por unidade`:'Vidas sem nenhuma unidade da rede no município'}</small>`;
- if(abreEstado(name))html+=`<small>${R.loaded?'Clique para ver a rede do estado no mapa':'Clique para explorar os bairros do estado'}</small>`;
+ if(abreRio(name))html+=`<small>${R.loaded?'Clique para ver a rede do Rio até Niterói no mapa':'Clique para ver os bairros do Rio até Niterói'}</small>`;
  return html+'</div>';
 }
 /* Ranking "onde expandir": municípios com mais vidas por unidade da rede (filtros da rede valem, menos o de município).
@@ -253,19 +262,24 @@ function atualizarLegenda(verRede,verBenef){
 const CORES_REDE={'Hospitais':'#168bff','Clínicas':'#33c95a','Laboratórios':'#ad64ed','Outros':'#ffae38'};
 const SIMBOLOS_REDE={'Hospitais':'H','Clínicas':'C','Laboratórios':'L','Outros':'O'};
 const urgTexto=u=>[...u.urgencias].map(v=>v==='NAO'?'NÃO':v==='NAO INFORMADO'?'não informada':v).join(' / ');
-/* Janela da rede (clique no Rio no mapa 01): unidades dos filtros atuais sobre o mapa de ruas,
-   posicionadas pelo bairro (mesma busca no Nominatim da janela de bairros); sem bairro, centro do município */
+/* Janela da rede (clique no Rio ou em Niterói no mapa 01): unidades dos filtros atuais do Rio e de Niterói
+   sobre o mapa de ruas, posicionadas pelo bairro (mesma busca no Nominatim da janela de bairros);
+   sem bairro, centro do município. O enquadramento fica fixo no Rio até Niterói. */
 function openRedeEstado(){if(!R.loaded)return;closeModal();
- const units=[...R.filtered].sort((a,b)=>(a.cidade==='RIO DE JANEIRO'?-1:b.cidade==='RIO DE JANEIRO'?1:0)||a.cidade.localeCompare(b.cidade,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));
- const cidades=new Set(units.map(u=>u.cidade)).size,element=document.createElement('div');element.className='v9-overlay';
- element.innerHTML=`<div class="v9-dialog" role="dialog" aria-modal="true"><header><div><strong>ESTADO DO RIO DE JANEIRO — REDE CREDENCIADA</strong><small>${fmt(units.length)} ${units.length===1?'unidade':'unidades'} nos filtros do mapa 01 · ${fmt(cidades)} municípios${A.data?` · ${fmt(A.data.rj)} vidas`:''}</small></div><button class="v9-close" type="button">Fechar ×</button></header><p>Posição aproximada pelo bairro de cada prestador, utilizando referências públicas. Sem bairro informado, a unidade fica no centro do município.</p><div class="v9-grid"><div id="v9-detail-map"></div><aside><strong>UNIDADES DA REDE</strong><div class="v9-progress">Preparando localização...</div>${A.data?.bairros.size?`<div class="v9-progress v9-progress-benef">Beneficiários: aguardando a rede (${fmt(A.data.bairros.size)} bairros)</div>`:''}<div class="v9-rede-lista">${units.map((u,i)=>`<button type="button" data-i="${i}"><i style="--pin:${CORES_REDE[u.categoria]}">${SIMBOLOS_REDE[u.categoria]}</i><span>${esc(u.nome)}<small>${esc([u.bairro,u.cidade].filter(Boolean).join(' — '))}${u.urgencias.has('SIM')?' · Urgência':''}</small></span></button>`).join('')}</div></aside></div></div>`;
+ const units=[...R.filtered].filter(u=>FOCO_RIO.has(u.cidade)).sort((a,b)=>(a.cidade==='RIO DE JANEIRO'?-1:b.cidade==='RIO DE JANEIRO'?1:0)||a.cidade.localeCompare(b.cidade,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));
+ // só os bairros de beneficiários do Rio e de Niterói
+ const bairrosFoco=A.data?[...A.data.bairros].filter(([key])=>FOCO_RIO.has(key.split('|')[0])):[];
+ const vidasFoco=A.data?[...FOCO_RIO].reduce((s,c)=>s+(A.data.cities.get(c)||0),0):0;
+ const element=document.createElement('div');element.className='v9-overlay';
+ element.innerHTML=`<div class="v9-dialog" role="dialog" aria-modal="true"><header><div><strong>RIO DE JANEIRO E NITERÓI — REDE CREDENCIADA</strong><small>${fmt(units.length)} ${units.length===1?'unidade':'unidades'} nos filtros do mapa 01${A.data?` · ${fmt(vidasFoco)} vidas`:''}</small></div><button class="v9-close" type="button">Fechar ×</button></header><p>Posição aproximada pelo bairro de cada prestador, utilizando referências públicas. Sem bairro informado, a unidade fica no centro do município.</p><div class="v9-grid"><div id="v9-detail-map"></div><aside><strong>UNIDADES DA REDE</strong><div class="v9-progress">Preparando localização...</div>${bairrosFoco.length?`<div class="v9-progress v9-progress-benef">Beneficiários: aguardando a rede (${fmt(bairrosFoco.length)} bairros)</div>`:''}<div class="v9-rede-lista">${units.map((u,i)=>`<button type="button" data-i="${i}"><i style="--pin:${CORES_REDE[u.categoria]}">${SIMBOLOS_REDE[u.categoria]}</i><span>${esc(u.nome)}<small>${esc([u.bairro,u.cidade].filter(Boolean).join(' — '))}${u.urgencias.has('SIM')?' · Urgência':''}</small></span></button>`).join('')}</div></aside></div></div>`;
  document.body.appendChild(element);const modal={element,map:null,closed:false};A.modal=modal;
  element.querySelector('.v9-close').onclick=closeModal;element.onclick=e=>{if(e.target===element)closeModal();};
- const map=L.map(element.querySelector('#v9-detail-map'),{zoomControl:true}).setView([-22.45,-42.85],8);modal.map=map;
+ const foco=limitesFoco();
+ const map=L.map(element.querySelector('#v9-detail-map'),{zoomControl:true}).fitBounds(foco,{padding:[20,20]});modal.map=map;
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
- setTimeout(()=>map.invalidateSize(),100);
+ setTimeout(()=>{map.invalidateSize();map.fitBounds(foco,{padding:[20,20],animate:false});},100);
  const progress=element.querySelector('.v9-progress');
- if(!units.length){progress.textContent='Nenhuma unidade nos filtros atuais.';return;}
+ if(!units.length){progress.textContent='Nenhuma unidade do Rio ou de Niterói nos filtros atuais.';return;}
  const markers=[];
  element.querySelector('.v9-rede-lista').addEventListener('click',e=>{const b=e.target.closest('button[data-i]');if(!b)return;const m=markers[b.dataset.i];if(!m){progress.textContent='Esta unidade ainda está sendo localizada…';return;}map.setView(m.getLatLng(),Math.max(map.getZoom(),14));m.openPopup();});
  // Um ponto por bairro + município; unidades do mesmo bairro ficam em volta dele
@@ -275,7 +289,7 @@ function openRedeEstado(){if(!R.loaded)return;closeModal();
  const bounds=[],heatPoints=[];let feitos=0,porBairro=0;
  /* Comparação (pedido do autor, 19/11/2026): com beneficiários importados, a janela mostra também as vidas por bairro.
     Beneficiários = calor quente (por baixo); rede = calor frio + pontos azuis (por cima). Botões na legenda ligam/desligam. */
- const temBenef=!!A.data&&A.data.bairros.size>0,camadas={rede:true,benef:true},pontosRede=L.layerGroup().addTo(map),heatBenef=[];
+ const temBenef=bairrosFoco.length>0,camadas={rede:true,benef:true},pontosRede=L.layerGroup().addTo(map),heatBenef=[];
  let camadaRede=null,camadaBenef=null;
  function desenhar(){
   for(const l of [camadaBenef,camadaRede])if(l)map.removeLayer(l);camadaBenef=camadaRede=null;
@@ -308,14 +322,13 @@ function openRedeEstado(){if(!R.loaded)return;closeModal();
     .bindPopup(`<div class="rede-popup"><strong>${esc(u.nome)}</strong><p>${esc([u.bairro,u.cidade].filter(Boolean).join(' — '))}${u.endereco?'<br>'+esc([u.endereco,u.numero].filter(Boolean).join(', ')):''}</p><small>${esc([...u.classes].join(' / '))} · Urgência: ${esc(urgTexto(u))}${u.esps.size?'<br>'+esc([...u.esps].join(', ')):''}</small></div>`,{maxWidth:320})
     .addTo(pontosRede);});}
   progress.textContent=`Rede: localizados ${feitos} de ${lugares.size} bairros (${porBairro} pelo bairro)`;
-  if(feitos===Math.min(lugares.size,10)&&bounds.length>1)map.fitBounds(bounds,{padding:[35,35],maxZoom:12});
  }
- if(bounds.length>1)map.fitBounds(bounds,{padding:[35,35],maxZoom:12});else if(bounds.length)map.setView(bounds[0],13);
+ // o enquadramento continua no Rio até Niterói (não pulo para os pontos)
  progress.textContent=`Rede: ${lugares.size} locais processados (${porBairro} pelo bairro, ${lugares.size-porBairro} pelo centro do município). Clique numa unidade para ir até ela.`;
  if(!temBenef)return;
  // Depois da rede, os bairros dos beneficiários, do que tem mais vidas para o que tem menos (o mapa já fica útil no começo).
  // Bairros já buscados antes (ex.: janela do mapa 02) saem do cache na hora.
- const progB=element.querySelector('.v9-progress-benef'),lista=[...A.data.bairros].map(([key,n])=>{const [city,bairro]=key.split('|');return {city,bairro,n};}).sort((a,b)=>b.n-a.n);
+ const progB=element.querySelector('.v9-progress-benef'),lista=bairrosFoco.map(([key,n])=>{const [city,bairro]=key.split('|');return {city,bairro,n};}).sort((a,b)=>b.n-a.n);
  const maxV=lista[0].n;let achados=0;
  for(let i=0;i<lista.length;i++){if(modal.closed)return;const p=lista[i],pos=await geocode(p.bairro,p.city);if(modal.closed)return;
   if(pos){achados++;heatBenef.push([pos[0],pos[1],heatIntensity(p.n,maxV)]);if(achados<=20||achados%5===0)desenhar();}
@@ -387,8 +400,8 @@ function drawRede(fit=false){const k='rede',map=A.maps[k],d=A.data;if(!map||!A.g
  A.boundaries[k]=L.geoJSON(A.geo,{pane:'v9borders',style:f=>{const name=cityName(f),n=(porCidade.get(name)||[]).length,v=vidasDe(name),ativo=(verRede&&n)||(verBenef&&v);return {color:ativo?'#44647c':'#283d57',weight:ativo?.95:.6,fillColor:'#10213d',fillOpacity:.035,interactive:true};},onEachFeature:(f,layer)=>{
   const name=cityName(f),list=porCidade.get(name)||[],v=vidasDe(name);
   layer.bindTooltip(tipRede(name,list,v),{sticky:true,direction:'top',opacity:.98,className:'v9-tooltip'});
-  if(abreEstado(name)){
-   layer.on('click',()=>R.loaded?openRedeEstado():openBairrosEstado());
+  if(abreRio(name)){
+   layer.on('click',()=>R.loaded?openRedeEstado():openBairrosRio());
    layer.on('mouseover',()=>layer.setStyle({weight:2.5,color:'#39d8f5'}));
    layer.on('mouseout',()=>A.boundaries[k]?.resetStyle(layer));
   }
