@@ -133,10 +133,9 @@
     "estudo-reclamacoes": { titulo: "Estudo de reclamações", subtitulo: "Reclamações, Reclame Aqui e Ouvidoria" },
     "volume-produtividade": { titulo: "Volume e produtividade", subtitulo: "Encerrados e demanda em aberto por colaborador" },
     "kanban-crm": { titulo: "CRM", subtitulo: "Kanban de tratativas · escolha o seu setor no filtro" },
-    "saude-social": {
-      titulo: "Saúde e Social",
-      subtitulo:
-        "Indicadores de beneficiários e produtos"
+    "geolocalizacao": {
+      titulo: "Geolocalização de vidas e rede",
+      subtitulo: "Rede credenciada × beneficiários no Estado do Rio de Janeiro"
     },
 
     "formulario-reuniao": {

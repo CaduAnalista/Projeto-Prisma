@@ -38,11 +38,12 @@ Repositório: `CaduAnalista/Projeto_dashb` (⚠️ confirmar se o nome mudou jun
 ```
 index.html            → redireciona para o login
 HTML/   login.html, visao-geral.html (casca com menu lateral que abre as outras páginas num iframe),
-        inteligencia.html, kanban-tratativas.html, saude-social.html,
+        inteligencia.html, kanban-tratativas.html, geolocalizacao.html (antigo saude-social.html),
         formulario-reuniao.html, assuntos-por-setor.html, cad-cap.html
-CSS/    um .css por página, mais rede-integrada.css e saude-social-nexus.css (usados pela Saúde e Social)
+CSS/    um .css por página; a Geolocalização usa geolocalizacao.css + geolocalizacao-prisma.css
+        (saude-social.css, rede-integrada.css e saude-social-nexus.css eram da página antiga e não são mais carregados)
 JAVA/   login.js, visao-geral.js, visao-geral-problemas-setoriais.js (submenu "Problemas-Setoriais"),
-        inteligencia.js, kanban-tratativas.js, saude-social.js,
+        inteligencia.js, kanban-tratativas.js, geolocalizacao.js (saude-social.js = página antiga, sem uso),
         formulario-reuniao.js, assuntos-por-setor.js, cad-cap.js
         nexus.js       → personagem animado (camadas, olhar, piscadas, expressões)
         fundo-rede.js  → fundo animado do login (rede de pontos; vira "dobra espacial" no portal)
@@ -130,7 +131,7 @@ nexus-personagem.js    → protótipo antigo da versão SVG rejeitada (já subst
   - Rótulos pequenos em fonte monoespaçada com letras espaçadas.
 - **Espectro do PRISMA (17/11/2026, pedido do autor: "marcante, cores vibrantes, com identidade").** A ideia da logo vira o sistema visual: a luz entra no prisma, abre em cores (múltiplas visões) e sai como seta laranja (uma direção).
   - Cores do espectro (variáveis `--esp-*` no `visao-geral.css`): azul `#2F6BFF`, ciano `#22D3FF`, turquesa `#2EE6C8`, âmbar `#FFC24A`, laranja `#FF8A2B`. Faixa completa em `--espectro`. Sem rosa nem violeta.
-  - **Cada área tem a sua cor** (ícone, item ativo e fio de luz no menu): Visão geral = laranja; Inteligência de Rede = ciano; Kanbans = azul; Saúde e Social = turquesa; Formulário de reunião / Assuntos por setor = âmbar. Áreas novas devem ganhar uma cor do espectro.
+  - **Cada área tem a sua cor** (ícone, item ativo e fio de luz no menu): Visão geral = laranja; Inteligência de Rede = ciano; Kanbans = azul; Geolocalização (antigo Saúde e Social) = turquesa; Formulário de reunião / Assuntos por setor = âmbar. Áreas novas devem ganhar uma cor do espectro.
   - Assinaturas: faixa do espectro correndo devagar embaixo do topo; fio do espectro no alto do painel dos dashboards; barra do espectro embaixo de "PRISMA"; o botão MENU do celular tem as três linhas em ciano, âmbar e laranja.
   - Boas-vindas: o nome do usuário aparece no espectro; abaixo vem o slogan, com "uma direção." em laranja; à direita, um **prisma grande em SVG** (luz branca entrando, leque de 5 cores, seta laranja tracejada correndo). As animações são leves e se desligam com `prefers-reduced-motion`. No celular, o prisma fica acima do texto.
 - No lugar do robô NEXUS, o topo do menu usa a **logo do prisma** (escolha do autor). O robô PRISMA aparece só no login.
@@ -228,7 +229,7 @@ Prompt de edição para os olhos vazios:
 | 2 | **Inteligência de Rede** | Existe (`inteligencia.html`). Regras na seção 8. |
 | 3 | **Relacionamento** (antes "Captação/Cadastro") | Existe (`cad-cap.html`). Precisa ser renomeado. |
 | 4 | **Faturamento** | **Não é prioridade agora**, será feito mais tarde. Indicadores e colunas serão definidos na hora. |
-| 5 | **Saúde e Social** | Existe (`saude-social.html`), criada pelo autor em 05/11/2026. Mapas de distribuição geográfica dos beneficiários. Regras na seção 8. Ainda fora do padrão NEXUS (ver pendências). |
+| 5 | **Geolocalização de vidas e rede** (antigo "Vidas do Saúde e Social") | `geolocalizacao.html` desde 19/11/2026 (menu `data-pagina="geolocalizacao"`). Mapas da rede credenciada × beneficiários. Regras na seção 8. |
 | 6 | **Kanban de tratativas** | Existe (`kanban-tratativas.html?setor=...`), criada pelo autor. Um quadro por setor (ADM/PAT, Reembolso, Credenciamento, Auditoria, Cadastro, Captação, Financeiro, Triagem). Guarda as tratativas no **IndexedDB** do navegador; a chave é Protocolo + Num. Ocorrência. **Menu (18/11/2026):** "Inteligência de Rede" abre o painel (`inteligencia.html`); a setinha mostra **Estudo de reclamações** (em breve, visual a definir pelo autor) e **CRM**. O CRM é um Kanban só (`kanban-tratativas.html` sem `?setor`): o quadro começa vazio com "Escolha o setor" e o colaborador filtra o setor dele. Os 8 itens de setor saíram do menu (o `?setor=` continua funcionando). Travar cada pessoa no próprio setor depende do login do Supabase (perfil com setor + RLS); só esconder na tela não protege. **v2 (18/11/2026; backup em `ARQUIVO/kanban-v1/`):** topo, sincronização e filtros compactos (filtro novo por responsável); 7 colunas cabendo na tela e "Concluído" recolhido numa faixa (lembrado em `localStorage["prisma-kanban-concluido"]`); cartão com dias úteis em cima, borda amarela/vermelha de prazo em qualquer coluna, mais urgentes primeiro, "N em atraso" no cabeçalho, "parado há N dias" (dias úteis desde a última tratativa, a partir de 3); observação obrigatória para entrar em "Precisando de ajuda" e "Concluído"; transferência recolhida. **Ordem das colunas:** Todos que entraram → Em atenção → Atraso → Muito importante → Em andamento interno → Em andamento externo → Precisando de ajuda → Concluído; cabeçalhos todos com 76 px. **Coluna "Muito importante"** (laranja): só a Triagem põe cartões nela, e o selo "★ Muito importante" acompanha o cartão até ser concluído. **Triagem** = visão de todos os setores (filtro "Setor do protocolo"), painel "Prioridade da Triagem" no cartão (setor + motivo) e botão **Novo protocolo PRISMA** (`PRISMA-AAAA-NNNN`, sequência em `config.seqPrisma`; chave `[numero,'PRISMA']`, `origem:'prisma'`; prazo de 5 dias úteis desde a criação). ⚠️ Por enquanto a Triagem é aberta a todos e tudo continua só no navegador de quem usa: os setores só veem a prioridade "na hora" quando o Kanban for para o Supabase. |
 | 7 | **Problemas-Setoriais** | Criada pelo autor: `formulario-reuniao.html` (até 3 assuntos por setor para a reunião) e `assuntos-por-setor.html` (acompanhamento e conclusão). As duas dividem o `localStorage` `nexus_v2_assuntos_reuniao`; não há sincronização entre computadores. |
 
@@ -296,7 +297,7 @@ Novos setores seguem o mesmo padrão: botão de importar planilha, filtros e ind
   - Estudo de reclamações;
   - Volume e produtividade;
   - CRM (Kanban);
-  - Saúde e Social;
+  - Geolocalização de vidas e rede (antigo Saúde e Social; desde 19/11/2026 abre o painel suspenso de filtros sozinho e fecha ao sair);
   - Formulário para a reunião;
   - Assuntos por setor.
 - **Como funciona um passo:**
@@ -307,7 +308,7 @@ Novos setores seguem o mesmo padrão: botão de importar planilha, filtros e ind
 - **No fim:** confete (sai se o sistema pede menos movimento) e opção de ver outros tutoriais.
 - **Ao começar:** abre sozinho a página certa e espera ela carregar.
 - **No celular:** abre e fecha a gaveta do menu conforme o passo, e o balão fica em cima ou embaixo do alvo.
-- **Passos opcionais:** um passo marcado `opcional` é pulado quando o alvo não existe. Exemplos: cartões do Kanban sem planilha, assuntos sem registro, rodapé do mapa que o JS do Saúde e Social remove.
+- **Passos opcionais:** um passo marcado `opcional` é pulado quando o alvo não existe. Exemplos: cartões do Kanban sem planilha, assuntos sem registro, ranking "Onde expandir" da Geolocalização (só com as duas planilhas) e a situação da importação (escondida no celular).
 - **Scroll-snap:** durante o tutorial a ponte desliga o encaixe da rolagem da página (scroll-snap), senão a página puxava o alvo do topo para fora da tela.
 - **localStorage** (com try/catch):
   - `prisma-tutoriais-feitos`: tutoriais concluídos;
@@ -412,18 +413,29 @@ Novos setores seguem o mesmo padrão: botão de importar planilha, filtros e ind
 - **Temperatura do lead** (frio/morno/quente) vem da própria planilha.
 - Quebras por órgão e por colaborador, filtros e base de leads.
 
-### Saúde e Social — distribuição geográfica (como está em 05/11/2026)
-- Página com cabeçalho, faixa de indicadores e **dois mapas** (Leaflet + leaflet.heat), cada um com os modos **Calor**, **Bolhas** e **Ambos** e um botão de restaurar o enquadramento.
-- **Planilha:** procura, nas 30 primeiras linhas de cada aba, um cabeçalho com `BAIRRO`, `CIDADE` (ou `MUNICIPIO`) e `ESTADO` (ou `UF`). Cada linha é **uma vida**. Aceita `.xlsx`, `.xls` e `.xlsb` (não aceita `.csv`).
-- **Indicadores:** Total de vidas (todas as linhas), Vidas no RJ (UF `RJ` ou `RIO DE JANEIRO`), Região Metropolitana, Municípios com beneficiários, nome do arquivo e data/hora da importação.
-- **Região Metropolitana** = lista fixa `METRO` no `saude-social.js` (22 municípios, incluindo Petrópolis).
-- **Mapa 01 — Rio de Janeiro e Região Metropolitana:** só os municípios da lista `METRO`; Rio de Janeiro e Niterói ganham rótulos fixos com o total de vidas. Clicar neles abre uma janela com a **concentração por bairro** (lista ordenada e mapa de calor aproximado).
+### Geolocalização de vidas e rede (antigo "Saúde e Social") — 19/11/2026 ✅ aprovada pelo autor (não mudar sem pedido)
+- **Origem (pedido do autor, 19/11/2026):** a página foi refeita **igual à versão do projeto de testes** (zip `Projeto_dashb-main`), pegando só os arquivos dela, e ganhou um nome mais específico. Arquivos: `HTML/geolocalizacao.html`, `CSS/geolocalizacao.css` (base igual à do teste), `CSS/geolocalizacao-prisma.css` (cores do PRISMA e modo claro, vinda do antigo `saude-social-nexus.css`) e `JAVA/geolocalizacao.js` (lógica igual à do teste; só acrescentei o desenho dos ícones Lucide).
+- Adaptações ao PRISMA: marca PRISMA no lugar de ASSEFAZ, `tema.js`, favicon, volta para a Visão Geral se aberta sozinha e ponte do tutorial. **Não usa** `portal-chegada.js`.
+- Saiu em relação à página antiga do PRISMA: botão "Atualizar arquivos do site" (lia `../dados/`), status das bases, filtro de contratação e o menu de camadas por tipo. Agora tudo vem do que o usuário importa.
+- Os arquivos antigos (`saude-social.html`, `saude-social.css`, `rede-integrada.css`, `saude-social-nexus.css`, `saude-social.js`) continuam na pasta, mas não são mais usados; apagar só com o OK do autor.
+- Página com cabeçalho, faixa de indicadores e **dois mapas** (Leaflet + leaflet.heat), cada um com botão de restaurar o enquadramento.
+- **Planilha de beneficiários:** procura, nas 30 primeiras linhas de cada aba, um cabeçalho com `BAIRRO`, `CIDADE` (ou `MUNICIPIO`) e `ESTADO` (ou `UF`). Cada linha é **uma vida**. Aceita `.xlsx`, `.xls` e `.xlsb` (não aceita `.csv`).
+- **Indicadores:** Unidades da rede, Hospitais, Total de vidas (todas as linhas), Vidas no RJ (UF `RJ` ou `RIO DE JANEIRO`), Região Metropolitana, Municípios com beneficiários, nome do arquivo e data/hora da importação.
+- **Região Metropolitana** = lista fixa `METRO` no `geolocalizacao.js` (22 municípios, incluindo Petrópolis).
+- **Cada mapa tem a sua planilha:** "Importar rede" preenche o mapa 01; "Importar beneficiários" preenche o mapa 02 **e** entra no mapa 01 para comparar com a rede.
+- **Mapa 01 — Rede credenciada × beneficiários:** todos os municípios do RJ, na largura toda e quase a altura da janela. Barra compacta de uma linha: modos **Calor / Marcadores / Ambos** (padrão Ambos; marcadores = gotas H/C/L/O agrupadas por proximidade e categoria), camadas **Rede** e **Beneficiários** (liga/desliga), botão **Filtros** (painel suspenso com Urgência, Tipo, Especialidade e Município; fecha ao clicar fora ou com Esc; mostra quantos filtros estão ativos), números (unidades, municípios, vidas) e restaurar. Posição = centro do município (a planilha não tem coordenadas).
+  - Lê a planilha de hospitais (`CNPJ/ CPF`, `PRESTADOR`, `MUNICÍPIO`, `BAIRRO`, `TIPO DE PRESTADOR`, `ESPECIALIDADE/SERVIÇO`, `ATENDIMENTO DE URGENCIA E EMERGENCI…`; sem UF = RJ) e o formato antigo do sistema (`NmeMunicipio`, `NmeFantasia`, `ClasseCadastro`, `Urgencia`…). Especialidades combinadas viram itens separados; "HOSPITAIS" = "HOSPITAL"; `#N/A` = vazio. Uma unidade = CNPJ (ou nome) + município + endereço/bairro.
+  - **Comparação:** com as duas camadas, beneficiários = calor quente (amarelo → vermelho, por baixo) e rede = calor frio (azul → ciano, por cima); legenda "Vidas / Rede" no canto. O balão do município mostra unidades, vidas e vidas por unidade.
+  - **Regiões de saúde (pedido do autor, 19/11/2026, ⏳ aguardando aprovação):** as **9 regiões de saúde da SES-RJ** (lista `REGIOES` no `geolocalizacao.js`, 92 municípios) aparecem no mapa 01 **só como linhas coloridas em volta de cada região**, sem pintar o fundo (Centro-Sul = marrom; cada região uma cor). Na divisa entre duas regiões a linha alterna as duas cores (uma tracejada sobre a outra); um contorno escuro por baixo deixa a linha visível sobre o calor. As linhas saem da própria malha dos municípios (trechos de divisa compartilhados), sem baixar nada a mais. Botão de camada **Regiões** (liga/desliga), legenda recolhível no canto inferior direito e o nome da região no balão de cada município.
+  - ❌ **Tentativas rejeitadas pelo autor (19/11/2026), desfeitas:** (1) modo "Áreas" com 5 faixas de laranja + círculos azuis; (2) modo "Municípios" com o calor pintando cada município + estados vizinhos (MG, ES, SP) e contorno do Brasil vindos da API do IBGE. O autor quer o calor original ("apenas com o valor") e **só o RJ** no mapa; o `geolocalizacao.js` voltou à versão do zip, mais as regiões.
+  - **Ranking "Onde expandir"** (canto superior direito, recolhível): 8 municípios com mais vidas por unidade, pontuação = vidas ÷ (unidades + 1); valem os filtros da rede, menos o de município. Só aparece com as duas planilhas. Clicar aproxima o mapa.
+  - **Janela da rede:** clicar no **Rio de Janeiro** abre o mapa de ruas com as unidades dos filtros atuais posicionadas pelo bairro (Nominatim, um por vez) e, com beneficiários, o calor dos bairros deles. Sem rede importada, abre a janela de bairros.
 - **Janela de bairros — fica como o autor fez (decisão do autor, 05/11/2026).** Cada bairro é buscado no **Nominatim**, um por vez, com 1,15 s de espera (com a planilha real: ~4 min no Rio, 175 bairros; ~1 min em Niterói, 37). O autor aceita a lentidão.
   - ⚠️ **Não mexer nesta janela sem pedido.** Em 05/11/2026 foi testada uma versão instantânea (posições locais da malha de bairros do IBGE 2022 + correção de nomes abreviados), e também um fundo escuro no lugar do mapa de ruas; o autor **rejeitou as duas** e pediu a versão original de volta (`saude-social.js` restaurado como estava). Os arquivos `bairros-rj.js` e `bairros-localizar.js` foram apagados.
   - Fundo: mapa de ruas do OpenStreetMap. ⚠️ Ele devolve "403 Access blocked" quando a página é aberta **direto do arquivo** (`file://`); publicado (GitHub Pages) ou por servidor local, funciona.
-- **Mapa 02 — Estado do Rio de Janeiro:** todos os municípios do RJ.
-  - **Janela de bairros do estado (pedido do autor, 05/11/2026):** no mapa 02, **só o município do Rio de Janeiro** abre a janela (dica "Clique para explorar os bairros do estado"; os outros municípios continuam com o balão do total). A janela é **igual à do mapa 01** (mesma função `janelaBairros`), com o título "ESTADO DO RIO DE JANEIRO — CONCENTRAÇÃO POR BAIRRO" e os bairros de **todas as cidades da planilha**, cada um como "BAIRRO — CIDADE" (há nomes repetidos, como CENTRO).
-  - Usa a mesma busca no Nominatim, um por vez: com a planilha real são 508 bairros em 54 cidades, **~10 min** (aceito pelo autor). Para cidades fora de Rio/Niterói, a busca vai com o nome da cidade e só aceita pontos dentro do estado do RJ. O mapa 01 não mudou.
+- **Mapa 02 — Estado do Rio de Janeiro:** beneficiários por município em todo o RJ, modos **Calor**, **Bolhas** e **Ambos**. Não mostra prestadores.
+  - **Janela de bairros do estado (pedido do autor, 05/11/2026):** no mapa 02, **só o município do Rio de Janeiro** abre a janela (dica "Clique para explorar os bairros do estado"; os outros municípios continuam com o balão do total). A janela usa a função `janelaBairros`, com o título "ESTADO DO RIO DE JANEIRO — CONCENTRAÇÃO POR BAIRRO" e os bairros de **todas as cidades da planilha**, cada um como "BAIRRO — CIDADE" (há nomes repetidos, como CENTRO).
+  - Usa a mesma busca no Nominatim, um por vez: com a planilha real são 508 bairros em 54 cidades, **~10 min** (aceito pelo autor). Para cidades fora de Rio/Niterói, a busca vai com o nome da cidade e só aceita pontos dentro do estado do RJ.
 - O rodapé de cada mapa (maior concentração e percentual) existe no HTML, mas o JS o remove ao iniciar.
 - ⚠️ **Depende de internet**, ao contrário do resto do site: os contornos dos municípios vêm do GitHub (`tbrugz/geodata-br`), o mapa de bairros usa os mapas do OpenStreetMap, as bibliotecas vêm de CDN e a localização de cada bairro é buscada no **Nominatim**. Nessa busca, **os nomes dos bairros saem do navegador** (sem nome, CPF nem contagem), o que contraria a regra "nada é enviado" da seção 2; o autor preferiu manter assim.
 
@@ -439,7 +451,7 @@ Mesmo ritmo de sempre: o autor descreve, perguntamos o que tiver dúvida, fazemo
 1. **Login:** ✅ visual novo PRISMA aprovado (seção 4). Próximo passo: Supabase Auth + proteção das páginas internas (sem sessão, volta para o login).
 2. Banco: modelar as tabelas (formulário de reunião, assuntos por setor, kanban) com RLS e migrar do `localStorage`/IndexedDB.
 3. Revisar cada página pelo lado da segurança (dados pessoais, HTML vindo da planilha, bibliotecas de CDN).
-- ⚠️ **Atenção:** o `saude-social.js` agora tenta baixar `../dados/familia-saude.xlsx` do próprio site. Essa planilha tem dados pessoais (CPF, nomes, telefones): **ela nunca pode ser publicada** no GitHub Pages. Hoje não existe pasta `dados/` no projeto. Com o banco, esses dados devem vir do Supabase com acesso restrito.
+- ⚠️ **Atenção:** o antigo `saude-social.js` tentava baixar `../dados/familia-saude.xlsx` do próprio site (a Geolocalização, desde 19/11/2026, só lê o que o usuário importa). Essa planilha tem dados pessoais (CPF, nomes, telefones): **ela nunca pode ser publicada** no GitHub Pages. Hoje não existe pasta `dados/` no projeto. Com o banco, esses dados devem vir do Supabase com acesso restrito.
 
 ### Fase anterior
 1. ✅ **Mascote NEXUS** (03/11/2026): camadas, olhos e cabeça seguindo o cursor, piscadas, expressões e ícone 512 × 512 prontos, e já usados no login.

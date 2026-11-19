@@ -273,7 +273,7 @@ a:focus-visible {
 #botaoVisaoGeral { --cor: var(--esp-laranja); --cor-rgb: 255, 138, 43; }
 .submenu-item[data-pagina="inteligencia"] { --cor: var(--esp-ciano); --cor-rgb: 34, 211, 255; }
 .submenu-item[data-pagina^="kanban-"] { --cor: var(--esp-azul); --cor-rgb: 47, 107, 255; }
-.submenu-item[data-pagina="saude-social"] { --cor: var(--esp-turquesa); --cor-rgb: 46, 230, 200; }
+.submenu-item[data-pagina="geolocalizacao"] { --cor: var(--esp-turquesa); --cor-rgb: 46, 230, 200; }
 #botaoFormularioReuniao,
 .submenu-item[data-pagina="formulario-reuniao"],
 .submenu-item[data-pagina="assuntos-por-setor"] { --cor: var(--esp-ambar); --cor-rgb: 255, 194, 74; }
@@ -1193,7 +1193,7 @@ html[data-tema="claro"] .luz-ambiente { opacity: 0.55; }
 html[data-tema="claro"] #botaoVisaoGeral { --cor: #E06A10; }
 html[data-tema="claro"] .submenu-item[data-pagina="inteligencia"] { --cor: #0A9CC4; }
 html[data-tema="claro"] .submenu-item[data-pagina^="kanban-"] { --cor: #2F6BFF; }
-html[data-tema="claro"] .submenu-item[data-pagina="saude-social"] { --cor: #0FA88F; }
+html[data-tema="claro"] .submenu-item[data-pagina="geolocalizacao"] { --cor: #0FA88F; }
 html[data-tema="claro"] #botaoFormularioReuniao,
 html[data-tema="claro"] .submenu-item[data-pagina="formulario-reuniao"],
 html[data-tema="claro"] .submenu-item[data-pagina="assuntos-por-setor"] { --cor: #C98200; }
