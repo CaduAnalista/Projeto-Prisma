@@ -220,8 +220,64 @@
         return { encerrados, pendentes, abertos };
     }
 
+    /* monta a tela a partir das linhas (da planilha importada ou do relatório salvo no banco) */
+    function conferirColunas(linhas) {
+        const colunas = resolverColunas(Object.keys(linhas[0]));
+        if (!colunas.encerrouPor && !colunas.responsavel) {
+            throw new Error('Não achei as colunas "Usuário Encerramento Ocorrência" nem "Descrição Operador Responsável".');
+        }
+        return colunas;
+    }
+    function aplicarLinhas(linhas, nomeArquivo, comAviso) {
+        const colunas = conferirColunas(linhas);
+        const { encerrados, pendentes, abertos } = prepararRegistros(linhas, colunas);
+        estado.encerrados = encerrados;
+        estado.pendentes = pendentes;
+        estado.abertos = abertos;
+        estado.temSla = Boolean(colunas.slaCumprido || colunas.previsao);
+        estado.nomeArquivo = nomeArquivo;
+        estado.filtros = filtrosVazios();
+        estado.hoje = hoje();
+
+        montarFiltros();
+        atualizarTudo();
+
+        if (!comAviso) return;
+        const falta = ['encerrouPor', 'responsavel', 'status', 'slaCumprido', 'abertura']
+            .filter((c) => !colunas[c]).map((c) => CAMPOS[c][0]);
+        avisar(`${numeroBR(encerrados.length)} encerrados e ${numeroBR(pendentes.length)} pendentes.` +
+            (falta.length ? ` Sem as colunas: ${falta.join(', ')}.` : ''), falta.length > 0);
+    }
+
+    /* relatório compartilhado no Supabase (20/11/2026): é a mesma planilha da Inteligência de Rede
+       e do CRM, então a tela abre com o relatório salvo e fica com ele até a próxima importação.
+       Só o gestor/admin importa; importar aqui também atualiza o CRM e a Inteligência. */
+    const R = window.PrismaRelatorio;
+    const banco = !!(R && R.configurado);
+    let podeImportar = !banco;
+    let importando = false;
+
+    async function carregarDoBanco() {
+        try {
+            const [linhas, ultima] = await Promise.all([R.carregarLinhas(), R.ultimaImportacao()]);
+            if (linhas.length) aplicarLinhas(linhas, (ultima && ultima.arquivo) || 'Relatório salvo', false);
+        } catch (erro) {
+            console.error(erro);
+            avisar('Não foi possível carregar o relatório salvo no banco.', true);
+        }
+    }
+    async function iniciarBanco() {
+        const botao = document.querySelector('label[for="arquivoExcel"]');
+        if (botao) botao.style.display = 'none';
+        try { podeImportar = await R.souGestao(); } catch (e) { podeImportar = false; }
+        if (podeImportar && botao) botao.style.display = '';
+        await carregarDoBanco();
+        R.acompanhar('volume', null, () => { if (!importando) carregarDoBanco().then(() => avisar('Um relatório novo foi importado e a tela foi atualizada.')); });
+    }
+
     function importarArquivo(arquivo) {
         if (!arquivo) return;
+        if (!podeImportar) { avisar('Só o gestor e o admin importam o relatório.', true); return; }
         if (!/\.(xlsx|xls|csv)$/i.test(arquivo.name)) { avisar('Formato não aceito. Use .xlsx, .xls ou .csv.', true); return; }
         if (!window.XLSX) { avisar('A biblioteca de leitura de Excel não carregou (LIB/xlsx-0.20.3.full.min.js).', true); return; }
 
@@ -229,32 +285,24 @@
         const leitor = new FileReader();
         leitor.onerror = () => avisar('Não foi possível ler o arquivo.', true);
         leitor.onload = () => {
-            setTimeout(() => {
+            setTimeout(async () => {
                 try {
                     const livro = XLSX.read(leitor.result, { type: 'array', cellDates: false });
                     const linhas = XLSX.utils.sheet_to_json(livro.Sheets[livro.SheetNames[0]], { defval: '', raw: true });
                     if (!linhas.length) throw new Error('A planilha está vazia.');
+                    conferirColunas(linhas);
 
-                    const colunas = resolverColunas(Object.keys(linhas[0]));
-                    if (!colunas.encerrouPor && !colunas.responsavel) {
-                        throw new Error('Não achei as colunas "Usuário Encerramento Ocorrência" nem "Descrição Operador Responsável".');
+                    if (banco) {
+                        importando = true;
+                        try {
+                            avisar('Enviando o relatório para o banco…');
+                            const r = await R.importar(linhas, arquivo.name);
+                            aplicarLinhas(linhas, arquivo.name, false);
+                            avisar(`Relatório salvo para todos: ${numeroBR(r.novos)} novo(s), ${numeroBR(r.atualizados)} atualizado(s) e ${numeroBR(r.removidos)} removido(s) no CRM.`);
+                        } finally { importando = false; }
+                    } else {
+                        aplicarLinhas(linhas, arquivo.name, true);
                     }
-                    const { encerrados, pendentes, abertos } = prepararRegistros(linhas, colunas);
-                    estado.encerrados = encerrados;
-                    estado.pendentes = pendentes;
-                    estado.abertos = abertos;
-                    estado.temSla = Boolean(colunas.slaCumprido || colunas.previsao);
-                    estado.nomeArquivo = arquivo.name;
-                    estado.filtros = filtrosVazios();
-                    estado.hoje = hoje();
-
-                    montarFiltros();
-                    atualizarTudo();
-
-                    const falta = ['encerrouPor', 'responsavel', 'status', 'slaCumprido', 'abertura']
-                        .filter((c) => !colunas[c]).map((c) => CAMPOS[c][0]);
-                    avisar(`${numeroBR(encerrados.length)} encerrados e ${numeroBR(pendentes.length)} pendentes.` +
-                        (falta.length ? ` Sem as colunas: ${falta.join(', ')}.` : ''), falta.length > 0);
                 } catch (erro) {
                     avisar(erro.message || 'Não foi possível ler a planilha.', true);
                 }
@@ -816,6 +864,7 @@
 
         estado.hoje = hoje();
         atualizarTudo();
+        if (banco) iniciarBanco();
     }
 
     iniciar();

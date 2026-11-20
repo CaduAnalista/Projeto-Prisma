@@ -25,6 +25,18 @@ Site chamado **PRISMA (Inteligência de Dados)**, uma **peça de portfólio pró
     - **colaborador:** só a **Visão geral** e o **CRM** (`kanban-crm`) **do(s) próprio(s) setor(es)**, liberados em `acessos_setor`. Conta nova nasce colaborador, sem setor.
   - SQL da etapa 1 em `SUPABASE/01-base-acesso.sql`: tabelas `setores`, `perfis`, `acessos_setor`, `paginas`, `permissoes_pagina` (papel × página, editável pelo gestor) e `historico` (quem mudou o quê e quando, gravado por gatilho, gestor e admin leem); funções `meu_papel()`, `eh_gestor()`, `eh_gestao()`, `pode_setor()`, `pode_setor_crm()` e `pode_pagina()`; RLS em todas. Todo SQL novo vai numerado nessa pasta (`02-...`, `03-...`).
   - ⚠️ Esconder a página no menu não basta: cada página interna vai conferir `pode_pagina()` ao abrir, e a proteção de verdade vem quando os dados dela estiverem no banco com RLS (ex.: os dados do Volume e produtividade numa tabela que só o gestor lê). Enquanto a página processar planilha no navegador, quem tiver a planilha e o endereço consegue usar.
+  - ✅ **Sincronia e importação (decisões do autor, 20/11/2026):**
+    - Todos precisam ver os mesmos dados ao mesmo tempo: o banco no Supabase **vai existir** para isso.
+    - O banco guarda **só a última foto** de cada planilha (o autor sempre importa o período todo). Cada importação nova substitui a anterior; nada se acumula.
+    - **Só o gestor e o admin importam.** O colaborador só trabalha nos cartões do(s) seu(s) setor(es).
+    - **CRM:** a importação substitui os dados da planilha, mas **mantém o trabalho da equipe** (coluna, responsável, observações, histórico, prioridade, transferência) de cada protocolo que continua na planilha nova. Protocolo que não vem mais na planilha sai do banco.
+    - **CRM:** protocolo criado dentro do PRISMA (`PRISMA-AAAA-NNNN`, tratativa extraordinária) **nunca** é atualizado nem apagado pela importação.
+    - **Um relatório só para CRM + Inteligência:** o relatório do CRM é importado em **dois lugares**, e os dois atualizam a mesma base: (1) na **Inteligência de Rede**; (2) no **CRM com o filtro Triagem** ("Triagem (todos os setores)"). Importar em qualquer um atualiza os CRMs de todos os setores **e** a Inteligência. **Sai o botão de importar do CRM de cada setor.**
+    - **Estudo de reclamações e Volume e produtividade** usam exatamente o mesmo relatório: também passam a ler da mesma base salva, até a próxima importação (decisão do autor, 20/11/2026).
+    - **A Inteligência de Rede fica salva até a próxima importação** (pedido do autor, 20/11/2026): ninguém precisa importar de novo ao abrir a página; ela monta os painéis a partir da mesma base do CRM guardada no banco.
+    - **Quem vê a Triagem é o admin** (e o gestor): o admin vê a Visão geral, todos os CRMs, a Triagem e a Inteligência de Rede, e é quem importa (junto com o gestor). O botão de importar só aparece para gestor e admin, e o banco recusa importação de qualquer outro papel.
+    - **CRM leva o CPF** do beneficiário (coluna da planilha: **`CPF Beneficiário`**; a equipe usa para procurar e cadastrar). Continua valendo: CPF nunca em URL, console nem localStorage; cada colaborador só vê o próprio setor (RLS).
+    - Vidas (Geolocalização): continua a decisão de levar para o banco só os números já contados, não a lista de pessoas.
   - ✅ **Triagem (decisão do autor, 19/11/2026):** no **CRM**, o colaborador com o setor Triagem **vê todos os setores** (e trata, como hoje: prioridade "Muito importante" e Novo protocolo PRISMA). Função `pode_setor_crm()`, separada do `pode_setor()` para a exceção valer só no CRM. A tabela do Kanban vai usar `pode_setor_crm()` nas regras.
 
 ### Regras de segurança (valem para todo código novo)
@@ -354,7 +366,7 @@ Novos setores seguem o mesmo padrão: botão de importar planilha, filtros e ind
     - **Dica do dia:** dia da semana com a data, encerrados, abertos e saldo.
     - No mês corrente o eixo vai **só até hoje** (data do computador) e ganha o dia seguinte sozinho a cada dia. Segue setor, canal, ocorrência e colaborador; período e situação não entram.
   - **Encerrados por prazo (RN 623)** (pedido do autor, 18/11/2026): colunas empilhadas por mês de encerramento, nos meses do período como a Evolução do IR (12 últimos sem filtro; os 6 últimos no celular), com em dia, atenção 4 dias, atenção 5 dias e atraso. Só entram encerrados; segue todos os filtros, menos a situação. A dica mostra quantidade e % de cada parte. Atenção 4 e 5 usam dois tons do âmbar (`--g-atencao4` mais claro e `--g-atencao5` mais escuro), validados junto com o verde e o vermelho.
-- **Precisando de ajuda:** lido do IndexedDB do Kanban (`prisma_kanban`, nome desde 20/11/2026; store `cartoes`, `tratativa.etapa === 'ajuda'`), pela chave [protocolo, num. ocorrência] (coluna `NUM_OCORRENCIA`; sem ela, só pelo protocolo). Relido ao voltar para a aba. ⚠️ Funciona só no mesmo navegador até existir o banco (Supabase).
+- **Precisando de ajuda:** vem do banco (`crm_cartoes` com `trabalho->tratativa->>etapa = 'ajuda'`, desde 20/11/2026), pela chave [protocolo, num. ocorrência] (coluna `NUM_OCORRENCIA`; sem ela, só pelo protocolo). Relido ao voltar para a aba e quando alguém mexe num cartão. Sem o banco configurado, lê o IndexedDB `prisma_kanban` como antes.
 - **Tabela:** Protocolo, Canal, CPF, Beneficiário, E-mail, Setor, Ocorrência, Abertura, Previsão, Status (prazo + situação + marca "Ajuda") e Observação de abertura. No desktop ocupa o bloco 3 inteiro, com paginação; no celular vira cartões.
 - **Exportar:** exatamente os protocolos da tabela (filtros + busca), com as colunas pedidas pelo autor: Protocolo, Canal, CPF, Beneficiário, E-mail, Setor, Ocorrência, Data de abertura, Previsão para encerrar, Status (ex.: "Pendente · Atrasado (RN 623) · Precisando de ajuda") e Observação de abertura.
 - O texto abaixo (estrutura de 03/11/2026) descreve a versão anterior, guardada em `ARQUIVO/inteligencia-v2/`; vale só a parte de setores e da RN 623.
@@ -476,6 +488,51 @@ Mesmo ritmo de sempre: o autor descreve, perguntamos o que tiver dúvida, fazemo
    - `visao-geral.js`: com Supabase, nome e e-mail reais no rodapé do menu e no "Olá, …!" (primeiro nome); esconde as páginas que o papel não abre (e o grupo que ficar vazio); para o colaborador, o grupo da Inteligência fica aberto sem a seta, mostrando só o CRM; "Sair do PRISMA" encerra a sessão; `abrirDashboard` recusa página sem permissão.
    - `JAVA/sessao-pagina.js` no `<head>` das 7 páginas internas (`data-pagina` = código da tabela `paginas`): se a Visão geral disser que o papel não abre a página, ela some e a Visão geral recarrega. É só a tela: os dados ficam protegidos pelo RLS quando forem para o banco.
 2. Banco: modelar as tabelas (formulário de reunião, assuntos por setor, kanban) com RLS e migrar do `localStorage`/IndexedDB.
+   - ✅ **Relatório do CRM no banco (20/11/2026), seguindo as decisões "Sincronia e importação" da seção 2:**
+     - `SUPABASE/04-relatorio-crm.sql` (rodado). Tabelas, todas com RLS:
+       - `relatorio_linhas`: a última planilha, uma linha por registro (`linha` jsonb);
+       - `relatorio_envio`: área de passagem, só aceita `insert` do gestor/admin;
+       - `relatorio_importacoes`: quem importou, quando e as contagens;
+       - `crm_cartoes`: `chave` = `["protocolo","num. ocorrência"]`, `origem` planilha|prisma, `setor`, `dados` (só PRISMA) e `trabalho` jsonb (tratativa, prioridade, transferidoDe);
+       - `crm_mudancas`: aviso ao vivo pelo Realtime, limpo depois de 1 dia;
+       - `crm_sequencia`: numeração PRISMA por ano.
+     - Funções:
+       - `meus_setores_crm()`: todos os setores para gestão e para o colaborador da Triagem; para os outros, os setores dele;
+       - `relatorio_aplicar()`: troca o relatório inteiro numa transação e devolve novos, atualizados e removidos;
+       - `crm_salvar()`: só o próprio setor; prioridade só a gestão;
+       - `crm_proximo_numero()` e `crm_criar_prisma()`: só a gestão.
+     - O colaborador só lê as linhas do relatório dos protocolos do setor dele.
+     - Detalhes do SQL:
+       - no Supabase, `delete` sem `where` pode ser recusado quando vem do site, por isso o SQL usa `where true`;
+       - as tabelas temporárias são apagadas antes de recriar;
+       - `= any ((select f())::text[])` precisa do cast.
+     - `JAVA/base-relatorio.js` (`window.PrismaRelatorio`):
+       - usa a sessão da Visão geral; se não der, a da própria página;
+       - só sobem as colunas que as páginas usam; telefone, endereço, CEP, nascimento, RG e nome da mãe ficam de fora;
+       - o envio é em lotes de 500 e a leitura paginada, de 1000 em 1000;
+       - o Realtime fecha quando a página sai do iframe.
+     - CRM (`kanban-tratativas.js?v=prisma7`):
+       - lê do banco: cartão + linha da planilha;
+       - antes de salvar, pega a versão mais nova do cartão;
+       - importar só na visão Triagem, para gestor/admin;
+       - a opção Triagem só aparece para gestor/admin; o colaborador vê só os setores dele e, com um setor só, já abre nele;
+       - campo "CPF Beneficiário" nos detalhes e na busca;
+       - "Ver detalhes" mostra os removidos;
+       - atualiza ao vivo;
+       - sem o banco configurado, continua no IndexedDB.
+     - Inteligência (`v=13`), Estudo (`v=4`) e Volume (`v=5`):
+       - abrem com o relatório salvo;
+       - importar (só gestor/admin) salva para todos e atualiza o CRM;
+       - recarregam sozinhas quando sai uma importação nova;
+       - na Inteligência, o "Precisando de ajuda" vem do `crm_cartoes`.
+     - Testado em 20/11/2026 com o autor logado, só com dados falsos:
+       - 2 importações: novos, atualizados e removidos certos; a tratativa e o PRISMA foram mantidos;
+       - tratativa, prioridade e protocolo PRISMA pela tela;
+       - as 4 páginas abrem com o relatório salvo;
+       - atualização ao vivo;
+       - colaborador bloqueado ao importar e ao criar PRISMA.
+       - Depois tudo foi apagado (banco zerado; a numeração recomeça em 0001).
+     - ⚠️ "Ver detalhes" mostra o nome de quem importou; sem nome no perfil, mostra o e-mail.
    - ✅ **Tudo com o nome PRISMA (20/11/2026, pedido do autor: "tudo precisa ter menção ao prisma"):** o nome antigo do projeto foi trocado por PRISMA em todos os textos, comentários, nomes de arquivo (imagens do mascote antigo, `JAVA/prisma.js`, `prisma-personagem.js`, `CSS/saude-social-prisma.css`) e na pasta `ARQUIVO/login-prisma/`. Backup completo de antes da troca ficou só no computador, fora do projeto.
      - O CRM grava em `prisma_kanban` e o Formulário/Assuntos em `prisma_assuntos_reuniao` (mensagem `prisma:assuntos-atualizados`).
      - **Única exceção:** a limpeza dos dados de teste no fim da `visao-geral.js` precisa citar os dois nomes antigos de armazenamento para o navegador achar e apagar (era onde estavam as planilhas importadas só para teste, que o autor pediu para zerar). Tema (`prisma-tema`) e tutoriais (`prisma-tutoriais-…`) não são tocados. Depois que o autor abrir o site atualizado uma vez em cada navegador onde testou, essa limpeza pode sair.

@@ -201,37 +201,85 @@
         return lista;
     }
 
+    /* monta a tela a partir das linhas (da planilha importada ou do relatório salvo no banco) */
+    function conferirColunas(linhas) {
+        const colunas = resolverColunas(Object.keys(linhas[0]));
+        if (!colunas.tipo && !colunas.canal) {
+            throw new Error('Não achei as colunas de tipo (DESC_TIPO_OCORRENCIA) nem de canal (DESC_COMUNICACAO).');
+        }
+        return colunas;
+    }
+    function aplicarLinhas(linhas, nomeArquivo, comAviso) {
+        const colunas = conferirColunas(linhas);
+        estado.base = prepararRegistros(linhas, colunas);
+        estado.temPlano = Boolean(colunas.plano);
+        estado.temColaborador = Boolean(colunas.colaborador);
+        estado.nomeArquivo = nomeArquivo;
+        estado.filtros = filtrosVazios();
+        $('fBenef').value = '';
+
+        montarFiltros();
+        atualizarTudo();
+
+        if (!comAviso) return;
+        const falta = ['plano', 'ocorrencia', 'cpf', 'colaborador'].filter((c) => !colunas[c]).map((c) => CAMPOS[c][0].replace(/ /g, '_'));
+        avisar(estado.base.length
+            ? `${numeroBR(estado.base.length)} reclamações de ${numeroBR(linhas.length)} linhas.${falta.length ? ` Sem as colunas: ${falta.join(', ')}.` : ''}`
+            : 'Nenhuma reclamação, Reclame Aqui ou ouvidoria nesta planilha.', !estado.base.length || falta.length > 0);
+    }
+
+    /* relatório compartilhado no Supabase (20/11/2026): é a mesma planilha da Inteligência de Rede
+       e do CRM, então a tela abre com o relatório salvo e fica com ele até a próxima importação.
+       Só o gestor/admin importa; importar aqui também atualiza o CRM e a Inteligência. */
+    const R = window.PrismaRelatorio;
+    const banco = !!(R && R.configurado);
+    let podeImportar = !banco;
+    let importando = false;
+
+    async function carregarDoBanco(comAviso) {
+        try {
+            const [linhas, ultima] = await Promise.all([R.carregarLinhas(), R.ultimaImportacao()]);
+            if (linhas.length) aplicarLinhas(linhas, (ultima && ultima.arquivo) || 'Relatório salvo', comAviso);
+        } catch (erro) {
+            console.error(erro);
+            avisar('Não foi possível carregar o relatório salvo no banco.', true);
+        }
+    }
+    async function iniciarBanco() {
+        const botao = document.querySelector('label[for="arquivoExcel"]');
+        if (botao) botao.style.display = 'none';
+        try { podeImportar = await R.souGestao(); } catch (e) { podeImportar = false; }
+        if (podeImportar && botao) botao.style.display = '';
+        await carregarDoBanco(false);
+        R.acompanhar('estudo', null, () => { if (!importando) carregarDoBanco(false).then(() => avisar('Um relatório novo foi importado e a tela foi atualizada.')); });
+    }
+
     function importarArquivo(arquivo) {
         if (!arquivo) return;
+        if (!podeImportar) { avisar('Só o gestor e o admin importam o relatório.', true); return; }
         if (!/\.(xlsx|xls|csv)$/i.test(arquivo.name)) { avisar('Formato não aceito. Use .xlsx, .xls ou .csv.', true); return; }
         if (!window.XLSX) { avisar('A biblioteca de leitura de Excel não carregou (LIB/xlsx-0.20.3.full.min.js).', true); return; }
 
         const leitor = new FileReader();
         leitor.onerror = () => avisar('Não foi possível ler o arquivo.', true);
-        leitor.onload = () => {
+        leitor.onload = async () => {
             try {
                 const livro = XLSX.read(leitor.result, { type: 'array', cellDates: false });
                 const linhas = XLSX.utils.sheet_to_json(livro.Sheets[livro.SheetNames[0]], { defval: '', raw: true });
                 if (!linhas.length) throw new Error('A planilha está vazia.');
+                conferirColunas(linhas);
 
-                const colunas = resolverColunas(Object.keys(linhas[0]));
-                if (!colunas.tipo && !colunas.canal) {
-                    throw new Error('Não achei as colunas de tipo (DESC_TIPO_OCORRENCIA) nem de canal (DESC_COMUNICACAO).');
+                if (banco) {
+                    importando = true;
+                    try {
+                        avisar('Enviando o relatório para o banco...');
+                        const r = await R.importar(linhas, arquivo.name);
+                        aplicarLinhas(linhas, arquivo.name, false);
+                        avisar(`Relatório salvo para todos: ${numeroBR(r.novos)} novo(s), ${numeroBR(r.atualizados)} atualizado(s) e ${numeroBR(r.removidos)} removido(s) no CRM.`);
+                    } finally { importando = false; }
+                } else {
+                    aplicarLinhas(linhas, arquivo.name, true);
                 }
-                estado.base = prepararRegistros(linhas, colunas);
-                estado.temPlano = Boolean(colunas.plano);
-                estado.temColaborador = Boolean(colunas.colaborador);
-                estado.nomeArquivo = arquivo.name;
-                estado.filtros = filtrosVazios();
-                $('fBenef').value = '';
-
-                montarFiltros();
-                atualizarTudo();
-
-                const falta = ['plano', 'ocorrencia', 'cpf', 'colaborador'].filter((c) => !colunas[c]).map((c) => CAMPOS[c][0].replace(/ /g, '_'));
-                avisar(estado.base.length
-                    ? `${numeroBR(estado.base.length)} reclamações de ${numeroBR(linhas.length)} linhas.${falta.length ? ` Sem as colunas: ${falta.join(', ')}.` : ''}`
-                    : 'Nenhuma reclamação, Reclame Aqui ou ouvidoria nesta planilha.', !estado.base.length || falta.length > 0);
             } catch (erro) {
                 avisar(erro.message || 'Não foi possível ler a planilha.', true);
             }
@@ -709,6 +757,7 @@
         observador.observe($('gSetor'));
 
         atualizarTudo();
+        if (banco) iniciarBanco();
     }
 
     iniciar();

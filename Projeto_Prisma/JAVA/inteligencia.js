@@ -1369,7 +1369,18 @@
 
     const BANCO_KANBAN = 'prisma_kanban';
 
-    function lerCartoesKanban() {
+    /* relatório compartilhado no Supabase (base-relatorio.js, 20/11/2026): com ele, os cartões
+       "Precisando de ajuda" vêm do banco, iguais para todos, e não mais do navegador */
+    const R = window.PrismaRelatorio;
+    const banco = !!(R && R.configurado);
+
+    async function lerCartoesKanban() {
+        if (banco) {
+            const { data, error } = await R.cliente().from('crm_cartoes')
+                .select('chave, protocolo').eq('trabalho->tratativa->>etapa', 'ajuda').limit(5000);
+            if (error) { console.error(error); return []; }
+            return (data || []).map((c) => ({ chave: c.chave, protocolo: c.protocolo, tratativa: { etapa: 'ajuda' } }));
+        }
         return new Promise((resolve) => {
             if (!('indexedDB' in window)) { resolve([]); return; }
             let pedido;
@@ -1470,8 +1481,69 @@
         return colunas;
     }
 
+    /* com o banco, só o gestor/admin importa; a importação daqui atualiza também os CRMs,
+       o Estudo de reclamações e o Volume e produtividade (pedido do autor, 20/11/2026) */
+    let podeImportar = !banco;
+    let importando = false;
+
+    function avisoDaImportacao(colunas) {
+        const semColuna = ['protocolo', 'cpf', 'email', 'status', 'previsao', 'observacao', 'canal', 'colaborador']
+            .filter((c) => !colunas[c]);
+        avisar(semColuna.length
+            ? `Planilha carregada, mas sem as colunas: ${semColuna.map((c) => CAMPOS[c][0]).join(', ')}.`
+            : `${numeroBR(estado.base.length)} ocorrências carregadas.`, semColuna.length > 0);
+    }
+
+    async function importarNoBanco(linhas, nomeArquivo) {
+        importando = true;
+        try {
+            const r = await R.importar(linhas, nomeArquivo, (feito, total) =>
+                mostrarCarregando(true, `Enviando para o banco: ${numeroBR(feito)} de ${numeroBR(total)} linhas`));
+            const colunas = carregarRegistros(linhas, nomeArquivo);
+            avisoDaImportacao(colunas);
+            setTimeout(() => avisar(`Relatório salvo para todos: ${numeroBR(r.novos)} novo(s), ${numeroBR(r.atualizados)} atualizado(s) e ${numeroBR(r.removidos)} removido(s) no CRM.`), 3600);
+        } finally {
+            importando = false;
+        }
+    }
+
+    /* abre o relatório que ficou salvo no banco (fica até a próxima importação) */
+    async function carregarDoBanco() {
+        mostrarCarregando(true, 'Carregando o relatório salvo');
+        try {
+            const [linhas, ultima] = await Promise.all([R.carregarLinhas(), R.ultimaImportacao()]);
+            if (linhas.length) carregarRegistros(linhas, (ultima && ultima.arquivo) || 'Relatório salvo');
+        } catch (erro) {
+            console.error(erro);
+            avisar('Não foi possível carregar o relatório salvo no banco.', true);
+        } finally {
+            mostrarCarregando(false);
+        }
+    }
+
+    async function iniciarBanco() {
+        /* o botão some enquanto eu confiro o papel da pessoa; volta só para o gestor/admin */
+        const botao = document.querySelector('label[for="arquivoExcel"]');
+        if (botao) botao.style.display = 'none';
+        try { podeImportar = await R.souGestao(); } catch (e) { podeImportar = false; }
+        if (podeImportar && botao) botao.style.display = '';
+        if (!podeImportar) {
+            $('vazioTexto').textContent = 'Ainda não há relatório. Ele aparece aqui assim que o gestor importar a planilha.';
+        }
+        await carregarDoBanco();
+        let espera = null;
+        R.acompanhar('inteligencia',
+            () => { clearTimeout(espera); espera = setTimeout(atualizarAjudaKanban, 800); },
+            () => { if (!importando) carregarDoBanco().then(() => avisar('Um relatório novo foi importado e a tela foi atualizada.')); });
+    }
+
     function importarArquivo(arquivo) {
         if (!arquivo) return;
+        if (!podeImportar) {
+            avisar('Só o gestor e o admin importam o relatório.', true);
+            $('arquivoExcel').value = '';
+            return;
+        }
         if (!/\.(xlsx|xls|csv)$/i.test(arquivo.name)) {
             avisar('Formato não aceito. Use .xlsx, .xls ou .csv.', true);
             return;
@@ -1486,19 +1558,21 @@
         leitor.onerror = () => { mostrarCarregando(false); avisar('Não foi possível ler o arquivo.', true); };
         leitor.onload = () => {
             /* deixa a tela de "carregando" aparecer antes do trabalho pesado */
-            setTimeout(() => {
+            setTimeout(async () => {
                 try {
                     const livro = XLSX.read(leitor.result, { type: 'array', cellDates: false });
                     const folha = livro.Sheets[livro.SheetNames[0]];
                     const linhas = XLSX.utils.sheet_to_json(folha, { defval: '', raw: true });
                     if (!linhas.length) throw new Error('A planilha está vazia.');
 
-                    const colunas = carregarRegistros(linhas, arquivo.name);
-                    const semColuna = ['protocolo', 'cpf', 'email', 'status', 'previsao', 'observacao', 'canal', 'colaborador']
-                        .filter((c) => !colunas[c]);
-                    avisar(semColuna.length
-                        ? `Planilha carregada, mas sem as colunas: ${semColuna.map((c) => CAMPOS[c][0]).join(', ')}.`
-                        : `${numeroBR(estado.base.length)} ocorrências carregadas.`, semColuna.length > 0);
+                    if (banco) {
+                        /* confiro as colunas antes de mandar (carregarRegistros reclama se faltar alguma) */
+                        const faltando = CAMPOS_OBRIGATORIOS.filter((c) => !resolverColunas(Object.keys(linhas[0]))[c]);
+                        if (faltando.length) throw new Error(`Colunas não encontradas: ${faltando.map((c) => CAMPOS[c][0]).join(', ')}.`);
+                        await importarNoBanco(linhas, arquivo.name);
+                    } else {
+                        avisoDaImportacao(carregarRegistros(linhas, arquivo.name));
+                    }
                 } catch (erro) {
                     console.error(erro);
                     avisar(`Erro ao ler a planilha: ${erro.message}`, true);
@@ -1739,6 +1813,7 @@
         montarFiltros();
         atualizarTudo();
         calcularLinhasPorPagina();
+        if (banco) iniciarBanco();
     }
 
     iniciar();
