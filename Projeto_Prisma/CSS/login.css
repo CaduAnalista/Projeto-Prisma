@@ -546,12 +546,6 @@ body {
 .link:hover { text-decoration: underline; }
 .link:focus-visible { outline: 2px solid var(--p-ciano); outline-offset: 3px; border-radius: 4px; }
 
-.link-teste {
-  display: block;
-  margin: 14px auto 0;
-  color: var(--p-texto-2);
-}
-
 .aviso {
   min-height: 1.4em;
   margin: 4px 0 12px;
@@ -670,7 +664,6 @@ body.saindo .cena {
   .campo-caixa { height: 46px; }
   .aviso { min-height: 1.2em; margin: 2px 0 8px; }
   .botao-entrar { height: 50px; }
-  .link-teste { margin-top: 8px; }
   .rodape { margin-top: 12px; padding-top: 10px; }
 }
 
@@ -826,7 +819,6 @@ body.saindo .cena {
   .link { font-size: 0.9rem; }
   .aviso { min-height: 1.1em; margin: 0 0 8px; font-size: 0.86rem; }
   .botao-entrar { height: 56px; font-size: 1.12rem; }
-  .link-teste { margin-top: 8px; }
   .rodape { margin-top: 10px; padding-top: 8px; font-size: 0.76rem; }
 }
 

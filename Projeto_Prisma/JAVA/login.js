@@ -1,14 +1,12 @@
 /* PRISMA — Login
 
-   Com o Supabase configurado (supabase-config.js), o e-mail e a senha são conferidos
-   no servidor do Supabase (sessao.js) e o acesso de teste some da tela.
-   ⚠️ Sem o Supabase configurado, vale só o acesso de teste abaixo, conferido no
-   navegador (modo de demonstração, NÃO é seguro).
+   O e-mail e a senha são conferidos no servidor do Supabase (sessao.js).
+   Tirei o "acesso de teste" em 19/11/2026 (pedido do autor): o site agora é de uso real,
+   então não existe mais login de demonstração. Sem o Supabase configurado, ninguém entra.
 */
 (() => {
   "use strict";
 
-  const ACESSO_TESTE = { email: "teste@corporativo.com", senha: "prisma2026" };
   const DESTINO = "./visao-geral.html";
   const DURACAO = 2800;            // ms da luz entrando até a troca de página
   const MAX_TENTATIVAS = 5;        // depois disso, espera
@@ -29,9 +27,6 @@
   const robo = window.PrismaRobo || { expressao() {}, reagir() {}, erro() {}, olharPara() {}, brilho() {} };
   const sessao = window.PrismaSessao;
   const loginReal = !!(sessao && sessao.configurado);
-
-  // com o login de verdade, o botão do acesso de teste sai da tela
-  if (loginReal) { const teste = $("acessoTeste"); if (teste) teste.hidden = true; }
   const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- fala do robô ---------- */
@@ -98,21 +93,11 @@
   });
 
   $("esqueciSenha").addEventListener("click", () => {
-    mostrarAviso(loginReal
-      ? "Peça ao gestor ou ao admin do PRISMA para redefinir a sua senha."
-      : "A recuperação de senha chega junto com o login seguro. Por enquanto, use o acesso de teste.", "info");
+    // só o gestor redefine senha (página Usuários)
+    mostrarAviso("Peça ao gestor do PRISMA para redefinir a sua senha.", "info");
     aviso.classList.remove("sucesso");
     aviso.style.color = "var(--p-texto-2)";
     setTimeout(() => (aviso.style.color = ""), 6000);
-  });
-
-  $("acessoTeste").addEventListener("click", () => {
-    email.value = ACESSO_TESTE.email;
-    senha.value = ACESSO_TESTE.senha;
-    mostrarAviso("");
-    robo.reagir("feliz", 1200);
-    falar("Acesso de teste preenchido. É só clicar em Entrar!");
-    botao.focus();
   });
 
   /* ---------- limite de tentativas ---------- */
@@ -175,12 +160,11 @@
       return;
     }
 
-    if (loginReal) { conferirNoSupabase(em, se); return; }
-
-    // ⚠️ modo de demonstração (ver o topo do arquivo)
-    const ok = em === ACESSO_TESTE.email && se === ACESSO_TESTE.senha;
-    if (!ok) { negar(); return; }
-    entrar();
+    if (!loginReal) {
+      recusar("O login não está configurado. Fale com o gestor do PRISMA.", "Não consegui falar com o servidor.");
+      return;
+    }
+    conferirNoSupabase(em, se);
   });
 
   function negar() {
