@@ -1340,6 +1340,60 @@ html[data-tema="claro"] .menu-fundo { background: rgba(14, 26, 58, 0.35); }
   html[data-tema="claro"] .menu-lateral { box-shadow: 18px 0 60px rgba(14, 26, 58, 0.25); }
 }
 
+/* =====================================================
+   TROCA OBRIGATÓRIA DA SENHA PROVISÓRIA (19/11/2026)
+   Janela que aparece no primeiro acesso de quem recebeu senha do gestor.
+===================================================== */
+
+.troca-senha {
+  width: min(440px, calc(100% - 32px));
+  padding: 28px;
+  border: 1px solid rgba(130, 170, 255, 0.22);
+  border-radius: 18px;
+  color: #EAF3FF;
+  background: linear-gradient(165deg, #111c40, #080e22);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+.troca-senha::backdrop { background: rgba(3, 6, 16, 0.82); backdrop-filter: blur(4px); }
+.troca-senha h2 { margin: 0 0 6px; font-size: 22px; }
+.troca-senha p { margin: 0 0 18px; color: #9DB0CF; font-size: 13px; line-height: 1.5; }
+.troca-senha label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; font-size: 13px; font-weight: 650; }
+
+.troca-senha input {
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid rgba(130, 170, 255, 0.22);
+  border-radius: 10px;
+  outline: 0;
+  color: #EAF3FF;
+  background: rgba(8, 14, 34, 0.7);
+  font: inherit;
+}
+
+.troca-senha input:focus { border-color: #FFC24A; box-shadow: 0 0 0 3px rgba(255, 194, 74, 0.16); }
+.troca-senha .troca-msg { min-height: 20px; margin: 0 0 8px; color: #ff8b97; }
+.troca-acoes { display: flex; justify-content: flex-end; gap: 10px; }
+
+.troca-acoes button {
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.troca-sair { border: 1px solid rgba(130, 170, 255, 0.22); background: rgba(22, 34, 72, 0.6); color: #EAF3FF; }
+.troca-salvar { border: 1px solid rgba(255, 210, 122, 0.7); background: linear-gradient(135deg, #FFD27A, #FFC24A 45%, #FF8A2B); color: #2A1600; }
+.troca-salvar:disabled { opacity: 0.6; cursor: wait; }
+
+html[data-tema="claro"] .troca-senha { color: #0E1A3A; background: #FFFFFF; }
+html[data-tema="claro"] .troca-senha p { color: #4F6086; }
+html[data-tema="claro"] .troca-senha input { color: #0E1A3A; background: #FFFFFF; border-color: rgba(47, 80, 160, 0.24); }
+html[data-tema="claro"] .troca-senha .troca-msg { color: #C42A48; }
+html[data-tema="claro"] .troca-sair { background: #FFFFFF; color: #0E1A3A; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

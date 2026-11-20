@@ -1,9 +1,9 @@
 /* PRISMA — Login
 
-   ⚠️ TEMPORÁRIO: enquanto o Supabase Auth não entra (CLAUDE.md, seção 2), a
-   verificação abaixo é só de demonstração e acontece no navegador. Ela NÃO é
-   segura e será trocada pela chamada ao Supabase. Por isso só existe o acesso
-   de teste, sem nenhuma conta real aqui.
+   Com o Supabase configurado (supabase-config.js), o e-mail e a senha são conferidos
+   no servidor do Supabase (sessao.js) e o acesso de teste some da tela.
+   ⚠️ Sem o Supabase configurado, vale só o acesso de teste abaixo, conferido no
+   navegador (modo de demonstração, NÃO é seguro).
 */
 (() => {
   "use strict";
@@ -27,6 +27,11 @@
   const mostrarSenha = $("mostrarSenha");
 
   const robo = window.PrismaRobo || { expressao() {}, reagir() {}, erro() {}, olharPara() {}, brilho() {} };
+  const sessao = window.PrismaSessao;
+  const loginReal = !!(sessao && sessao.configurado);
+
+  // com o login de verdade, o botão do acesso de teste sai da tela
+  if (loginReal) { const teste = $("acessoTeste"); if (teste) teste.hidden = true; }
   const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- fala do robô ---------- */
@@ -93,7 +98,9 @@
   });
 
   $("esqueciSenha").addEventListener("click", () => {
-    mostrarAviso("A recuperação de senha chega junto com o login seguro. Por enquanto, use o acesso de teste.", "info");
+    mostrarAviso(loginReal
+      ? "Peça ao gestor ou ao admin do PRISMA para redefinir a sua senha."
+      : "A recuperação de senha chega junto com o login seguro. Por enquanto, use o acesso de teste.", "info");
     aviso.classList.remove("sucesso");
     aviso.style.color = "var(--p-texto-2)";
     setTimeout(() => (aviso.style.color = ""), 6000);
@@ -168,20 +175,37 @@
       return;
     }
 
-    // ⚠️ verificação temporária (ver o topo do arquivo)
+    if (loginReal) { conferirNoSupabase(em, se); return; }
+
+    // ⚠️ modo de demonstração (ver o topo do arquivo)
     const ok = em === ACESSO_TESTE.email && se === ACESSO_TESTE.senha;
-
-    if (!ok) {
-      tentativas += 1;
-      senha.value = "";
-      // mensagem igual para e-mail ou senha errados: não revela qual dos dois falhou
-      recusar("E-mail ou senha incorretos.", "Hmm... não reconheci esse acesso. Confira seus dados.");
-      if (tentativas >= MAX_TENTATIVAS) bloquear();
-      return;
-    }
-
+    if (!ok) { negar(); return; }
     entrar();
   });
+
+  function negar() {
+    tentativas += 1;
+    senha.value = "";
+    // mensagem igual para e-mail ou senha errados: não revela qual dos dois falhou
+    recusar("E-mail ou senha incorretos.", "Hmm... não reconheci esse acesso. Confira seus dados.");
+    if (tentativas >= MAX_TENTATIVAS) bloquear();
+  }
+
+  async function conferirNoSupabase(em, se) {
+    enviando = true;
+    botao.disabled = true;
+    botao.querySelector("span").textContent = "Conferindo...";
+    let r;
+    try { r = await sessao.entrar(em, se); } catch (_) { r = { ok: false, motivo: "rede" }; }
+    enviando = false;
+    botao.disabled = false;
+    botao.querySelector("span").textContent = "Entrar";
+    if (r.ok) { entrar(); return; }
+    if (r.motivo === "rede") { recusar("Sem conexão com o servidor. Tente de novo.", "Não consegui falar com o servidor."); return; }
+    if (r.motivo === "muitas-tentativas") { senha.value = ""; bloquear(); return; }
+    if (r.motivo === "bloqueado") { senha.value = ""; recusar("Este acesso está bloqueado. Fale com o gestor ou o admin.", "Esse acesso está desativado."); return; }
+    negar();
+  }
 
   function entrar() {
     enviando = true;

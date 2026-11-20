@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050916"><script src="../JAVA/tema.js?v=1"></script>
+<title>Usuários | PRISMA</title>
+<!-- trava do login: só o gestor abre esta página (quem protege de verdade é o banco e a função) -->
+<script src="../JAVA/sessao-pagina.js?v=1" data-pagina="usuarios"></script>
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/svg+xml" href="../ASSETS/prisma-icone.svg">
+
+<link rel="stylesheet" href="../CSS/usuarios.css?v=1">
+<script src="../JAVA/usuarios.js?v=3" defer></script>
+</head>
+<body>
+<!-- Página interna: o menu lateral pertence só à Visão Geral. -->
+<main class="pagina-usuarios">
+  <header class="cabecalho-pagina">
+    <div>
+      <span class="sobretitulo">CONTAS E ACESSOS</span>
+      <h1>Usuários</h1>
+      <p>Crie os logins da equipe, escolha o papel e os setores de cada pessoa.</p>
+    </div>
+    <span class="etiqueta">Só o gestor vê esta página</span>
+  </header>
+
+  <p class="aviso-informativo">A conta nasce com uma <strong>senha provisória</strong>. Passe a senha para a pessoa por um canal seguro: no primeiro acesso o PRISMA obriga a trocar por uma senha só dela.</p>
+
+  <!-- ========== NOVO USUÁRIO ========== -->
+  <section class="cartao" aria-labelledby="tituloNovo">
+    <div class="cartao-cabecalho">
+      <h2 id="tituloNovo">Novo usuário</h2>
+      <span>* Campos obrigatórios</span>
+    </div>
+    <form id="formNovo" class="cartao-corpo" autocomplete="off" novalidate>
+      <div class="grade-campos">
+        <label class="campo">
+          <span>Nome <em>*</em></span>
+          <input id="novoNome" type="text" maxlength="120" placeholder="Nome completo" required>
+        </label>
+        <label class="campo">
+          <span>E-mail <em>*</em></span>
+          <input id="novoEmail" type="email" maxlength="254" placeholder="nome@empresa.com" required>
+        </label>
+        <label class="campo">
+          <span>Papel <em>*</em></span>
+          <select id="novoPapel">
+            <option value="colaborador">Colaborador — Visão geral e CRM do(s) seu(s) setor(es)</option>
+            <option value="admin">Admin — tudo, menos Volume e produtividade</option>
+            <option value="gestor">Gestor — tudo, inclusive esta página</option>
+          </select>
+        </label>
+        <div class="campo">
+          <span>Senha provisória <em>*</em></span>
+          <div class="linha-senha">
+            <input id="novaSenha" type="text" maxlength="72" placeholder="8+ caracteres, letras e números" spellcheck="false" autocomplete="off" required>
+            <button type="button" class="botao botao-secundario" id="gerarSenha">Gerar</button>
+          </div>
+        </div>
+      </div>
+      <fieldset class="campo campo-setores" id="blocoSetores">
+        <legend>Setores <small>(o colaborador só vê o CRM destes setores)</small></legend>
+        <div class="lista-setores" id="novoSetores"></div>
+      </fieldset>
+      <p class="mensagem" id="msgNovo" role="status" aria-live="polite"></p>
+      <div class="acoes">
+        <button type="reset" class="botao botao-secundario">Limpar</button>
+        <button type="submit" class="botao botao-primario" id="botaoCriar">Criar usuário</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ========== LISTA DE CONTAS ========== -->
+  <section class="cartao" aria-labelledby="tituloLista">
+    <div class="cartao-cabecalho">
+      <h2 id="tituloLista">Contas</h2>
+      <span id="contagem"></span>
+    </div>
+    <div class="cartao-corpo">
+      <p class="mensagem" id="msgLista" role="status" aria-live="polite"></p>
+      <div class="tabela-rolagem">
+        <table class="tabela">
+          <thead>
+            <tr><th>Nome</th><th>E-mail</th><th>Papel</th><th>Setores</th><th>Situação</th><th class="col-acoes">Ações</th></tr>
+          </thead>
+          <tbody id="corpoTabela"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- janela para editar setores / redefinir senha -->
+<dialog id="janela" class="janela" aria-labelledby="janelaTitulo">
+  <form method="dialog" id="janelaForm">
+    <h3 id="janelaTitulo"></h3>
+    <p class="janela-sub" id="janelaSub"></p>
+    <div id="janelaConteudo"></div>
+    <p class="mensagem" id="janelaMsg" role="status" aria-live="polite"></p>
+    <div class="acoes">
+      <button type="button" class="botao botao-secundario" id="janelaCancelar">Cancelar</button>
+      <button type="submit" class="botao botao-primario" id="janelaOk">Salvar</button>
+    </div>
+  </form>
+</dialog>
+</body>
+</html>

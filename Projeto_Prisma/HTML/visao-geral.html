@@ -25,13 +25,18 @@
   <!-- modo claro / escuro: vem antes do CSS para a tela não piscar -->
   <script src="../JAVA/tema.js?v=1"></script>
 
+  <!-- login de verdade (Supabase): sem sessão válida, volta para o login antes de mostrar a tela -->
+  <script src="../LIB/supabase.js"></script>
+  <script src="../JAVA/supabase-config.js?v=2"></script>
+  <script src="../JAVA/sessao.js?v=2"></script>
+
   <!-- chegada pela luz do login (PRISMA) -->
   <script src="../JAVA/prisma-chegada.js"></script>
 
   <!-- ESTILOS DA VISÃO GERAL -->
   <link
     rel="stylesheet"
-    href="../CSS/visao-geral.css?v=11"
+    href="../CSS/visao-geral.css?v=12"
   >
   <link rel="stylesheet" href="../CSS/tutorial.css?v=1">
 </head>
@@ -402,6 +407,9 @@
 
             </button>
 
+            <!-- USUÁRIOS (pedido do autor, 19/11/2026): só o gestor vê; cria e cuida dos logins -->
+            <button type="button" class="submenu-item" data-pagina="usuarios" data-url="./usuarios.html" title="Abrir Usuários"><span class="submenu-icone" aria-hidden="true">⚿</span><span>Usuários</span></button>
+
           </div>
 
         </div>
@@ -731,7 +739,7 @@
        JAVASCRIPT
   ========================================== -->
 
-  <script src="../JAVA/visao-geral.js?v=11"></script>
+  <script src="../JAVA/visao-geral.js?v=12"></script>
   <script src="../JAVA/tutorial.js?v=8"></script>
 
 </body>

@@ -170,7 +170,9 @@
       titulo: "NIP",
       subtitulo:
         "Monitoramento de demandas e notificações"
-    }
+    },
+
+    "usuarios": { titulo: "Usuários", subtitulo: "Contas, papéis e setores (só o gestor)" }
   };
 
   /* ================================================
@@ -557,6 +559,12 @@
   ================================================= */
 
   function abrirDashboard(idPagina, url) {
+    // página que o papel da pessoa não abre: não carrega (o banco também recusa os dados)
+    if (window.PrismaSessao && !window.PrismaSessao.podePagina(idPagina)) {
+      console.warn("PRISMA: sem permissão para", idPagina);
+      return;
+    }
+
     if (!url || !PAGINAS[idPagina]) {
       console.warn(
         "PRISMA: dashboard indisponível:",
@@ -700,6 +708,156 @@
 
   paginaInicial.hidden = false;
   painelDinamico.hidden = true;
+
+  /* ================================================
+     LOGIN DE VERDADE (Supabase)
+     Sem sessão, o sessao.js manda de volta para o login.
+     Com sessão: nome e e-mail no rodapé do menu, só as
+     páginas do papel da pessoa e "Sair" encerrando a sessão.
+     Sem o Supabase configurado, nada muda (demonstração).
+  ================================================= */
+
+  const sessao = window.PrismaSessao;
+
+  if (sessao && sessao.configurado) {
+    sessao.protegerCasca().then(perfil => {
+      if (!perfil) return;
+
+      const nome = document.querySelector(".usuario-nome");
+      const email = document.querySelector(".usuario-email");
+      if (nome) nome.textContent = perfil.nome || perfil.email;
+      // "Olá, Fulano!" das boas-vindas: só o primeiro nome
+      const ola = document.querySelector(".pagina-inicial h2 .texto-espectro, #paginaInicial h2 .texto-espectro");
+      if (ola) ola.textContent = (perfil.nome || "").trim().split(/\s+/)[0] || "bem-vindo";
+      if (email) email.textContent = perfil.email;
+
+      // esconde o que o papel não abre (só organiza a tela; quem protege é o RLS)
+      document.querySelectorAll("[data-pagina]").forEach(el => {
+        const codigo = el.dataset.pagina;
+        if (codigo !== "visao-geral" && !sessao.podePagina(codigo)) el.hidden = true;
+      });
+
+      // grupo do menu que ficou sem nenhuma página visível some junto com o botão que o abre
+      document.querySelectorAll(".submenu").forEach(grupo => {
+        const visiveis = grupo.querySelectorAll(".submenu-item[data-pagina]:not([hidden])").length;
+        if (visiveis) return;
+        grupo.hidden = true;
+        if (grupo.id) {
+          document.querySelectorAll(`[aria-controls="${grupo.id}"]`).forEach(b => { b.hidden = true; });
+        }
+      });
+
+      // colaborador: não abre o painel da Inteligência, mas abre o CRM que fica dentro dela.
+      // Nesse caso o grupo fica sempre aberto e a setinha some (senão sobraria só a seta solta).
+      const itemInteligencia = document.querySelector('.submenu-item[data-pagina="inteligencia"]');
+      if (itemInteligencia && itemInteligencia.hidden && submenuInteligencia) {
+        const filhos = submenuInteligencia.querySelectorAll(".submenu-item[data-pagina]:not([hidden])").length;
+        if (filhos) {
+          definirSubmenuInteligencia(true);
+          if (botaoExpandirInteligencia) botaoExpandirInteligencia.hidden = true;
+        }
+      }
+
+      const sair = document.getElementById("botaoSair");
+      if (sair) {
+        sair.addEventListener("click", e => {
+          e.preventDefault();
+          sessao.sair();
+        });
+      }
+
+      // conta com senha provisória: só passa daqui depois de trocar a senha
+      if (perfil.trocarSenha) mostrarTrocaSenha(sessao);
+    });
+  }
+
+  /* ================================================
+     TROCA OBRIGATÓRIA DA SENHA PROVISÓRIA
+     A janela não fecha com Esc nem clicando fora: ou troca a senha, ou sai.
+  ================================================= */
+
+  function mostrarTrocaSenha(sessao) {
+    const janela = document.createElement("dialog");
+    janela.className = "troca-senha";
+    janela.setAttribute("aria-labelledby", "trocaTitulo");
+
+    const form = document.createElement("form");
+    form.noValidate = true;
+
+    const titulo = document.createElement("h2");
+    titulo.id = "trocaTitulo";
+    titulo.textContent = "Crie a sua senha";
+
+    const texto = document.createElement("p");
+    texto.textContent = "Você entrou com uma senha provisória. Antes de continuar, escolha uma senha só sua (8 caracteres ou mais, com letras e números).";
+
+    const campo = (rotulo, id) => {
+      const label = document.createElement("label");
+      const span = document.createElement("span");
+      span.textContent = rotulo;
+      const input = document.createElement("input");
+      input.type = "password";
+      input.id = id;
+      input.autocomplete = "new-password";
+      input.maxLength = 72;
+      input.required = true;
+      label.append(span, input);
+      return { label, input };
+    };
+    const nova = campo("Nova senha", "trocaNova");
+    const confirma = campo("Repita a nova senha", "trocaConfirma");
+
+    const msg = document.createElement("p");
+    msg.className = "troca-msg";
+    msg.setAttribute("role", "status");
+    msg.setAttribute("aria-live", "polite");
+
+    const acoes = document.createElement("div");
+    acoes.className = "troca-acoes";
+    const botaoSair = document.createElement("button");
+    botaoSair.type = "button";
+    botaoSair.className = "troca-sair";
+    botaoSair.textContent = "Sair";
+    botaoSair.addEventListener("click", () => sessao.sair());
+    const botaoSalvar = document.createElement("button");
+    botaoSalvar.type = "submit";
+    botaoSalvar.className = "troca-salvar";
+    botaoSalvar.textContent = "Salvar senha";
+    acoes.append(botaoSair, botaoSalvar);
+
+    form.append(titulo, texto, nova.label, confirma.label, msg, acoes);
+    janela.appendChild(form);
+    document.body.appendChild(janela);
+
+    janela.addEventListener("cancel", e => e.preventDefault());   // Esc não fecha
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const s = nova.input.value;
+      if (s.length < 8 || !/[A-Za-z]/.test(s) || !/\d/.test(s)) {
+        msg.textContent = "A senha precisa de 8 caracteres ou mais, com letras e números.";
+        return;
+      }
+      if (s !== confirma.input.value) {
+        msg.textContent = "As duas senhas não são iguais.";
+        return;
+      }
+      botaoSalvar.disabled = true;
+      botaoSalvar.textContent = "Salvando...";
+      const r = await sessao.trocarSenha(s);
+      if (!r.ok) {
+        msg.textContent = r.erro;
+        botaoSalvar.disabled = false;
+        botaoSalvar.textContent = "Salvar senha";
+        return;
+      }
+      // recarrego para o menu aparecer já com as páginas liberadas
+      window.location.reload();
+    });
+
+    janela.showModal();
+    nova.input.focus();
+  }
 
   console.info(
     "PRISMA: navegação dinâmica inicializada."
