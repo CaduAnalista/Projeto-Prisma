@@ -1362,12 +1362,12 @@
     /* ======================================================
        13. "PRECISANDO DE AJUDA" DO KANBAN
        O Kanban guarda os cartões no IndexedDB deste navegador
-       (nexus_v2_kanban, store "cartoes", chave [protocolo, num. ocorrência]).
+       (prisma_kanban, store "cartoes", chave [protocolo, num. ocorrência]).
        Aqui eu só leio. Se o banco ainda não existe, crio as mesmas
        stores que o Kanban criaria, para não atrapalhar ele depois.
     ====================================================== */
 
-    const BANCO_KANBAN = 'nexus_v2_kanban';
+    const BANCO_KANBAN = 'prisma_kanban';
 
     function lerCartoesKanban() {
         return new Promise((resolve) => {

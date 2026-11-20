@@ -1,15 +1,15 @@
-/* NEXUS — personagem animado (imagens 3D em camadas)
+/* PRISMA — personagem animado (imagens 3D em camadas)
    Camadas: corpo (imagem inteira, com o miolo da cabeça escondido atrás)
           + cabeça recortada + íris desenhadas em SVG sobre os olhos vazios.
    Olhos rápidos, cabeça lenta, piscadas, olhar ocioso e expressões.
-   API: Nexus.expressao("curioso" | "feliz" | "pensando" | "erro" | "pronto")
-        Nexus.reagir("erro", 2200)  → muda a expressão e volta ao normal
-        Nexus.olharPara(elemento)   → olha para um elemento da página (ex.: campo em foco)
-        Nexus.atual                 → nome da expressão atual */
+   API: Prisma.expressao("curioso" | "feliz" | "pensando" | "erro" | "pronto")
+        Prisma.reagir("erro", 2200)  → muda a expressão e volta ao normal
+        Prisma.olharPara(elemento)   → olha para um elemento da página (ex.: campo em foco)
+        Prisma.atual                 → nome da expressão atual */
 (() => {
   "use strict";
 
-  const palco = document.getElementById("nexusPalco");
+  const palco = document.getElementById("prismaPalco");
   if (!palco) return;
 
   const $ = (id) => document.getElementById(id);
@@ -24,9 +24,9 @@
   const CENTRO_OLHOS = { x: 582, y: 310 };  // referência para calcular a direção do olhar
   const NUCLEO = { x: 626, y: 737 };        // núcleo luminoso do peito
 
-  const corpo = $("nexusCorpo");
-  const cabeca = $("nexusCabeca");
-  const nucleo = $("nexusNucleo");
+  const corpo = $("prismaCorpo");
+  const cabeca = $("prismaCabeca");
+  const nucleo = $("prismaNucleo");
 
   /* Cada olho: centro neutro da íris (olhando para quem vê), limites verticais e horizontais. */
   const olhos = [
@@ -308,5 +308,5 @@
   palco.dataset.expressao = nome;
   requestAnimationFrame(quadro);
 
-  window.Nexus = { expressao, reagir, olharPara, get atual() { return nome; } };
+  window.Prisma = { expressao, reagir, olharPara, get atual() { return nome; } };
 })();

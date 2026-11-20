@@ -1,4 +1,4 @@
-/* NEXUS V2 | Formulário de reunião — Assuntos por setor */
+/* PRISMA | Formulário de reunião — Assuntos por setor */
 :root{color-scheme:dark;--fundo:#07172e;--painel:#0b2444;--painel-2:#12365d;--borda:#2c628f;--texto:#f3f8ff;--secundario:#b6cbe4;--ciano:#08c9f2;--verde:#0d946a;--verde-2:#06684f;--verde-borda:#33e6a5;--foco:#65dfff}
 *{box-sizing:border-box}html{min-height:100%;background:var(--fundo)}
 body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 100% 0%,#123d71 0%,transparent 45%),linear-gradient(145deg,#07172e,#081f3d 72%,#06152c);font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--texto)}
@@ -56,7 +56,7 @@ button,input,textarea,select{font:inherit}button:focus-visible,input:focus-visib
 @media(max-width:650px){.pagina-assuntos{padding:16px 12px 30px}.cabecalho-pagina{align-items:flex-start;flex-direction:column}.barra-ferramentas{grid-template-columns:1fr;padding:14px}.botao-atualizar{width:100%}.cartao-setor{padding:20px;min-height:150px}.cartao-cabecalho h2{font-size:24px}.lista-assuntos li{font-size:18px}.etiqueta-reuniao{font-size:12px}.form-edicao{padding:18px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}
 
-/* Plano de ação 5W2H: modal compacto, mantendo a identidade visual do NEXUS. */
+/* Plano de ação 5W2H: modal compacto, mantendo a identidade visual do PRISMA. */
 .texto-assunto[role="button"]{cursor:pointer;border-radius:7px;transition:color .15s,background .15s}
 .texto-assunto[role="button"]:hover{color:#74efff;text-decoration:underline;text-underline-offset:4px}
 .texto-assunto[role="button"]:focus-visible{outline:2px solid var(--foco);outline-offset:3px}

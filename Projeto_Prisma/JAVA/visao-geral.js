@@ -859,6 +859,18 @@
     nova.input.focus();
   }
 
+  /* ================================================
+     LIMPEZA DOS DADOS DE TESTE (20/11/2026)
+     O autor pediu para zerar o que foi importado só para testar. O CRM e o
+     Formulário agora guardam em "prisma_kanban" e "prisma_assuntos_reuniao";
+     aqui eu apago os dois lugares antigos, onde ficaram as planilhas de teste.
+     (Os nomes antigos precisam aparecer aqui só para o navegador achar o que apagar.)
+     Tema e tutoriais (prisma-tema, prisma-tutoriais-...) não são tocados.
+  ================================================= */
+
+  try { indexedDB.deleteDatabase("nexus_v2_kanban"); } catch (_) { /* navegador sem IndexedDB */ }
+  try { localStorage.removeItem("nexus_v2_assuntos_reuniao"); } catch (_) { /* sem armazenamento */ }
+
   console.info(
     "PRISMA: navegação dinâmica inicializada."
   );

@@ -1,4 +1,4 @@
-/* NEXUS — fundo animado: pontos que se ligam formando uma rede de dados.
+/* PRISMA — fundo animado: pontos que se ligam formando uma rede de dados.
    Leve de propósito: poucos pontos, pausa quando a aba está escondida
    e fica parado se o usuário pediu menos movimento. */
 (() => {
@@ -18,8 +18,8 @@
   let lerCoresAte = performance.now() + 700;
   function lerCores() {
     if (performance.now() > lerCoresAte) return;
-    COR_PONTO = estilo.getPropertyValue("--nexus-primaria").trim() || COR_PONTO;
-    COR_LINHA = estilo.getPropertyValue("--nexus-secundaria").trim() || COR_LINHA;
+    COR_PONTO = estilo.getPropertyValue("--prisma-primaria").trim() || COR_PONTO;
+    COR_LINHA = estilo.getPropertyValue("--prisma-secundaria").trim() || COR_LINHA;
   }
   new MutationObserver(() => { lerCoresAte = performance.now() + 700; })
     .observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });

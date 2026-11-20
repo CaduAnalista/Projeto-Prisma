@@ -1,12 +1,12 @@
-/* NEXUS — personagem animado
+/* PRISMA — personagem animado
    Olhos que seguem o cursor, cabeça com atraso, piscadas e expressões.
-   Uso: inclua o SVG com id="nexus" na página e carregue este arquivo.
-   API: Nexus.expressao("curioso" | "feliz" | "pensando" | "erro")
-        Nexus.reagir("erro", 2200)  → muda a expressão e volta ao normal */
+   Uso: inclua o SVG com id="prisma" na página e carregue este arquivo.
+   API: Prisma.expressao("curioso" | "feliz" | "pensando" | "erro")
+        Prisma.reagir("erro", 2200)  → muda a expressão e volta ao normal */
 (() => {
   "use strict";
 
-  const svg = document.getElementById("nexus");
+  const svg = document.getElementById("prisma");
   if (!svg) return;
 
   const $ = (id) => document.getElementById(id);
@@ -180,5 +180,5 @@
 
   requestAnimationFrame(quadro);
 
-  window.Nexus = { expressao, reagir, get atual() { return nome; } };
+  window.Prisma = { expressao, reagir, get atual() { return nome; } };
 })();

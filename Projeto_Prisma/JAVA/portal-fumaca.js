@@ -1,4 +1,4 @@
-/* NEXUS — fumaça da transição de portal (login aceito)
+/* PRISMA — fumaça da transição de portal (login aceito)
    Uma nebulosa de fumaça ciano, azul e violeta nasce no centro, gira devagar
    e se espalha até tomar a tela; no fim, uma névoa clara cobre tudo e a página
    de destino abre (lá o portal-chegada.js dissolve a mesma névoa).

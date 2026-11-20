@@ -1,4 +1,4 @@
-/* NEXUS — chegada pelo portal
+/* PRISMA — chegada pelo portal
    Quando a página é aberta pelo login (transição de portal), continua a névoa
    clara que cobriu a tela e a dissolve aos poucos: primeiro a névoa fica
    transparente e o desfoque da página vai sumindo, como se a nova realidade
@@ -8,8 +8,8 @@
 
   let veioDoPortal = false;
   try {
-    veioDoPortal = sessionStorage.getItem("nexus-portal") === "1";
-    sessionStorage.removeItem("nexus-portal");
+    veioDoPortal = sessionStorage.getItem("prisma-portal") === "1";
+    sessionStorage.removeItem("prisma-portal");
   } catch (erro) {
     return;
   }

@@ -1,6 +1,6 @@
 
 /*
-  NEXUS — Login demonstrativo V2
+  PRISMA — Login demonstrativo V2
 
   Usuário de teste:
   Nome: Teste
@@ -21,9 +21,9 @@
   const balao = document.getElementById("balao");
   const balaoTexto = document.getElementById("balaoTexto");
   const botao = document.getElementById("botaoEntrar");
-  const palco = document.getElementById("nexusPalco");
+  const palco = document.getElementById("prismaPalco");
 
-  const nexus = window.Nexus || {
+  const prisma = window.Prisma || {
     expressao() {},
     reagir() {},
     olharPara() {}
@@ -129,7 +129,7 @@
 
     falar(fala);
 
-    nexus.reagir("erro", 2400);
+    prisma.reagir("erro", 2400);
 
     cartao.classList.remove("tremer");
 
@@ -226,7 +226,7 @@
 
     try {
       sessionStorage.setItem(
-        "nexus-portal",
+        "prisma-portal",
         "1"
       );
     } catch (erro) {
@@ -253,28 +253,28 @@
 
   [nome, email].forEach((campo) => {
     campo.addEventListener("focus", () => {
-      nexus.olharPara(campo);
+      prisma.olharPara(campo);
 
-      nexus.expressao("curioso");
+      prisma.expressao("curioso");
 
       falar(FALAS[campo.id]);
     });
 
     campo.addEventListener("input", () => {
-      nexus.olharPara(campo);
+      prisma.olharPara(campo);
     });
 
     campo.addEventListener("blur", () => {
-      nexus.olharPara(null);
+      prisma.olharPara(null);
     });
   });
 
   /*
-    INTERAÇÃO COM O NEXUS
+    INTERAÇÃO COM O PRISMA
   */
 
   palco.addEventListener("click", () => {
-    nexus.reagir("feliz", 1400);
+    prisma.reagir("feliz", 1400);
 
     falar(
       "Ei! Estou pronto para apresentar os indicadores."
@@ -397,12 +397,12 @@
     );
 
     /*
-      Reação do NEXUS
+      Reação do PRISMA
     */
 
-    nexus.olharPara(null);
+    prisma.olharPara(null);
 
-    nexus.expressao("pronto");
+    prisma.expressao("pronto");
 
     falar(
       `Tudo certo, ${primeiroNome(nomeInformado)}! Vamos começar!`
@@ -452,7 +452,7 @@
     nome.value = "Teste";
     email.value = "teste@corporativo.com";
 
-    nexus.expressao("curioso");
+    prisma.expressao("curioso");
   });
 
   /*

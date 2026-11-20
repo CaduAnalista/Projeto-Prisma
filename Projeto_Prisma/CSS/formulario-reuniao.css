@@ -1,4 +1,4 @@
-/* NEXUS V2 — Formulário para a reunião
+/* PRISMA — Formulário para a reunião
    Página interna da Visão Geral: não cria menu lateral. */
 :root{color-scheme:dark;--fundo:#0b1424;--painel:#111f35;--painel2:#152941;--linha:#29415e;--texto:#edf6ff;--muted:#9db3cb;--ciano:#2bd4f4;--azul:#1179e8;--azul2:#0958c7;--verde:#24c28a;--erro:#ff8b97;--raio:18px}
 *{box-sizing:border-box}

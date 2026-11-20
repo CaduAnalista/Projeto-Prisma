@@ -15,7 +15,8 @@ const SETORES=['ADM/PAT','Reembolso','Credenciamento','Auditoria','Cadastro','Ca
 const ETAPAS=[['entrada','Todos que entraram'],['atencao','Em atenção'],['atraso','Atraso'],['importante','Muito importante'],['interno','Em andamento interno'],['externo','Em andamento externo'],['ajuda','Precisando de ajuda'],['concluido','Concluído']];
 /* colunas que pedem uma observação para o cartão entrar (assim o histórico explica o porquê) */
 const EXIGE_NOTA=['ajuda','concluido'];
-const DB='nexus_v2_kanban', VERSION=1;const $=id=>document.getElementById(id);
+/* nome do banco local trocado para "prisma_kanban" em 20/11/2026 (o antigo, com os testes, é apagado pela Visão geral) */
+const DB='prisma_kanban', VERSION=1;const $=id=>document.getElementById(id);
 const SETORES_SLUG={'adm-pat':'ADM/PAT','reembolso':'Reembolso','credenciamento':'Credenciamento','auditoria':'Auditoria','cadastro':'Cadastro','captacao':'Captação','financeiro':'Financeiro','triagem':'Triagem'};
 const setorParametro=new URLSearchParams(location.search).get('setor');
 if (setorParametro && SETORES_SLUG[setorParametro]) $('setor').value=SETORES_SLUG[setorParametro];

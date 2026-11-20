@@ -1,9 +1,9 @@
-/* NEXUS V2 — Assuntos por setor. Persistência local temporária.
+/* PRISMA — Assuntos por setor. Persistência local temporária.
    Compatível com registros antigos que usam apenas `concluido: boolean`.
    Não há sincronização entre navegadores/computadores sem banco de dados. */
 (() => {
   'use strict';
-  const CHAVE = 'nexus_v2_assuntos_reuniao';
+  const CHAVE = 'prisma_assuntos_reuniao';
   const SETORES = [
     'Inteligência de rede', 'Gestão', 'ADM/PAT', 'Financeiro',
     'Captação/Cadastro', 'Auditoria', 'Credenciamento', 'Gerência', 'Coordenação'
@@ -47,7 +47,7 @@
   }
   function salvarRegistros(dados) {
     localStorage.setItem(CHAVE, JSON.stringify(dados));
-    try { window.parent?.postMessage({ tipo: 'nexus:assuntos-atualizados' }, window.location.origin); }
+    try { window.parent?.postMessage({ tipo: 'prisma:assuntos-atualizados' }, window.location.origin); }
     catch (_) { /* fora do iframe */ }
   }
   function statusDe(r) {
@@ -386,7 +386,7 @@
   window.addEventListener('focus', carregar);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) carregar(); });
   window.addEventListener('message', evento => {
-    if (evento.origin === window.location.origin && evento.data?.tipo === 'nexus:assuntos-atualizados') carregar();
+    if (evento.origin === window.location.origin && evento.data?.tipo === 'prisma:assuntos-atualizados') carregar();
   });
   carregar();
 })();

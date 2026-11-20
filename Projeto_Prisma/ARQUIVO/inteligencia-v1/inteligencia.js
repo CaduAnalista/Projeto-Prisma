@@ -1,6 +1,6 @@
 /* ==========================================================
 
-   INTELIGÊNCIA DE REDE — NEXUS
+   INTELIGÊNCIA DE REDE — PRISMA
 
    Importação Excel, indicadores, gráficos, filtros e exportação
 

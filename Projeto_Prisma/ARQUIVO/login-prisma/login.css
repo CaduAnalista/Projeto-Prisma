@@ -1,19 +1,19 @@
-/* NEXUS — Tela de login
+/* PRISMA — Tela de login
    Paleta "Ciano elétrico". Todas as cores ficam nas variáveis abaixo. */
 
 :root {
-  --nexus-fundo: #0A0E1A;
-  --nexus-superficie: #121A2E;
-  --nexus-borda: #1F2C4A;
-  --nexus-primaria: #00E5FF;
-  --nexus-secundaria: #3D7BFF;
-  --nexus-acento: #8F6BFF;
-  --nexus-texto: #E6F1FF;
-  --nexus-texto-2: #8FA3C0;
+  --prisma-fundo: #0A0E1A;
+  --prisma-superficie: #121A2E;
+  --prisma-borda: #1F2C4A;
+  --prisma-primaria: #00E5FF;
+  --prisma-secundaria: #3D7BFF;
+  --prisma-acento: #8F6BFF;
+  --prisma-texto: #E6F1FF;
+  --prisma-texto-2: #8FA3C0;
 
   /* ⚠️ provisórias: as cores de status ainda serão definidas (CLAUDE.md, seção 5) */
-  --nexus-erro: #FF5C7A;
-  --nexus-sucesso: #2EE6A6;
+  --prisma-erro: #FF5C7A;
+  --prisma-sucesso: #2EE6A6;
 
   --raio: 14px;
   --fonte: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -21,30 +21,30 @@
 
   /* a troca para o modo alerta (e a volta) é animada */
   transition:
-    --nexus-fundo 0.45s ease,
-    --nexus-superficie 0.45s ease,
-    --nexus-borda 0.45s ease,
-    --nexus-primaria 0.45s ease,
-    --nexus-secundaria 0.45s ease,
-    --nexus-acento 0.45s ease;
+    --prisma-fundo 0.45s ease,
+    --prisma-superficie 0.45s ease,
+    --prisma-borda 0.45s ease,
+    --prisma-primaria 0.45s ease,
+    --prisma-secundaria 0.45s ease,
+    --prisma-acento 0.45s ease;
 }
 
 /* Registrar as cores como <color> é o que permite animar a troca de paleta. */
-@property --nexus-fundo { syntax: "<color>"; inherits: true; initial-value: #0A0E1A; }
-@property --nexus-superficie { syntax: "<color>"; inherits: true; initial-value: #121A2E; }
-@property --nexus-borda { syntax: "<color>"; inherits: true; initial-value: #1F2C4A; }
-@property --nexus-primaria { syntax: "<color>"; inherits: true; initial-value: #00E5FF; }
-@property --nexus-secundaria { syntax: "<color>"; inherits: true; initial-value: #3D7BFF; }
-@property --nexus-acento { syntax: "<color>"; inherits: true; initial-value: #8F6BFF; }
+@property --prisma-fundo { syntax: "<color>"; inherits: true; initial-value: #0A0E1A; }
+@property --prisma-superficie { syntax: "<color>"; inherits: true; initial-value: #121A2E; }
+@property --prisma-borda { syntax: "<color>"; inherits: true; initial-value: #1F2C4A; }
+@property --prisma-primaria { syntax: "<color>"; inherits: true; initial-value: #00E5FF; }
+@property --prisma-secundaria { syntax: "<color>"; inherits: true; initial-value: #3D7BFF; }
+@property --prisma-acento { syntax: "<color>"; inherits: true; initial-value: #8F6BFF; }
 
 /* Modo alerta: login recusado. A tela inteira fica vermelha por 2 s (o login.js tira a classe). */
 :root.alerta {
-  --nexus-fundo: #1A0910;
-  --nexus-superficie: #2A0F1A;
-  --nexus-borda: #5C1C2E;
-  --nexus-primaria: #FF3B5C;
-  --nexus-secundaria: #FF5A4E;
-  --nexus-acento: #FF2E88;
+  --prisma-fundo: #1A0910;
+  --prisma-superficie: #2A0F1A;
+  --prisma-borda: #5C1C2E;
+  --prisma-primaria: #FF3B5C;
+  --prisma-secundaria: #FF5A4E;
+  --prisma-acento: #FF2E88;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -54,8 +54,8 @@ html, body { height: 100%; }
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--nexus-fundo);
-  color: var(--nexus-texto);
+  background: var(--prisma-fundo);
+  color: var(--prisma-texto);
   font-family: var(--fonte);
   overflow-x: hidden;
 }
@@ -79,9 +79,9 @@ body {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 28% 42%, color-mix(in srgb, var(--nexus-primaria) 16%, transparent), transparent 38%),
-    radial-gradient(circle at 80% 18%, color-mix(in srgb, var(--nexus-acento) 14%, transparent), transparent 34%),
-    radial-gradient(circle at 70% 95%, color-mix(in srgb, var(--nexus-secundaria) 12%, transparent), transparent 40%);
+    radial-gradient(circle at 28% 42%, color-mix(in srgb, var(--prisma-primaria) 16%, transparent), transparent 38%),
+    radial-gradient(circle at 80% 18%, color-mix(in srgb, var(--prisma-acento) 14%, transparent), transparent 34%),
+    radial-gradient(circle at 70% 95%, color-mix(in srgb, var(--prisma-secundaria) 12%, transparent), transparent 40%);
 }
 
 /* Piso em perspectiva, estilo holograma */
@@ -111,8 +111,8 @@ body {
   top: -64px;
   bottom: 0;
   background-image:
-    linear-gradient(color-mix(in srgb, var(--nexus-primaria) 22%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--nexus-primaria) 22%, transparent) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--prisma-primaria) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--prisma-primaria) 22%, transparent) 1px, transparent 1px);
   background-size: 64px 64px;
   animation: grade-andar 6s linear infinite;
   will-change: transform;
@@ -144,7 +144,7 @@ body {
    PERSONAGEM
 ===================================================== */
 
-.lado-nexus {
+.lado-prisma {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -153,14 +153,14 @@ body {
 }
 
 /* Janela que mostra o busto (da cabeça até o núcleo do peito) */
-.nexus-janela {
+.prisma-janela {
   position: relative;
   height: min(78vh, 700px);
   aspect-ratio: 1105 / 1060;
   max-width: 100%;
 }
 
-.nexus-palco {
+.prisma-palco {
   position: absolute;
   inset: 0 0 auto 0;
   width: 100%;
@@ -170,8 +170,8 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.nexus-corpo,
-.nexus-cabeca {
+.prisma-corpo,
+.prisma-cabeca {
   position: absolute;
   inset: 0;
   will-change: transform;
@@ -179,14 +179,14 @@ body {
 
 /* O esmaecimento de baixo fica só no corpo: uma máscara no palco inteiro
    faz o Chrome sumir com as íris quando a cabeça gira em 3D. */
-.nexus-corpo {
+.prisma-corpo {
   -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 74%);
   mask-image: linear-gradient(to bottom, #000 62%, transparent 74%);
 }
 
 /* A imagem do corpo vai só até onde o esmaecimento termina (1064 de 1424 px de altura):
    o resto nunca aparecia e só pesava no download. */
-.nexus-corpo img {
+.prisma-corpo img {
   position: absolute;
   inset: 0 0 auto 0;
   width: 100%;
@@ -195,7 +195,7 @@ body {
 }
 
 /* Recorte da cabeça: x 316, y 0, 464 × 533 na imagem original */
-.nexus-cabeca-img {
+.prisma-cabeca-img {
   position: absolute;
   left: 28.597%;
   top: 0;
@@ -204,7 +204,7 @@ body {
   pointer-events: none;
 }
 
-.nexus-olhos {
+.prisma-olhos {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -212,9 +212,9 @@ body {
   pointer-events: none;
 }
 
-/* Núcleo luminoso do peito (posição definida pelo nexus.js) */
-.nexus-nucleo {
-  --cor-nucleo: var(--nexus-primaria);
+/* Núcleo luminoso do peito (posição definida pelo prisma.js) */
+.prisma-nucleo {
+  --cor-nucleo: var(--prisma-primaria);
   position: absolute;
   width: 9%;
   aspect-ratio: 1;
@@ -226,9 +226,9 @@ body {
   pointer-events: none;
 }
 
-.nexus-palco[data-expressao="feliz"] .nexus-nucleo { --cor-nucleo: #7DF6FF; }
-.nexus-palco[data-expressao="pensando"] .nexus-nucleo { --cor-nucleo: var(--nexus-acento); }
-.nexus-palco[data-expressao="erro"] .nexus-nucleo { --cor-nucleo: var(--nexus-erro); }
+.prisma-palco[data-expressao="feliz"] .prisma-nucleo { --cor-nucleo: #7DF6FF; }
+.prisma-palco[data-expressao="pensando"] .prisma-nucleo { --cor-nucleo: var(--prisma-acento); }
+.prisma-palco[data-expressao="erro"] .prisma-nucleo { --cor-nucleo: var(--prisma-erro); }
 
 /* Aros holográficos atrás da cabeça */
 .holo-aro {
@@ -243,14 +243,14 @@ body {
 .aro-1 {
   width: 66%;
   aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--nexus-primaria) 35%, transparent);
-  box-shadow: 0 0 60px color-mix(in srgb, var(--nexus-primaria) 18%, transparent), inset 0 0 60px color-mix(in srgb, var(--nexus-primaria) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--prisma-primaria) 35%, transparent);
+  box-shadow: 0 0 60px color-mix(in srgb, var(--prisma-primaria) 18%, transparent), inset 0 0 60px color-mix(in srgb, var(--prisma-primaria) 10%, transparent);
 }
 
 .aro-2 {
   width: 78%;
   aspect-ratio: 1;
-  border: 2px dashed color-mix(in srgb, var(--nexus-secundaria) 35%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--prisma-secundaria) 35%, transparent);
   animation: girar 40s linear infinite;
 }
 
@@ -258,12 +258,12 @@ body {
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-.nexus-plataforma {
+.prisma-plataforma {
   width: 70%;
   height: 26px;
   margin-top: -40px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--nexus-primaria) 40%, transparent), transparent 70%);
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--prisma-primaria) 40%, transparent), transparent 70%);
   filter: blur(6px);
   opacity: 0.7;
 }
@@ -279,15 +279,15 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  border: 1px solid color-mix(in srgb, var(--nexus-primaria) 40%, var(--nexus-borda));
+  border: 1px solid color-mix(in srgb, var(--prisma-primaria) 40%, var(--prisma-borda));
   border-radius: 16px 16px 16px 4px;
-  background: color-mix(in srgb, var(--nexus-superficie) 82%, transparent);
+  background: color-mix(in srgb, var(--prisma-superficie) 82%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 24px color-mix(in srgb, var(--nexus-primaria) 12%, transparent);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 24px color-mix(in srgb, var(--prisma-primaria) 12%, transparent);
   font-size: 14px;
   line-height: 1.45;
-  color: var(--nexus-texto);
+  color: var(--prisma-texto);
   animation: flutuar 5s ease-in-out infinite;
 }
 
@@ -297,14 +297,14 @@ body {
   height: 8px;
   margin-top: 6px;
   border-radius: 50%;
-  background: var(--nexus-primaria);
-  box-shadow: 0 0 10px var(--nexus-primaria);
+  background: var(--prisma-primaria);
+  box-shadow: 0 0 10px var(--prisma-primaria);
 }
 
 .balao.digitando #balaoTexto::after {
   content: "▍";
   margin-left: 2px;
-  color: var(--nexus-primaria);
+  color: var(--prisma-primaria);
   animation: piscar-cursor 0.8s steps(1) infinite;
 }
 
@@ -322,10 +322,10 @@ body {
 .lado-form {
   position: relative;
   padding: 32px;
-  border: 1px solid var(--nexus-borda);
+  border: 1px solid var(--prisma-borda);
   border-radius: 22px;
   background:
-    linear-gradient(160deg, color-mix(in srgb, var(--nexus-superficie) 92%, transparent), color-mix(in srgb, var(--nexus-fundo) 88%, transparent));
+    linear-gradient(160deg, color-mix(in srgb, var(--prisma-superficie) 92%, transparent), color-mix(in srgb, var(--prisma-fundo) 88%, transparent));
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -340,7 +340,7 @@ body {
   right: 24px;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, var(--nexus-primaria), var(--nexus-acento), transparent);
+  background: linear-gradient(90deg, transparent, var(--prisma-primaria), var(--prisma-acento), transparent);
 }
 
 .marca {
@@ -354,8 +354,8 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: var(--nexus-fundo);
-  border: 1px solid var(--nexus-borda);
+  background: var(--prisma-fundo);
+  border: 1px solid var(--prisma-borda);
   padding: 2px;
 }
 
@@ -364,7 +364,7 @@ body {
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.32em;
-  background: linear-gradient(90deg, var(--nexus-texto), var(--nexus-primaria));
+  background: linear-gradient(90deg, var(--prisma-texto), var(--prisma-primaria));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -375,7 +375,7 @@ body {
   margin-top: 2px;
   font-size: 12px;
   letter-spacing: 0.08em;
-  color: var(--nexus-texto-2);
+  color: var(--prisma-texto-2);
 }
 
 .status-sistema {
@@ -384,21 +384,21 @@ body {
   align-items: center;
   gap: 6px;
   padding: 5px 10px;
-  border: 1px solid var(--nexus-borda);
+  border: 1px solid var(--prisma-borda);
   border-radius: 999px;
   font-family: var(--fonte-mono);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--nexus-texto-2);
+  color: var(--prisma-texto-2);
 }
 
 .status-sistema i {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--nexus-sucesso);
-  box-shadow: 0 0 8px var(--nexus-sucesso);
+  background: var(--prisma-sucesso);
+  box-shadow: 0 0 8px var(--prisma-sucesso);
   animation: pulsar 2s ease-in-out infinite;
 }
 
@@ -410,7 +410,7 @@ body {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--nexus-primaria);
+  color: var(--prisma-primaria);
 }
 
 h1 {
@@ -424,7 +424,7 @@ h1 {
   margin: 8px 0 26px;
   font-size: 14px;
   line-height: 1.55;
-  color: var(--nexus-texto-2);
+  color: var(--prisma-texto-2);
 }
 
 .campo { margin-bottom: 16px; }
@@ -434,7 +434,7 @@ h1 {
   margin-bottom: 7px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--nexus-texto-2);
+  color: var(--prisma-texto-2);
 }
 
 .campo-caixa {
@@ -449,7 +449,7 @@ h1 {
   width: 18px;
   height: 18px;
   fill: none;
-  stroke: var(--nexus-texto-2);
+  stroke: var(--prisma-texto-2);
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -467,10 +467,10 @@ h1 {
   width: 100%;
   height: 50px;
   padding: 0 14px 0 44px;
-  border: 1px solid var(--nexus-borda);
+  border: 1px solid var(--prisma-borda);
   border-radius: var(--raio);
-  background: color-mix(in srgb, var(--nexus-fundo) 70%, transparent);
-  color: var(--nexus-texto);
+  background: color-mix(in srgb, var(--prisma-fundo) 70%, transparent);
+  color: var(--prisma-texto);
   font: inherit;
   font-size: 15px;
   outline: none;
@@ -480,31 +480,31 @@ h1 {
 }
 
 .campo-caixa select { cursor: pointer; padding-right: 40px; }
-.campo-caixa select:invalid { color: var(--nexus-texto-2); }
-.campo-caixa select option { background: var(--nexus-superficie); color: var(--nexus-texto); }
+.campo-caixa select:invalid { color: var(--prisma-texto-2); }
+.campo-caixa select option { background: var(--prisma-superficie); color: var(--prisma-texto); }
 
-.campo-caixa input::placeholder { color: color-mix(in srgb, var(--nexus-texto-2) 70%, transparent); }
+.campo-caixa input::placeholder { color: color-mix(in srgb, var(--prisma-texto-2) 70%, transparent); }
 
 .campo-caixa input:hover,
-.campo-caixa select:hover { border-color: color-mix(in srgb, var(--nexus-primaria) 35%, var(--nexus-borda)); }
+.campo-caixa select:hover { border-color: color-mix(in srgb, var(--prisma-primaria) 35%, var(--prisma-borda)); }
 
 .campo-caixa input:focus,
 .campo-caixa select:focus {
-  border-color: var(--nexus-primaria);
-  background: color-mix(in srgb, var(--nexus-fundo) 90%, transparent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--nexus-primaria) 16%, transparent);
+  border-color: var(--prisma-primaria);
+  background: color-mix(in srgb, var(--prisma-fundo) 90%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--prisma-primaria) 16%, transparent);
 }
 
-.campo-caixa:focus-within svg { stroke: var(--nexus-primaria); }
+.campo-caixa:focus-within svg { stroke: var(--prisma-primaria); }
 
 .aviso {
   min-height: 20px;
   margin: 4px 0 12px;
   font-size: 13px;
-  color: var(--nexus-erro);
+  color: var(--prisma-erro);
 }
 
-.aviso.sucesso { color: var(--nexus-sucesso); }
+.aviso.sucesso { color: var(--prisma-sucesso); }
 
 .botao-entrar {
   width: 100%;
@@ -515,14 +515,14 @@ h1 {
   gap: 10px;
   border: 0;
   border-radius: var(--raio);
-  background: linear-gradient(90deg, var(--nexus-primaria), color-mix(in srgb, var(--nexus-primaria) 60%, var(--nexus-secundaria)));
-  color: var(--nexus-fundo);
+  background: linear-gradient(90deg, var(--prisma-primaria), color-mix(in srgb, var(--prisma-primaria) 60%, var(--prisma-secundaria)));
+  color: var(--prisma-fundo);
   font: inherit;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 8px 30px color-mix(in srgb, var(--nexus-primaria) 30%, transparent);
+  box-shadow: 0 8px 30px color-mix(in srgb, var(--prisma-primaria) 30%, transparent);
   transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
 }
 
@@ -537,7 +537,7 @@ h1 {
   transition: transform 0.2s;
 }
 
-.botao-entrar:hover { filter: brightness(1.08); box-shadow: 0 10px 38px color-mix(in srgb, var(--nexus-primaria) 45%, transparent); }
+.botao-entrar:hover { filter: brightness(1.08); box-shadow: 0 10px 38px color-mix(in srgb, var(--prisma-primaria) 45%, transparent); }
 .botao-entrar:hover svg { transform: translateX(3px); }
 .botao-entrar:active { transform: translateY(1px); }
 .botao-entrar:disabled { cursor: progress; filter: saturate(0.6); }
@@ -547,21 +547,21 @@ h1 {
   width: 100%;
   margin-top: 12px;
   padding: 10px;
-  border: 1px dashed var(--nexus-borda);
+  border: 1px dashed var(--prisma-borda);
   border-radius: var(--raio);
   background: transparent;
-  color: var(--nexus-texto-2);
+  color: var(--prisma-texto-2);
   font: inherit;
   font-size: 13px;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
 }
 
-.botao-demo:hover { color: var(--nexus-primaria); border-color: color-mix(in srgb, var(--nexus-primaria) 50%, var(--nexus-borda)); }
+.botao-demo:hover { color: var(--prisma-primaria); border-color: color-mix(in srgb, var(--prisma-primaria) 50%, var(--prisma-borda)); }
 
 button:focus-visible,
-.nexus-palco:focus-visible {
-  outline: 2px solid var(--nexus-primaria);
+.prisma-palco:focus-visible {
+  outline: 2px solid var(--prisma-primaria);
   outline-offset: 3px;
 }
 
@@ -571,9 +571,9 @@ button:focus-visible,
   gap: 8px;
   margin-top: 22px;
   padding-top: 18px;
-  border-top: 1px solid var(--nexus-borda);
+  border-top: 1px solid var(--prisma-borda);
   font-size: 12px;
-  color: var(--nexus-texto-2);
+  color: var(--prisma-texto-2);
 }
 
 .rodape svg {
@@ -581,7 +581,7 @@ button:focus-visible,
   width: 16px;
   height: 16px;
   fill: none;
-  stroke: var(--nexus-primaria);
+  stroke: var(--prisma-primaria);
   stroke-width: 1.8;
 }
 
@@ -599,8 +599,8 @@ button:focus-visible,
    MODO ALERTA (login recusado)
 ===================================================== */
 
-/* O NEXUS fica todo em tons de vermelho (filtro SVG no login.html), com brilho em volta */
-.alerta .nexus-palco {
+/* O PRISMA fica todo em tons de vermelho (filtro SVG no login.html), com brilho em volta */
+.alerta .prisma-palco {
   filter: url(#filtroAlerta) drop-shadow(0 0 22px rgba(255, 59, 92, 0.55));
 }
 
@@ -657,7 +657,7 @@ button:focus-visible,
 @keyframes nevoa-cobrir { to { opacity: 1; } }
 
 /* Com menos movimento: só escurece e troca de página */
-.portal.simples .portal-nevoa { background: var(--nexus-fundo); animation: nevoa-cobrir 0.3s forwards; }
+.portal.simples .portal-nevoa { background: var(--prisma-fundo); animation: nevoa-cobrir 0.3s forwards; }
 
 /* =====================================================
    CELULAR E TABLET
@@ -672,13 +672,13 @@ button:focus-visible,
   }
 
   /* Balão à esquerda e a cabeça ampliada à direita */
-  .lado-nexus {
+  .lado-prisma {
     flex-direction: row;
     align-items: center;
     gap: 6px;
   }
 
-  .nexus-janela {
+  .prisma-janela {
     flex: none;
     height: auto;
     width: min(58%, 260px);
@@ -687,18 +687,18 @@ button:focus-visible,
   }
 
   /* palco 160% maior que a janela, centrado na cabeça */
-  .nexus-palco {
+  .prisma-palco {
     width: 160%;
     left: -33.2%;
     top: 3%;
   }
 
-  .nexus-corpo {
+  .prisma-corpo {
     -webkit-mask-image: linear-gradient(to bottom, #000 33%, transparent 41%);
     mask-image: linear-gradient(to bottom, #000 33%, transparent 41%);
   }
 
-  .nexus-plataforma { display: none; }
+  .prisma-plataforma { display: none; }
 
   .holo-aro { left: 50%; top: 45%; }
   .aro-1 { width: 84%; }
@@ -729,7 +729,7 @@ button:focus-visible,
     -webkit-backdrop-filter: none;
   }
 
-  .balao { background: color-mix(in srgb, var(--nexus-superficie) 94%, transparent); }
+  .balao { background: color-mix(in srgb, var(--prisma-superficie) 94%, transparent); }
 
   .marca { margin-bottom: 20px; }
 }
@@ -751,7 +751,7 @@ button:focus-visible,
 
 
 
-/* CORREÇÃO DA ROLAGEM VERTICAL — NEXUS */
+/* CORREÇÃO DA ROLAGEM VERTICAL — PRISMA */
 
 html,
 body {

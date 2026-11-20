@@ -1,9 +1,9 @@
-/* NEXUS V2 — Kanban setorial. Dados locais via IndexedDB; para colaboração real é necessário backend.
+/* PRISMA V2 — Kanban setorial. Dados locais via IndexedDB; para colaboração real é necessário backend.
    A chave imutável é Protocolo + Num. Ocorrência. Importações NÃO sobrescrevem tratativas. */
 (()=>{'use strict';
 const SETORES=['ADM/PAT','Reembolso','Credenciamento','Auditoria','Cadastro','Captação','Financeiro','Triagem'];
 const ETAPAS=[['entrada','Todos que entraram'],['atencao','Em atenção'],['atraso','Atraso'],['interno','Em andamento interno'],['externo','Em andamento externo'],['ajuda','Precisando de ajuda'],['concluido','Concluído']];
-const DB='nexus_v2_kanban', VERSION=1;const $=id=>document.getElementById(id);
+const DB='prisma_v2_kanban', VERSION=1;const $=id=>document.getElementById(id);
 const SETORES_SLUG={'adm-pat':'ADM/PAT','reembolso':'Reembolso','credenciamento':'Credenciamento','auditoria':'Auditoria','cadastro':'Cadastro','captacao':'Captação','financeiro':'Financeiro','triagem':'Triagem'};
 const setorParametro=new URLSearchParams(location.search).get('setor');
 if (setorParametro && SETORES_SLUG[setorParametro]) $('setor').value=SETORES_SLUG[setorParametro];

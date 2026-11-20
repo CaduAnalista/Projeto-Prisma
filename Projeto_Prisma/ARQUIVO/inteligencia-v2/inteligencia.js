@@ -1,5 +1,5 @@
 /* ==========================================================
-   INTELIGÊNCIA DE REDE — NEXUS
+   INTELIGÊNCIA DE REDE — PRISMA
    Tela 1 (Visão operacional): pendentes, abertos e encerrados hoje,
    pendentes por setor (RN 623) e tabela de protocolos com exportação.
    Tudo é calculado no navegador: a planilha não sai daqui.
@@ -1454,7 +1454,7 @@
         $('menuRecolher').addEventListener('click', () => {
             const recolher = !$('app').classList.contains('menu-recolhido');
             definirMenuRecolhido(recolher);
-            guardar('nexus-menu-recolhido', recolher ? '1' : '0');
+            guardar('prisma-menu-recolhido', recolher ? '1' : '0');
         });
         $('abrirMenu').addEventListener('click', abrirMenuCelular);
         $('menuFundo').addEventListener('click', fecharMenuCelular);
@@ -1489,7 +1489,7 @@
         $('infoHoje').textContent = formatarData(estado.hoje);
 
         montarMenu();
-        const preferencia = ler('nexus-menu-recolhido');
+        const preferencia = ler('prisma-menu-recolhido');
         definirMenuRecolhido(preferencia === null ? window.innerWidth < 1600 : preferencia === '1');
 
         ligarEventos();

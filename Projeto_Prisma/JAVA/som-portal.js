@@ -1,4 +1,4 @@
-/* NEXUS — som da transição de portal ("mudança de realidade")
+/* PRISMA — som da transição de portal ("mudança de realidade")
    Gerado na hora com a Web Audio API: não há arquivo de áudio para baixar.
    Clima espacial e suave, sem estalos: tudo passa por um reverb (eco de sala
    enorme, também gerado aqui) e é espalhado entre os lados esquerdo e direito.

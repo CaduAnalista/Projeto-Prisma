@@ -1,9 +1,9 @@
-/* NEXUS V2 — Formulário para reunião
+/* PRISMA — Formulário para reunião
    Armazenamento local temporário. Futuramente, substituir funções de persistência
    por chamadas a uma API, mantendo o mesmo formato dos registros. */
 (() => {
   'use strict';
-  const CHAVE = 'nexus_v2_assuntos_reuniao';
+  const CHAVE = 'prisma_assuntos_reuniao';
   const LIMITE_POR_SETOR = 3;
   const SETORES = new Set([
     'Inteligência de rede', 'Gestão', 'ADM/PAT', 'Financeiro',
@@ -104,7 +104,7 @@
       localStorage.setItem(CHAVE, JSON.stringify([...registros, ...novos]));
       form.reset();
       avisar(`${novos.length} assunto(s) registrado(s) com sucesso. Consulte a página “Assuntos por setor”.`, 'sucesso');
-      try { window.parent?.postMessage({ tipo: 'nexus:assuntos-atualizados' }, window.location.origin); } catch (_) { /* sem integração externa */ }
+      try { window.parent?.postMessage({ tipo: 'prisma:assuntos-atualizados' }, window.location.origin); } catch (_) { /* sem integração externa */ }
     } catch (erro) {
       console.error('Falha ao registrar assuntos:', erro);
       avisar('Não foi possível salvar. Verifique se o navegador permite armazenamento local e tente novamente.');

@@ -1,7 +1,7 @@
 /* =====================================================
    INTELIGÊNCIA DE REDE — PRISMA
    Espectro do PRISMA: esta área é a cor CIANO (a mesma do item no menu).
-   Os nomes das variáveis (--nexus-*) ficaram iguais para não mexer no resto
+   Os nomes das variáveis (--prisma-*) ficaram iguais para não mexer no resto
    do arquivo: só os valores mudaram. A "camada PRISMA" no fim do arquivo dá
    o vidro, o brilho e os fios do espectro.
    Desktop (a partir de 1024 × 640): cada tela cabe inteira, sem rolar a página.
@@ -9,14 +9,14 @@
 ===================================================== */
 
 :root {
-    --nexus-fundo: #050916;
-    --nexus-superficie: #0E1734;
-    --nexus-borda: #22345E;
-    --nexus-primaria: #22D3FF;   /* ciano do espectro: cor desta área */
-    --nexus-secundaria: #2F6BFF; /* azul do espectro */
-    --nexus-acento: #FF8A2B;     /* laranja da seta (no lugar do violeta) */
-    --nexus-texto: #EAF3FF;
-    --nexus-texto-2: #9DB0CF;
+    --prisma-fundo: #050916;
+    --prisma-superficie: #0E1734;
+    --prisma-borda: #22345E;
+    --prisma-primaria: #22D3FF;   /* ciano do espectro: cor desta área */
+    --prisma-secundaria: #2F6BFF; /* azul do espectro */
+    --prisma-acento: #FF8A2B;     /* laranja da seta (no lugar do violeta) */
+    --prisma-texto: #EAF3FF;
+    --prisma-texto-2: #9DB0CF;
 
     /* espectro do PRISMA (igual ao visao-geral.css) */
     --esp-azul: #2F6BFF;
@@ -27,12 +27,12 @@
     --espectro: linear-gradient(90deg, #2F6BFF, #22D3FF 28%, #2EE6C8 48%, #FFC24A 72%, #FF8A2B);
 
     /* ⚠️ provisórias: as cores de status ainda serão definidas (CLAUDE.md, seção 5) */
-    --nexus-ok: #2EE6A6;
-    --nexus-atencao: #FFC857;
-    --nexus-atraso: #FF5C7A;
+    --prisma-ok: #2EE6A6;
+    --prisma-atencao: #FFC857;
+    --prisma-atraso: #FF5C7A;
 
-    --superficie-2: color-mix(in srgb, var(--nexus-superficie) 70%, var(--nexus-fundo));
-    --borda-suave: color-mix(in srgb, var(--nexus-borda) 70%, transparent);
+    --superficie-2: color-mix(in srgb, var(--prisma-superficie) 70%, var(--prisma-fundo));
+    --borda-suave: color-mix(in srgb, var(--prisma-borda) 70%, transparent);
     --raio: 14px;
     --raio-p: 10px;
     --menu-largura: 248px;
@@ -52,9 +52,9 @@ body {
     background:
         radial-gradient(ellipse 55% 45% at 12% -8%, rgba(47, 107, 255, 0.18), transparent 70%),
         radial-gradient(ellipse 40% 35% at 95% 105%, rgba(255, 138, 43, 0.08), transparent 70%),
-        radial-gradient(ellipse 90% 70% at 50% 20%, #0B1638, var(--nexus-fundo) 78%);
+        radial-gradient(ellipse 90% 70% at 50% 20%, #0B1638, var(--prisma-fundo) 78%);
     background-attachment: fixed;
-    color: var(--nexus-texto);
+    color: var(--prisma-texto);
     font-family: var(--fonte);
     font-size: 14px;
     line-height: 1.4;
@@ -75,7 +75,7 @@ svg {
 }
 
 :focus-visible {
-    outline: 2px solid var(--nexus-primaria);
+    outline: 2px solid var(--prisma-primaria);
     outline-offset: 2px;
 }
 
@@ -166,8 +166,8 @@ svg {
     flex-direction: column;
     gap: 18px;
     padding: 18px 14px;
-    border-right: 1px solid var(--nexus-borda);
-    background: linear-gradient(180deg, color-mix(in srgb, var(--nexus-superficie) 92%, transparent), color-mix(in srgb, var(--nexus-fundo) 96%, transparent));
+    border-right: 1px solid var(--prisma-borda);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--prisma-superficie) 92%, transparent), color-mix(in srgb, var(--prisma-fundo) 96%, transparent));
     overflow: hidden;
     z-index: 30;
 }
@@ -194,10 +194,10 @@ svg {
     width: 40px;
     height: 40px;
     padding: 2px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 12px;
-    background: var(--nexus-fundo);
-    box-shadow: 0 0 18px color-mix(in srgb, var(--nexus-primaria) 18%, transparent);
+    background: var(--prisma-fundo);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--prisma-primaria) 18%, transparent);
 }
 
 .marca-texto { display: flex; flex-direction: column; min-width: 0; white-space: nowrap; }
@@ -207,13 +207,13 @@ svg {
     font-size: 16px;
     font-weight: 800;
     letter-spacing: 0.3em;
-    background: linear-gradient(90deg, var(--nexus-texto), var(--nexus-primaria));
+    background: linear-gradient(90deg, var(--prisma-texto), var(--prisma-primaria));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
 }
 
-.marca-texto small { font-size: 11.5px; color: var(--nexus-texto-2); letter-spacing: 0.04em; }
+.marca-texto small { font-size: 11.5px; color: var(--prisma-texto-2); letter-spacing: 0.04em; }
 
 .menu-recolher {
     display: grid;
@@ -221,15 +221,15 @@ svg {
     width: 30px;
     height: 30px;
     flex: none;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 9px;
     background: transparent;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s, transform 0.25s;
 }
 
-.menu-recolher:hover { color: var(--nexus-primaria); border-color: color-mix(in srgb, var(--nexus-primaria) 50%, var(--nexus-borda)); }
+.menu-recolher:hover { color: var(--prisma-primaria); border-color: color-mix(in srgb, var(--prisma-primaria) 50%, var(--prisma-borda)); }
 
 .menu-rotulo {
     display: block;
@@ -237,14 +237,14 @@ svg {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
 }
 
 .menu-painel {
     padding: 12px;
     border: 1px solid var(--borda-suave);
     border-radius: var(--raio-p);
-    background: color-mix(in srgb, var(--nexus-fundo) 55%, transparent);
+    background: color-mix(in srgb, var(--prisma-fundo) 55%, transparent);
 }
 
 .menu-painel-nome { display: block; margin-top: 3px; font-size: 14px; font-weight: 600; white-space: nowrap; }
@@ -255,17 +255,17 @@ svg {
     width: 100%;
     height: 38px;
     padding: 0 32px 0 12px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: var(--raio-p);
     background:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238FA3C0' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center / 16px,
-        var(--nexus-fundo);
+        var(--prisma-fundo);
     font-size: 13.5px;
     appearance: none;
     cursor: pointer;
 }
 
-.menu-seletor select option { background: var(--nexus-superficie); }
+.menu-seletor select option { background: var(--prisma-superficie); }
 
 .menu-nav { display: flex; flex-direction: column; gap: 4px; }
 
@@ -277,18 +277,18 @@ svg {
     height: 42px;
     padding: 0 12px;
     border-radius: var(--raio-p);
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     text-decoration: none;
     font-weight: 500;
     white-space: nowrap;
     transition: background 0.2s, color 0.2s;
 }
 
-.menu-item:hover { background: color-mix(in srgb, var(--nexus-superficie) 80%, transparent); color: var(--nexus-texto); }
+.menu-item:hover { background: color-mix(in srgb, var(--prisma-superficie) 80%, transparent); color: var(--prisma-texto); }
 
 .menu-item.ativo {
-    background: color-mix(in srgb, var(--nexus-primaria) 12%, transparent);
-    color: var(--nexus-texto);
+    background: color-mix(in srgb, var(--prisma-primaria) 12%, transparent);
+    color: var(--prisma-texto);
 }
 
 .menu-item.ativo::before {
@@ -299,11 +299,11 @@ svg {
     bottom: 9px;
     width: 3px;
     border-radius: 0 3px 3px 0;
-    background: var(--nexus-primaria);
-    box-shadow: 0 0 10px var(--nexus-primaria);
+    background: var(--prisma-primaria);
+    box-shadow: 0 0 10px var(--prisma-primaria);
 }
 
-.menu-item.ativo svg { color: var(--nexus-primaria); }
+.menu-item.ativo svg { color: var(--prisma-primaria); }
 
 .menu-rodape {
     margin-top: auto;
@@ -313,10 +313,10 @@ svg {
     padding-top: 14px;
     border-top: 1px solid var(--borda-suave);
     font-size: 12px;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
 }
 
-.menu-rodape svg { color: var(--nexus-primaria); width: 16px; height: 16px; }
+.menu-rodape svg { color: var(--prisma-primaria); width: 16px; height: 16px; }
 
 /* Menu recolhido: só ícones (trilho) */
 .menu-recolhido .menu { padding-inline: 14px; }
@@ -353,7 +353,7 @@ svg {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: var(--nexus-primaria);
+    color: var(--prisma-primaria);
 }
 
 h1 {
@@ -386,15 +386,15 @@ h2 {
     gap: 7px;
     height: 32px;
     padding: 0 12px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 999px;
-    background: color-mix(in srgb, var(--nexus-superficie) 70%, transparent);
+    background: color-mix(in srgb, var(--prisma-superficie) 70%, transparent);
     font-size: 12.5px;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     white-space: nowrap;
 }
 
-.info-chip strong { color: var(--nexus-texto); font-weight: 600; }
+.info-chip strong { color: var(--prisma-texto); font-weight: 600; }
 
 .situacao { display: flex; align-items: center; gap: 8px; }
 
@@ -406,15 +406,15 @@ h2 {
     min-width: 0;
     margin-left: 6px;
     font-size: 12px;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     white-space: nowrap;
 }
 
-.tabela-fonte svg { width: 14px; height: 14px; color: var(--nexus-primaria); }
-.tabela-fonte strong { color: var(--nexus-texto); font-weight: 600; }
+.tabela-fonte svg { width: 14px; height: 14px; color: var(--prisma-primaria); }
+.tabela-fonte strong { color: var(--prisma-texto); font-weight: 600; }
 #infoBase { overflow: hidden; text-overflow: ellipsis; }
 .tabela-titulo { min-width: 0; }
-.info-chip svg { width: 15px; height: 15px; color: var(--nexus-primaria); }
+.info-chip svg { width: 15px; height: 15px; color: var(--prisma-primaria); }
 
 /* =====================================================
    BOTÕES
@@ -437,20 +437,20 @@ h2 {
 }
 
 .botao-primario {
-    background: linear-gradient(90deg, var(--nexus-primaria), color-mix(in srgb, var(--nexus-primaria) 60%, var(--nexus-secundaria)));
-    color: var(--nexus-fundo);
-    box-shadow: 0 6px 22px color-mix(in srgb, var(--nexus-primaria) 25%, transparent);
+    background: linear-gradient(90deg, var(--prisma-primaria), color-mix(in srgb, var(--prisma-primaria) 60%, var(--prisma-secundaria)));
+    color: var(--prisma-fundo);
+    box-shadow: 0 6px 22px color-mix(in srgb, var(--prisma-primaria) 25%, transparent);
 }
 
 .botao-primario:hover { filter: brightness(1.08); }
 
 .botao-secundario {
-    border-color: var(--nexus-borda);
-    background: color-mix(in srgb, var(--nexus-fundo) 60%, transparent);
-    color: var(--nexus-texto);
+    border-color: var(--prisma-borda);
+    background: color-mix(in srgb, var(--prisma-fundo) 60%, transparent);
+    color: var(--prisma-texto);
 }
 
-.botao-secundario:hover:not(:disabled) { border-color: var(--nexus-primaria); color: var(--nexus-primaria); }
+.botao-secundario:hover:not(:disabled) { border-color: var(--prisma-primaria); color: var(--prisma-primaria); }
 .botao:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .botao-icone {
@@ -458,28 +458,28 @@ h2 {
     place-items: center;
     width: 34px;
     height: 34px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 9px;
     background: transparent;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s;
 }
 
-.botao-icone:hover:not(:disabled) { color: var(--nexus-primaria); border-color: color-mix(in srgb, var(--nexus-primaria) 50%, var(--nexus-borda)); }
+.botao-icone:hover:not(:disabled) { color: var(--prisma-primaria); border-color: color-mix(in srgb, var(--prisma-primaria) 50%, var(--prisma-borda)); }
 .botao-icone:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .link {
     border: 0;
     background: none;
     padding: 0;
-    color: var(--nexus-secundaria);
+    color: var(--prisma-secundaria);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
 }
 
-.link:hover { color: var(--nexus-primaria); }
+.link:hover { color: var(--prisma-primaria); }
 
 /* =====================================================
    FILTROS
@@ -491,9 +491,9 @@ h2 {
     align-items: center;
     gap: 6px;
     padding: 7px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: var(--raio);
-    background: color-mix(in srgb, var(--nexus-superficie) 75%, transparent);
+    background: color-mix(in srgb, var(--prisma-superficie) 75%, transparent);
 }
 
 .filtro { position: relative; }
@@ -506,27 +506,27 @@ h2 {
     padding: 0 8px 0 11px;
     border: 1px solid var(--borda-suave);
     border-radius: var(--raio-p);
-    background: color-mix(in srgb, var(--nexus-fundo) 65%, transparent);
+    background: color-mix(in srgb, var(--prisma-fundo) 65%, transparent);
     cursor: pointer;
     white-space: nowrap;
     transition: border-color 0.2s;
 }
 
-.filtro-botao:hover, .filtro-botao[aria-expanded="true"] { border-color: color-mix(in srgb, var(--nexus-primaria) 55%, var(--nexus-borda)); }
-.filtro-botao > svg:first-child { width: 15px; height: 15px; color: var(--nexus-primaria); }
+.filtro-botao:hover, .filtro-botao[aria-expanded="true"] { border-color: color-mix(in srgb, var(--prisma-primaria) 55%, var(--prisma-borda)); }
+.filtro-botao > svg:first-child { width: 15px; height: 15px; color: var(--prisma-primaria); }
 
 /* em telas de até 1440 px os ícones dos filtros saem, para tudo caber numa linha */
 @media (max-width: 1440px) and (min-width: 1024px) {
     .filtro-botao > svg:first-child { display: none; }
 }
-.filtro-botao .seta { width: 15px; height: 15px; color: var(--nexus-texto-2); }
+.filtro-botao .seta { width: 15px; height: 15px; color: var(--prisma-texto-2); }
 
 .filtro-rotulo {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
 }
 
 .filtro-valor { font-size: 13px; font-weight: 600; max-width: 170px; overflow: hidden; text-overflow: ellipsis; }
@@ -543,7 +543,7 @@ h2 {
     cursor: pointer;
 }
 
-.filtro-select select option { background: var(--nexus-superficie); font-weight: 400; }
+.filtro-select select option { background: var(--prisma-superficie); font-weight: 400; }
 
 .filtro-tipos {
     display: flex;
@@ -560,7 +560,7 @@ h2 {
     border: 1px solid var(--borda-suave);
     border-radius: 999px;
     background: transparent;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
@@ -568,15 +568,15 @@ h2 {
     transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.chip:hover { color: var(--nexus-texto); border-color: var(--nexus-borda); }
+.chip:hover { color: var(--prisma-texto); border-color: var(--prisma-borda); }
 
 .chip[aria-pressed="true"] {
-    border-color: color-mix(in srgb, var(--nexus-primaria) 60%, transparent);
-    background: color-mix(in srgb, var(--nexus-primaria) 14%, transparent);
-    color: var(--nexus-texto);
+    border-color: color-mix(in srgb, var(--prisma-primaria) 60%, transparent);
+    background: color-mix(in srgb, var(--prisma-primaria) 14%, transparent);
+    color: var(--prisma-texto);
 }
 
-.chip small { margin-left: 4px; font-weight: 500; color: var(--nexus-texto-2); }
+.chip small { margin-left: 4px; font-weight: 500; color: var(--prisma-texto-2); }
 
 /* No desktop os canais ficam numa linha; o que não cabe vai para o "+N" (ajustarCanais) */
 @media (min-width: 1024px) {
@@ -597,43 +597,43 @@ h2 {
     z-index: 40;
     width: 320px;
     padding: 14px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: var(--raio);
-    background: var(--nexus-superficie);
+    background: var(--prisma-superficie);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
 .periodo-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-.periodo-campos label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--nexus-texto-2); }
+.periodo-campos label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--prisma-texto-2); }
 
 .periodo-campos input,
 .popover-lista input[type="search"] {
     height: 36px;
     padding: 0 10px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 9px;
-    background: var(--nexus-fundo);
+    background: var(--prisma-fundo);
     color-scheme: dark;
     outline: none;
 }
 
 .periodo-campos input:focus,
-.popover-lista input[type="search"]:focus { border-color: var(--nexus-primaria); }
+.popover-lista input[type="search"]:focus { border-color: var(--prisma-primaria); }
 
 .atalhos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 
 .atalhos button {
     height: 30px;
     padding: 0 11px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 999px;
     background: transparent;
     font-size: 12.5px;
     cursor: pointer;
 }
 
-.atalhos button:hover { border-color: var(--nexus-primaria); color: var(--nexus-primaria); }
+.atalhos button:hover { border-color: var(--prisma-primaria); color: var(--prisma-primaria); }
 
 .popover-lista { width: 380px; display: flex; flex-direction: column; gap: 10px; }
 .popover-lista input[type="search"] { width: 100%; }
@@ -644,7 +644,7 @@ h2 {
     margin: 0 -6px;
     padding: 0 6px;
     scrollbar-width: thin;
-    scrollbar-color: var(--nexus-borda) transparent;
+    scrollbar-color: var(--prisma-borda) transparent;
 }
 
 .opcao {
@@ -657,10 +657,10 @@ h2 {
     cursor: pointer;
 }
 
-.opcao:hover { background: color-mix(in srgb, var(--nexus-fundo) 70%, transparent); }
-.opcao input { accent-color: var(--nexus-primaria); width: 15px; height: 15px; flex: none; }
+.opcao:hover { background: color-mix(in srgb, var(--prisma-fundo) 70%, transparent); }
+.opcao input { accent-color: var(--prisma-primaria); width: 15px; height: 15px; flex: none; }
 .opcao span { flex: 1; min-width: 0; }
-.opcao small { color: var(--nexus-texto-2); font-variant-numeric: tabular-nums; }
+.opcao small { color: var(--prisma-texto-2); font-variant-numeric: tabular-nums; }
 
 .popover-rodape {
     display: flex;
@@ -669,7 +669,7 @@ h2 {
     padding-top: 10px;
     border-top: 1px solid var(--borda-suave);
     font-size: 12.5px;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
 }
 
 /* =====================================================
@@ -694,9 +694,9 @@ h2 {
     min-height: 0;
     overflow: hidden;
     padding: 8px 16px 8px 12px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: var(--raio);
-    background: color-mix(in srgb, var(--nexus-superficie) 85%, transparent);
+    background: color-mix(in srgb, var(--prisma-superficie) 85%, transparent);
 }
 
 .kpi-icone {
@@ -706,14 +706,14 @@ h2 {
     height: 36px;
     flex: none;
     border-radius: 10px;
-    background: color-mix(in srgb, var(--nexus-secundaria) 16%, transparent);
-    color: var(--nexus-secundaria);
+    background: color-mix(in srgb, var(--prisma-secundaria) 16%, transparent);
+    color: var(--prisma-secundaria);
 }
 
 .kpi-texto { display: flex; flex-direction: column; min-width: 0; }
 
-.kpi-rotulo { font-size: 13px; font-weight: 600; color: var(--nexus-texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.kpi-apoio { font-size: 11.5px; color: var(--nexus-texto-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi-rotulo { font-size: 13px; font-weight: 600; color: var(--prisma-texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi-apoio { font-size: 11.5px; color: var(--prisma-texto-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .kpi-valor {
     margin-left: auto;
@@ -726,36 +726,36 @@ h2 {
 }
 
 .kpi-destaque {
-    border-color: color-mix(in srgb, var(--nexus-primaria) 40%, var(--nexus-borda));
+    border-color: color-mix(in srgb, var(--prisma-primaria) 40%, var(--prisma-borda));
     background:
-        linear-gradient(110deg, color-mix(in srgb, var(--nexus-primaria) 12%, transparent), transparent 70%),
-        color-mix(in srgb, var(--nexus-superficie) 85%, transparent);
+        linear-gradient(110deg, color-mix(in srgb, var(--prisma-primaria) 12%, transparent), transparent 70%),
+        color-mix(in srgb, var(--prisma-superficie) 85%, transparent);
 }
 
-.kpi-destaque .kpi-icone { background: color-mix(in srgb, var(--nexus-primaria) 16%, transparent); color: var(--nexus-primaria); }
+.kpi-destaque .kpi-icone { background: color-mix(in srgb, var(--prisma-primaria) 16%, transparent); color: var(--prisma-primaria); }
 
 /* Encerrados hoje, comparado aos abertos hoje (cor definida no JS) */
-.kpi.saldo-ok { --cor-saldo: var(--nexus-ok); }
-.kpi.saldo-atencao { --cor-saldo: var(--nexus-atencao); }
-.kpi.saldo-atraso { --cor-saldo: var(--nexus-atraso); }
+.kpi.saldo-ok { --cor-saldo: var(--prisma-ok); }
+.kpi.saldo-atencao { --cor-saldo: var(--prisma-atencao); }
+.kpi.saldo-atraso { --cor-saldo: var(--prisma-atraso); }
 
 .kpi[class*="saldo-"] {
-    border-color: color-mix(in srgb, var(--cor-saldo) 45%, var(--nexus-borda));
+    border-color: color-mix(in srgb, var(--cor-saldo) 45%, var(--prisma-borda));
     background:
         linear-gradient(110deg, color-mix(in srgb, var(--cor-saldo) 12%, transparent), transparent 70%),
-        color-mix(in srgb, var(--nexus-superficie) 85%, transparent);
+        color-mix(in srgb, var(--prisma-superficie) 85%, transparent);
 }
 
 .kpi[class*="saldo-"] .kpi-icone { background: color-mix(in srgb, var(--cor-saldo) 16%, transparent); color: var(--cor-saldo); }
 .kpi[class*="saldo-"] .kpi-valor,
 .kpi[class*="saldo-"] .kpi-apoio { color: var(--cor-saldo); }
-.kpi-destaque .kpi-valor { color: var(--nexus-primaria); font-size: 32px; }
+.kpi-destaque .kpi-valor { color: var(--prisma-primaria); font-size: 32px; }
 
 /* Cartões */
 .cartao {
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: var(--raio);
-    background: color-mix(in srgb, var(--nexus-superficie) 85%, transparent);
+    background: color-mix(in srgb, var(--prisma-superficie) 85%, transparent);
 }
 
 .cartao-topo {
@@ -766,7 +766,7 @@ h2 {
     padding: 12px 16px 0;
 }
 
-.cartao-apoio { margin: 2px 0 0; font-size: 12px; color: var(--nexus-texto-2); }
+.cartao-apoio { margin: 2px 0 0; font-size: 12px; color: var(--prisma-texto-2); }
 
 .legenda {
     display: flex;
@@ -779,12 +779,12 @@ h2 {
 }
 
 .legenda li { display: flex; align-items: center; gap: 6px; }
-.legenda small { color: var(--nexus-texto-2); }
+.legenda small { color: var(--prisma-texto-2); }
 
 .ponto { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
-.ponto.ok { background: var(--nexus-ok); }
-.ponto.atencao { background: var(--nexus-atencao); }
-.ponto.atraso { background: var(--nexus-atraso); }
+.ponto.ok { background: var(--prisma-ok); }
+.ponto.atencao { background: var(--prisma-atencao); }
+.ponto.atraso { background: var(--prisma-atraso); }
 
 /* Pendentes por setor (barras empilhadas) */
 .setores { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
@@ -801,7 +801,7 @@ h2 {
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: thin;
-    scrollbar-color: var(--nexus-borda) transparent;
+    scrollbar-color: var(--prisma-borda) transparent;
     /* linha de base das colunas (fica atrás do nome) */
     background: linear-gradient(var(--borda-suave), var(--borda-suave)) no-repeat left 12px bottom 31px / calc(100% - 24px) 1px;
 }
@@ -821,8 +821,8 @@ h2 {
     transition: background 0.2s;
 }
 
-.coluna:hover { background: color-mix(in srgb, var(--nexus-fundo) 55%, transparent); }
-.coluna.ativo { background: color-mix(in srgb, var(--nexus-primaria) 10%, transparent); }
+.coluna:hover { background: color-mix(in srgb, var(--prisma-fundo) 55%, transparent); }
+.coluna.ativo { background: color-mix(in srgb, var(--prisma-primaria) 10%, transparent); }
 
 .coluna-total {
     margin-bottom: 4px;
@@ -851,13 +851,13 @@ h2 {
     font-size: 11.5px;
     font-weight: 750;
     line-height: 1;
-    color: var(--nexus-fundo);
+    color: var(--prisma-fundo);
     font-variant-numeric: tabular-nums;
 }
 
-.coluna-pilha .ok { background: var(--nexus-ok); }
-.coluna-pilha .atencao { background: var(--nexus-atencao); }
-.coluna-pilha .atraso { background: var(--nexus-atraso); }
+.coluna-pilha .ok { background: var(--prisma-ok); }
+.coluna-pilha .atencao { background: var(--prisma-atencao); }
+.coluna-pilha .atraso { background: var(--prisma-atraso); }
 
 .coluna-nome {
     max-width: 100%;
@@ -870,7 +870,7 @@ h2 {
     text-overflow: ellipsis;
 }
 
-.vazio-pequeno { grid-column: 1 / -1; margin: 6px 0; font-size: 13px; color: var(--nexus-texto-2); }
+.vazio-pequeno { grid-column: 1 / -1; margin: 6px 0; font-size: 13px; color: var(--prisma-texto-2); }
 
 /* =====================================================
    TABELA
@@ -892,8 +892,8 @@ h2 {
 .contador {
     padding: 2px 9px;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--nexus-primaria) 14%, transparent);
-    color: var(--nexus-primaria);
+    background: color-mix(in srgb, var(--prisma-primaria) 14%, transparent);
+    color: var(--prisma-primaria);
     font-size: 12.5px;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -908,7 +908,7 @@ h2 {
     gap: 2px;
     border: 1px solid var(--borda-suave);
     border-radius: var(--raio-p);
-    background: color-mix(in srgb, var(--nexus-fundo) 65%, transparent);
+    background: color-mix(in srgb, var(--prisma-fundo) 65%, transparent);
 }
 
 .segmentado button {
@@ -920,7 +920,7 @@ h2 {
     border: 0;
     border-radius: 7px;
     background: transparent;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     font-size: 12.5px;
     font-weight: 600;
     white-space: nowrap;
@@ -928,21 +928,21 @@ h2 {
     transition: background 0.2s, color 0.2s;
 }
 
-.segmentado button:hover { color: var(--nexus-texto); }
+.segmentado button:hover { color: var(--prisma-texto); }
 
 .segmentado button[aria-pressed="true"] {
-    background: color-mix(in srgb, var(--nexus-primaria) 16%, transparent);
-    color: var(--nexus-texto);
+    background: color-mix(in srgb, var(--prisma-primaria) 16%, transparent);
+    color: var(--prisma-texto);
 }
 
 .segmentado small {
     font-size: 11.5px;
     font-weight: 700;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     font-variant-numeric: tabular-nums;
 }
 
-.segmentado button[aria-pressed="true"] small { color: var(--nexus-primaria); }
+.segmentado button[aria-pressed="true"] small { color: var(--prisma-primaria); }
 
 .busca {
     display: flex;
@@ -953,13 +953,13 @@ h2 {
     padding: 0 12px;
     border: 1px solid var(--borda-suave);
     border-radius: var(--raio-p);
-    background: color-mix(in srgb, var(--nexus-fundo) 65%, transparent);
+    background: color-mix(in srgb, var(--prisma-fundo) 65%, transparent);
 }
 
-.busca:focus-within { border-color: var(--nexus-primaria); }
-.busca svg { width: 16px; height: 16px; color: var(--nexus-texto-2); }
+.busca:focus-within { border-color: var(--prisma-primaria); }
+.busca svg { width: 16px; height: 16px; color: var(--prisma-texto-2); }
 .busca input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; font-size: 13.5px; }
-.busca input::placeholder { color: color-mix(in srgb, var(--nexus-texto-2) 75%, transparent); }
+.busca input::placeholder { color: color-mix(in srgb, var(--prisma-texto-2) 75%, transparent); }
 
 .tabela-area { position: relative; flex: 1; min-height: 0; overflow: hidden; }
 
@@ -982,14 +982,14 @@ h2 {
 .tabela th {
     height: 36px;
     padding: 0 10px;
-    background: color-mix(in srgb, var(--nexus-fundo) 55%, transparent);
-    border-bottom: 1px solid var(--nexus-borda);
+    background: color-mix(in srgb, var(--prisma-fundo) 55%, transparent);
+    border-bottom: 1px solid var(--prisma-borda);
     font-size: 11px;
     font-weight: 700;
     text-align: left;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -997,8 +997,8 @@ h2 {
 }
 
 .tabela th[data-ordem] { cursor: pointer; }
-.tabela th[data-ordem]:hover { color: var(--nexus-texto); }
-.tabela th[aria-sort]::after { content: " ↓"; color: var(--nexus-primaria); }
+.tabela th[data-ordem]:hover { color: var(--prisma-texto); }
+.tabela th[aria-sort]::after { content: " ↓"; color: var(--prisma-primaria); }
 .tabela th[aria-sort="ascending"]::after { content: " ↑"; }
 
 /* altura fixa da linha: o JS usa 34 px para calcular quantas cabem */
@@ -1012,16 +1012,16 @@ h2 {
     font-variant-numeric: tabular-nums;
 }
 
-.tabela tbody tr:hover td { background: color-mix(in srgb, var(--nexus-primaria) 5%, transparent); }
+.tabela tbody tr:hover td { background: color-mix(in srgb, var(--prisma-primaria) 5%, transparent); }
 
 .mono { font-family: var(--fonte-mono); font-size: 12.5px; letter-spacing: -0.01em; }
-.fraco { color: var(--nexus-texto-2); }
+.fraco { color: var(--prisma-texto-2); }
 
 .etiqueta-setor {
     display: inline-block;
     max-width: 100%;
     padding: 2px 7px;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 6px;
     font-size: 11.5px;
     font-weight: 600;
@@ -1042,10 +1042,10 @@ h2 {
 }
 
 .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.status.ok { color: var(--nexus-ok); background: color-mix(in srgb, var(--nexus-ok) 13%, transparent); }
-.status.atencao { color: var(--nexus-atencao); background: color-mix(in srgb, var(--nexus-atencao) 13%, transparent); }
-.status.atraso { color: var(--nexus-atraso); background: color-mix(in srgb, var(--nexus-atraso) 13%, transparent); }
-.status.sem { color: var(--nexus-texto-2); background: color-mix(in srgb, var(--nexus-texto-2) 12%, transparent); }
+.status.ok { color: var(--prisma-ok); background: color-mix(in srgb, var(--prisma-ok) 13%, transparent); }
+.status.atencao { color: var(--prisma-atencao); background: color-mix(in srgb, var(--prisma-atencao) 13%, transparent); }
+.status.atraso { color: var(--prisma-atraso); background: color-mix(in srgb, var(--prisma-atraso) 13%, transparent); }
+.status.sem { color: var(--prisma-texto-2); background: color-mix(in srgb, var(--prisma-texto-2) 12%, transparent); }
 
 .obs {
     display: block;
@@ -1053,7 +1053,7 @@ h2 {
     padding: 0;
     border: 0;
     background: none;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     text-align: left;
     font-size: 12.5px;
     white-space: nowrap;
@@ -1062,7 +1062,7 @@ h2 {
     cursor: pointer;
 }
 
-.obs:hover { color: var(--nexus-primaria); }
+.obs:hover { color: var(--prisma-primaria); }
 
 /* Estado vazio */
 .vazio {
@@ -1075,7 +1075,7 @@ h2 {
     gap: 8px;
     padding: 20px;
     text-align: center;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
 }
 
 .vazio-icone {
@@ -1084,12 +1084,12 @@ h2 {
     width: 52px;
     height: 52px;
     border-radius: 16px;
-    background: color-mix(in srgb, var(--nexus-primaria) 12%, transparent);
-    color: var(--nexus-primaria);
+    background: color-mix(in srgb, var(--prisma-primaria) 12%, transparent);
+    color: var(--prisma-primaria);
 }
 
 .vazio-icone svg { width: 24px; height: 24px; }
-.vazio strong { color: var(--nexus-texto); font-size: 15px; }
+.vazio strong { color: var(--prisma-texto); font-size: 15px; }
 .vazio p { margin: 0; max-width: 420px; font-size: 13.5px; }
 
 .paginacao {
@@ -1101,12 +1101,12 @@ h2 {
     padding: 6px 12px 6px 16px;
     border-top: 1px solid var(--borda-suave);
     font-size: 12.5px;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
     font-variant-numeric: tabular-nums;
 }
 
 .paginacao-botoes { display: flex; align-items: center; gap: 10px; }
-.paginacao-botoes span { min-width: 64px; text-align: center; color: var(--nexus-texto); font-weight: 600; }
+.paginacao-botoes span { min-width: 64px; text-align: center; color: var(--prisma-texto); font-weight: 600; }
 
 /* =====================================================
    SOBREPOSIÇÕES
@@ -1118,7 +1118,7 @@ h2 {
     z-index: 80;
     display: grid;
     place-items: center;
-    background: color-mix(in srgb, var(--nexus-fundo) 82%, transparent);
+    background: color-mix(in srgb, var(--prisma-fundo) 82%, transparent);
     backdrop-filter: blur(6px);
 }
 
@@ -1128,21 +1128,21 @@ h2 {
     align-items: center;
     gap: 8px;
     padding: 36px 48px;
-    border: 2px dashed color-mix(in srgb, var(--nexus-primaria) 60%, transparent);
+    border: 2px dashed color-mix(in srgb, var(--prisma-primaria) 60%, transparent);
     border-radius: 22px;
-    background: var(--nexus-superficie);
-    color: var(--nexus-texto-2);
+    background: var(--prisma-superficie);
+    color: var(--prisma-texto-2);
 }
 
-.carregando-caixa { border-style: solid; border-color: var(--nexus-borda); }
-.soltar-caixa svg { width: 34px; height: 34px; color: var(--nexus-primaria); }
-.soltar-caixa strong, .carregando-caixa strong { color: var(--nexus-texto); font-size: 16px; }
+.carregando-caixa { border-style: solid; border-color: var(--prisma-borda); }
+.soltar-caixa svg { width: 34px; height: 34px; color: var(--prisma-primaria); }
+.soltar-caixa strong, .carregando-caixa strong { color: var(--prisma-texto); font-size: 16px; }
 
 .giro {
     width: 34px;
     height: 34px;
-    border: 3px solid var(--nexus-borda);
-    border-top-color: var(--nexus-primaria);
+    border: 3px solid var(--prisma-borda);
+    border-top-color: var(--prisma-primaria);
     border-radius: 50%;
     animation: girar 0.8s linear infinite;
 }
@@ -1152,10 +1152,10 @@ h2 {
 .detalhe {
     width: min(640px, calc(100vw - 32px));
     padding: 0;
-    border: 1px solid var(--nexus-borda);
+    border: 1px solid var(--prisma-borda);
     border-radius: 18px;
-    background: var(--nexus-superficie);
-    color: var(--nexus-texto);
+    background: var(--prisma-superficie);
+    color: var(--prisma-texto);
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
 }
 
@@ -1179,7 +1179,7 @@ h2 {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--nexus-texto-2);
+    color: var(--prisma-texto-2);
 }
 
 .detalhe header .detalhe-rotulo { padding: 0; }
@@ -1193,7 +1193,7 @@ h2 {
 }
 
 .detalhe-dados div { min-width: 0; }
-.detalhe-dados dt { font-size: 11.5px; color: var(--nexus-texto-2); }
+.detalhe-dados dt { font-size: 11.5px; color: var(--prisma-texto-2); }
 .detalhe-dados dd { margin: 2px 0 0; font-size: 13.5px; font-weight: 600; overflow-wrap: anywhere; }
 
 .detalhe p {
@@ -1214,15 +1214,15 @@ h2 {
     z-index: 90;
     max-width: 380px;
     padding: 12px 16px;
-    border: 1px solid var(--nexus-borda);
-    border-left: 3px solid var(--nexus-primaria);
+    border: 1px solid var(--prisma-borda);
+    border-left: 3px solid var(--prisma-primaria);
     border-radius: 12px;
-    background: var(--nexus-superficie);
+    background: var(--prisma-superficie);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     font-size: 13.5px;
 }
 
-.aviso-flutuante.erro { border-left-color: var(--nexus-atraso); }
+.aviso-flutuante.erro { border-left-color: var(--prisma-atraso); }
 
 /* =====================================================
    TELAS ESTREITAS (notebook pequeno)
@@ -1354,7 +1354,7 @@ h2 {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        color: var(--nexus-texto-2);
+        color: var(--prisma-texto-2);
     }
     .tabela tbody tr:hover td { background: none; }
     .obs { display: inline; white-space: normal; }
@@ -1491,7 +1491,7 @@ h1 { font-weight: 800; letter-spacing: -0.02em; }
 }
 
 .aviso-flutuante { border-left-color: var(--esp-ciano); }
-.aviso-flutuante.erro { border-left-color: var(--nexus-atraso); }
+.aviso-flutuante.erro { border-left-color: var(--prisma-atraso); }
 
 /* tabela */
 .tabela th { background: rgba(11, 22, 56, 0.6); border-bottom-color: rgba(34, 211, 255, 0.25); }
@@ -1525,27 +1525,27 @@ h1 { font-weight: 800; letter-spacing: -0.02em; }
 /* =====================================================
    MODO CLARO (botão no topo da Visão Geral; o tema.js põe
    data-tema="claro" no <html>). Como quase tudo aqui usa as
-   variáveis --nexus-*, eu troco as variáveis e acerto só o
+   variáveis --prisma-*, eu troco as variáveis e acerto só o
    que a camada PRISMA pintou com cor fixa. O layout não muda.
 ===================================================== */
 
 html[data-tema="claro"] {
     color-scheme: light;
-    --nexus-fundo: #EEF3FB;
-    --nexus-superficie: #FFFFFF;
-    --nexus-borda: #D3DDEE;
-    --nexus-primaria: #0A9CC4;
-    --nexus-secundaria: #2F6BFF;
-    --nexus-acento: #E06A10;
-    --nexus-texto: #0E1A3A;
-    --nexus-texto-2: #4F6086;
+    --prisma-fundo: #EEF3FB;
+    --prisma-superficie: #FFFFFF;
+    --prisma-borda: #D3DDEE;
+    --prisma-primaria: #0A9CC4;
+    --prisma-secundaria: #2F6BFF;
+    --prisma-acento: #E06A10;
+    --prisma-texto: #0E1A3A;
+    --prisma-texto-2: #4F6086;
     --esp-ciano: #0A9CC4;
     --esp-laranja: #E06A10;
 
     /* status um tom mais escuro para ler no branco (continuam provisórias) */
-    --nexus-ok: #12A877;
-    --nexus-atencao: #C27C00;
-    --nexus-atraso: #E0345A;
+    --prisma-ok: #12A877;
+    --prisma-atencao: #C27C00;
+    --prisma-atraso: #E0345A;
 
     --superficie-2: #F4F7FC;
     --borda-suave: #E1E8F4;

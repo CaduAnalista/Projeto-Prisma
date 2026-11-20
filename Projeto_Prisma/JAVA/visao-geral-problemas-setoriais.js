@@ -1,4 +1,4 @@
-/* NEXUS V2 — complemento não destrutivo de navegação.
+/* PRISMA V2 — complemento não destrutivo de navegação.
    Carregar DEPOIS do visao-geral.js existente. */
 (() => {
   'use strict';
@@ -47,7 +47,7 @@
       inicial.hidden = true;
       painel.hidden = false;
       if (carregando) carregando.hidden = false;
-      iframe.title = dados.titulo + ' — NEXUS';
+      iframe.title = dados.titulo + ' — PRISMA';
       iframe.src = item.dataset.url;
     }, true);
   });
