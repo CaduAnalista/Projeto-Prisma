@@ -9,7 +9,13 @@
   "use strict";
 
   const $ = (id) => document.getElementById(id);
-  const sessao = window.parent && window.parent !== window ? window.parent.PrismaSessao : null;
+
+  // uso o login da Visão geral; se o navegador não deixar acessar (ex.: arquivo aberto direto
+  // da pasta), uso o sessao.js que esta própria página carrega. Antes, esse bloqueio derrubava
+  // o script inteiro e os botões "Gerar" e "Criar usuário" ficavam sem fazer nada.
+  let sessao = null;
+  try { if (window.parent !== window && window.parent.PrismaSessao) sessao = window.parent.PrismaSessao; } catch (_) { sessao = null; }
+  if (!sessao) sessao = window.PrismaSessao || null;
   const sb = sessao && sessao.configurado ? sessao.cliente() : null;
 
   const PAPEIS = { gestor: "Gestor", admin: "Admin", colaborador: "Colaborador" };
@@ -265,13 +271,20 @@
 
   // ---------- início ----------
   async function iniciar() {
+    // o "Gerar" não depende do banco: já funciona aqui
+    $("gerarSenha").disabled = false;
+    mensagem(msgNovo, "");
     if (!sb) {
-      mensagem(msgNovo, "Esta página só funciona com o login de verdade (Supabase) ligado.", "erro");
-      $("botaoCriar").disabled = true;
+      mensagem(msgNovo, "Não encontrei o acesso ao Supabase nesta página. Confira se LIB/supabase.js, JAVA/supabase-config.js e JAVA/sessao.js foram enviados junto com o site.", "erro");
       return;
     }
     const { data: u } = await sb.auth.getUser();
     meuId = u && u.user ? u.user.id : null;
+    if (!meuId) {
+      mensagem(msgNovo, "Não achei o seu login nesta página. Abra o PRISMA pelo endereço do site (não pelo arquivo da pasta), entre de novo e volte aqui.", "erro");
+      return;
+    }
+    $("botaoCriar").disabled = false;
     const { data, error } = await sb.from("setores").select("id, nome").order("nome");
     if (!error) setores = data;
     montarSetores($("novoSetores"));

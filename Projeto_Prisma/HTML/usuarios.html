@@ -11,7 +11,12 @@
 <link rel="icon" type="image/svg+xml" href="../ASSETS/prisma-icone.svg">
 
 <link rel="stylesheet" href="../CSS/usuarios.css?v=1">
-<script src="../JAVA/usuarios.js?v=3" defer></script>
+<!-- a página carrega o próprio acesso ao Supabase: assim funciona mesmo quando o navegador
+     não deixa ela conversar com a Visão geral (ex.: arquivo aberto direto da pasta) -->
+<script src="../LIB/supabase.js" defer></script>
+<script src="../JAVA/supabase-config.js?v=2" defer></script>
+<script src="../JAVA/sessao.js?v=2" defer></script>
+<script src="../JAVA/usuarios.js?v=4" defer></script>
 </head>
 <body>
 <!-- Página interna: o menu lateral pertence só à Visão Geral. -->
@@ -55,7 +60,7 @@
           <span>Senha provisória <em>*</em></span>
           <div class="linha-senha">
             <input id="novaSenha" type="text" maxlength="72" placeholder="8+ caracteres, letras e números" spellcheck="false" autocomplete="off" required>
-            <button type="button" class="botao botao-secundario" id="gerarSenha">Gerar</button>
+            <button type="button" class="botao botao-secundario" id="gerarSenha" disabled>Gerar</button>
           </div>
         </div>
       </div>
@@ -63,10 +68,11 @@
         <legend>Setores <small>(o colaborador só vê o CRM destes setores)</small></legend>
         <div class="lista-setores" id="novoSetores"></div>
       </fieldset>
-      <p class="mensagem" id="msgNovo" role="status" aria-live="polite"></p>
+      <!-- esta mensagem some quando o usuarios.js começa; se ela ficar, o script não carregou -->
+      <p class="mensagem erro" id="msgNovo" role="status" aria-live="polite">Preparando a página... Se esta mensagem não sumir, o arquivo JAVA/usuarios.js não carregou (confira se ele foi enviado junto com o site).</p>
       <div class="acoes">
         <button type="reset" class="botao botao-secundario">Limpar</button>
-        <button type="submit" class="botao botao-primario" id="botaoCriar">Criar usuário</button>
+        <button type="submit" class="botao botao-primario" id="botaoCriar" disabled>Criar usuário</button>
       </div>
     </form>
   </section>
